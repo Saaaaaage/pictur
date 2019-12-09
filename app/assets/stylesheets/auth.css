@@ -1,0 +1,105 @@
+.logo-big {
+    font-size: 70px;
+    font-family: 'Baloo';
+    font-weight: 700;
+    display: block;
+    width:100%;
+    margin: 0 80px 65px 80px;
+}
+
+.auth-body {
+    width:350px;
+    position: relative;
+    margin: auto;
+    padding-top: 80px;
+}
+
+.auth-container {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.auth-input-group {
+    border-radius: 5px;
+    background-color: #2C2F34;
+    padding: 15px;
+
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.auth-input-field {
+    width: 320px;
+    background-color: #191919;
+    border: 0px solid transparent;
+    border-radius: 5px;
+    height: 35px;
+    padding: 5px 10px 5px 10px ;
+    color: #f2f2f2;
+    margin-bottom: 15px;
+    font-size: 13px;
+    position: relative;
+
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.auth-input-field:last-child {
+    margin-bottom: 0px;
+}
+.auth-input-field:focus {
+    border: 1px solid #1bb76e
+}
+
+/* TODO: why are these trying to wrap?  why does using top:0px; suddenly shoot the position upward by a large amount? */
+.auth-input-error {
+    position: absolute;
+    border-color: #d43030;
+    background-color: #d43030;
+    padding: 3px 4px;
+    left: 350px;
+    border-radius: 5px;
+    font-size: 12px;
+    opacity: 0.9;
+    margin-top: 8px;
+    white-space: nowrap;
+}
+
+.auth-input-error:after {
+    content: "";
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-width: 7px;
+    border-style: solid;
+    border-color: transparent #d43030 transparent transparent;
+    top: 2px;
+    left: -13px;
+    opacity: 0.9;
+}
+
+.after-form-group {
+    display:flex;
+    justify-content: flex-end;
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+.after-form-group a {
+    margin-top: 13px;
+    text-align: end;
+}
+
+/* TODO: Why does top padding start getting applied immediately, but bottom padding needs 20px before the padding is applied??? */
+button.button-auth {
+    font-weight: 10;
+    margin-left: 15px;
+    margin-right: 0px;
+    background-color: #5c69ff;
+    padding: 10px 18px 30px 18px;
+}
+button.button-auth:hover {
+    background-color: #636FFF;
+}

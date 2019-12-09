@@ -1,0 +1,91 @@
+
+.navbar {
+    background-color: #171544;
+    padding: 10px;
+    height: 50px;
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    display: flex;
+    justify-content: space-between;
+}
+
+.navbar-left, .navbar-right, .navbar-center {
+    position:relative;
+}
+
+.search-bar {
+    width: 450px;
+    height: 25px;
+    border-radius: 3px;
+    border: 0px solid transparent;
+    opacity: 0.8;
+    padding: 3px 8px 3px 8px;
+}
+
+.search-bar:focus {
+    opacity: 0.9;
+}
+
+.logo {
+    font-size: 40px;
+    font-family: 'Baloo';
+    font-weight: 700;
+}
+
+.plus-icon {
+    display: inline-block;
+    margin-right: 15px;
+    color: #1bb76e;
+    background-color: #fff;
+    padding: 2px 5px 2px 5px;
+    border-radius: 3px;
+    box-shadow: 0px 4px #75ebb4;
+}
+
+
+/* TODO: why doesn't the image show up.... */
+.avatar-nav {
+    background-image: url(earth.svg);
+    background-size: contain;
+    height: 35px;
+    width: 35px;
+    position: relative;
+}
+
+.avatar-nav p {
+    text-align: center;
+    padding-top: 7px;
+    font-family: 'Baloo';
+    font-weight: 700;
+    font-size: 24px;
+    text-shadow: 2px 2px 4px #000000;
+}
+
+.avatar-menu {
+    top: 60px;
+    right: 20px;
+    position: absolute;
+    border-radius: 5px;
+    display:none;
+}
+
+.avatar-menu ul {
+    border-radius: 5px;
+    padding-top:5px;
+    padding-bottom: 5px;
+}
+
+.avatar-menu-top {
+    background-color: #53555D;
+}
+.avatar-menu-top > li {
+    padding: 20px 20px;
+    letter-spacing: 1px;
+}
+.avatar-menu-top > li:hover {
+    background-color: rgba(204,204,204,0.2);
+}
+.avatar-menu-bottom {
+    background-color: #565F6E;   
+}

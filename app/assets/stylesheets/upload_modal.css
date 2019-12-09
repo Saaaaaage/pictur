@@ -1,0 +1,18 @@
+.box_uploading, .box_error {
+    display: none;
+}
+
+.box {
+    background-image: url(OGMMBE0.jpg);
+    background-size: contain;
+    outline: 2px dashed gainsboro;
+    outline-offset: -100px;
+    height: 500px;
+    width: 500px;
+    margin: 0 auto;
+    background-repeat: no-repeat;
+    border-radius: 10px;
+}
+.box .box_dragndrop {
+    display: inline;
+}

@@ -1,0 +1,42 @@
+.postShowBody {
+    display: flex;
+    justify-content: center;
+}
+
+.postShowMain {
+    margin-top: 30px;
+    margin-right: 30px;
+}
+
+.postShowMainHeader {
+    padding: 20px;
+    background-color: #2c2f34;
+    border-radius: 5px 5px 0px 0px;
+    position:sticky;
+    top:0;
+}
+.postShowMainHeader h1 {
+    font-size: 18px;
+    font-weight: 400;
+}
+.postShowMainHeader h3 {
+    font-size: 12px;
+    font-weight: 400;
+    color: #BBB;
+    padding-left: 2px;
+    padding-top: 5px;
+}
+
+.postImage {
+    display: block;
+    max-width: 728px;
+    padding-bottom: 20px;
+    background-color: #2c2f34;
+}
+
+.postShowSidebar {
+    width: 300px;
+    height: 600px;
+    background-color: red;
+    margin-top: 30px;
+}

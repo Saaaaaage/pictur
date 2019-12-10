@@ -26,11 +26,4 @@ class ApplicationController < ActionController::Base
     end
   end
 
-#   TODO: Cleanup or implement
-#   def require_logged_out
-#   end
-
-#   def require_logged_in
-#   end
-
 end

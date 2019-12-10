@@ -59,8 +59,15 @@ class LoginForm extends React.Component {
                 </form>
                 <div className='after-form-group'>
                     <Link to='/register'>need an account?</Link>
-                    <button onClick={this.demoLogin} className="button button-auth">Demo Login</button>
-                    <button type="submit" className="button button-auth" form="login-form">Sign In</button>
+                    <button
+                        onClick={this.demoLogin}
+                        className="button button-auth"
+                    >Demo Login</button>
+                    <button
+                        type="submit"
+                        className="button button-auth"
+                        form="login-form"
+                    >Sign In</button>
                 </div>
             </div>
         )

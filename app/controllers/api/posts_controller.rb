@@ -3,11 +3,11 @@ class Api::PostsController < ApplicationController
 
     # TODO: pagination
     def index
-        @posts = Post.all
+        @posts = Post.with_attached_uploads.all
     end
 
     def show
-        @post = Post.find(params[:id])
+        @post = Post.with_attached_uploads.find(params[:id])
     end
 
     def create

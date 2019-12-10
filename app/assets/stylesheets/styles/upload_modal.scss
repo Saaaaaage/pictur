@@ -3,12 +3,12 @@
 }
 
 .box {
-    background-image: url(OGMMBE0.jpg);
-    background-size: contain;
-    outline: 2px dashed gainsboro;
+background: rgb(34,193,195);
+background: linear-gradient(0deg, rgba(34,193,195,1) 0%, rgba(253,187,45,1) 100%);
+    outline: 2px dashed rgb(29, 28, 114);
     outline-offset: -100px;
     height: 500px;
-    width: 500px;
+    width: 800px;
     margin: 0 auto;
     background-repeat: no-repeat;
     border-radius: 10px;

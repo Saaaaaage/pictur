@@ -9,7 +9,7 @@ export default props => {
     return (
         <div>
             <Link to="/">
-                <span className="logo">
+                <span className="logo auth-back">
                     p
                 </span>
                 back to Pictur
@@ -19,7 +19,7 @@ export default props => {
                 <Link to="/">
                     <span className="logo-big">
                         pictur
-                </span>
+                    </span>
                 </Link>
 
                 <AuthRoute path='/login' component={LoginContainer} />

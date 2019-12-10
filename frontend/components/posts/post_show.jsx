@@ -8,6 +8,13 @@ class PostShow extends React.Component {
     componentDidMount(){
         this.props.loadPost();
     }
+
+    componentDidUpdate(prevProps) {
+        if (this.props.match.params.postId != prevProps.match.params.postId) {
+            this.props.loadPost();
+        }
+    }
+
     render() {
         const images = this.props.images.map(image => {
             return <PostShowImage image={image} />

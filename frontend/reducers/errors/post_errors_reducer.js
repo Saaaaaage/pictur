@@ -2,7 +2,7 @@ import {
     RECEIVE_POST,
     RECEIVE_POST_ERRORS,
     CLEAR_ERRORS
-} from '../actions/post_actions';
+} from '../../actions/post_actions';
 
 const _nullErrors = [];
 

@@ -1,6 +1,6 @@
 import {
     RECEIVE_CURRENT_USER
-} from '../actions/session_actions';
+} from '../../actions/session_actions';
 
 export default (state = {}, action) => {
     Object.freeze(state);

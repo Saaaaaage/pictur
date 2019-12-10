@@ -7,6 +7,10 @@
     margin: 0 80px 65px 80px;
 }
 
+.logo-big-first-letter {
+    color: #88C624
+}
+
 .auth-body {
     width:350px;
     position: relative;
@@ -102,4 +106,9 @@ button.button-auth {
 }
 button.button-auth:hover {
     background-color: #636FFF;
+}
+
+.auth-back {
+    padding-left: 15px;
+    padding-right: 10px;
 }

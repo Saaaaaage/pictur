@@ -1,8 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {Redirect } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 
-class UploadModal extends React.Component{
+
+class Upload extends React.Component{
     constructor(props) {
         super(props)
         this.state = {
@@ -20,7 +21,6 @@ class UploadModal extends React.Component{
     }
 
     handleSubmit(e) {
-        // e.preventDefault();
         let formData = new FormData();
         formData.append('post[title]', 'test post please ignore');
 
@@ -67,4 +67,4 @@ class UploadModal extends React.Component{
         )
     }
 }
-export default UploadModal
+export default Upload

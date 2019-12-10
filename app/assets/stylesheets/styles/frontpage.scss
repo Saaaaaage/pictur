@@ -1,0 +1,45 @@
+.grid-column-container {
+    display: flex;
+    justify-content: center;
+}
+
+.grid-column {
+    width: 240px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.post-preview-container {
+    display: block;
+    width: 240px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    overflow:hidden;
+    background-color: #474a51;
+    text-overflow: ellipsis;
+    color: #fff;
+}
+
+.post-preview-info {
+    max-height:32x;
+    padding: 15px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+.post-preview-description {
+    font-family: "Proxima Nova Regular", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    line-height:16px;
+    letter-spacing: .3px;
+    text-align: left;
+    color: #fff;
+    display: -webkit-box;
+    max-height: 31.92px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+}

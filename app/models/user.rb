@@ -21,7 +21,8 @@ class User < ApplicationRecord
 
     before_validation :ensure_session_token
 
-    has_many :posts
+    has_many :posts, inverse_of: :user
+    has_many :comments, inverse_of: :user
 
     def self.find_by_credentials(username, password)
         user = User.find_by(username: username)

@@ -60,12 +60,7 @@ class FrontPage extends React.Component {
         return (
             <div>
                 <NavbarContainer/>
-                <div>Icons made by <a href="https://www.flaticon.com/authors/smalllikeart" title="smalllikeart">smalllikeart</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
-                <a href="https://www.freepik.com/free-photos-vectors/water">Water photo created by jannoon028 - www.freepik.com</a>
-
-
-                <p>{this.state.width}</p>
-                <p>{this.state.columns}</p>
+                <br /><br />
 
                 <div className="grid-column-container">
                     {gridColumns.map((col, i) => (<div className="grid-column" key={i}>{col}</div>))}

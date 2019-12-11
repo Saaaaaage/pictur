@@ -3,7 +3,7 @@ class Api::PostsController < ApplicationController
 
     # TODO: pagination
     def index
-        @posts = Post.with_attached_uploads.all
+        @posts = Post.with_attached_uploads.includes(:user).all
     end
 
     def show

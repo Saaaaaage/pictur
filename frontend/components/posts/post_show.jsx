@@ -32,7 +32,7 @@ class PostShow extends React.Component {
                 <div className="postShowMain">
                     <div className="postShowMainHeader">
                         <h1>{this.props.post.title}</h1>
-                        <h3>by <strong>*UsernameGoesHere*</strong></h3>
+                        <h3>by <strong>{this.props.post.user.username}</strong></h3>
                     </div>
                     <ul>{images}</ul>
                 </div>

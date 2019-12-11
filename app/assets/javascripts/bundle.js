@@ -460,15 +460,7 @@ function (_React$Component) {
         return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null);
       }
 
-      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_navbar_navbar_container__WEBPACK_IMPORTED_MODULE_1__["default"], null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, "Icons made by ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
-        href: "https://www.flaticon.com/authors/smalllikeart",
-        title: "smalllikeart"
-      }, "smalllikeart"), " from ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
-        href: "https://www.flaticon.com/",
-        title: "Flaticon"
-      }, "www.flaticon.com")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
-        href: "https://www.freepik.com/free-photos-vectors/water"
-      }, "Water photo created by jannoon028 - www.freepik.com"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, this.state.width), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, this.state.columns), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_navbar_navbar_container__WEBPACK_IMPORTED_MODULE_1__["default"], null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "grid-column-container"
       }, gridColumns.map(function (col, i) {
         return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -698,13 +690,11 @@ __webpack_require__.r(__webpack_exports__);
       logout = _ref.logout;
 
   var menuClick = function menuClick(e) {
-    console.log("show");
     var menu = document.getElementsByClassName("avatar-menu")[0];
     menu.setAttribute("style", "display:block");
   };
 
   var menuBlur = function menuBlur(e) {
-    console.log("hide");
     var menu = document.getElementsByClassName("avatar-menu")[0];
     menu.setAttribute("style", "display:none");
   };
@@ -817,7 +807,7 @@ function (_React$Component) {
         className: "postShowMain"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "postShowMainHeader"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, this.props.post.title), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h3", null, "by ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("strong", null, "*UsernameGoesHere*"))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", null, images)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, this.props.post.title), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h3", null, "by ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("strong", null, this.props.post.user.username))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", null, images)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "postShowSidebar"
       }));
     }
@@ -849,7 +839,9 @@ __webpack_require__.r(__webpack_exports__);
 var msp = function msp(state, ownProps) {
   // TODO: the images.... that can't be right....
   return {
-    post: state.entities.posts[ownProps.match.params.postId] || {},
+    post: state.entities.posts[ownProps.match.params.postId] || {
+      user: {}
+    },
     images: Object.values((state.entities.posts[ownProps.match.params.postId] || {}).uploads || {})
   };
 };
@@ -1389,11 +1381,9 @@ function Modal(_ref) {
       closeModal = _ref.closeModal;
 
   if (!modal) {
-    console.log("NOT DISPLAYING MODAL!!!");
     return null;
   }
 
-  console.log("DISPLAYING MODAL");
   var component;
 
   switch (modal) {

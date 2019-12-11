@@ -4,13 +4,11 @@ import { Link } from 'react-router-dom'
 export default ({currentUser, logout}) => {
 
     const menuClick = e => {
-        console.log("show");
         const menu = document.getElementsByClassName("avatar-menu")[0];
         menu.setAttribute("style", "display:block")
     }
 
     const menuBlur = e => {
-        console.log("hide")
         const menu = document.getElementsByClassName("avatar-menu")[0];
         menu.setAttribute("style", "display:none")
     }

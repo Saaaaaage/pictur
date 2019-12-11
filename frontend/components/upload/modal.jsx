@@ -5,10 +5,8 @@ import UploadContainer from './upload_container';
 
 function Modal({ modal, closeModal }) {
     if (!modal) {
-        console.log("NOT DISPLAYING MODAL!!!")
         return null;
     }
-    console.log("DISPLAYING MODAL")
     let component;
     switch (modal) {
         case 'upload':

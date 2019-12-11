@@ -5,7 +5,7 @@ import { fetchPost } from '../../actions/post_actions';
 const msp = (state, ownProps) => {
     // TODO: the images.... that can't be right....
     return {
-        post: state.entities.posts[ownProps.match.params.postId] || {},
+        post: state.entities.posts[ownProps.match.params.postId] || {user: {}},
         images: Object.values((state.entities.posts[ownProps.match.params.postId] || {}).uploads || {})
     }
 };

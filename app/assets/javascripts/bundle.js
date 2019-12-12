@@ -86,6 +86,99 @@
 /************************************************************************/
 /******/ ({
 
+/***/ "./frontend/actions/comment_actions.js":
+/*!*********************************************!*\
+  !*** ./frontend/actions/comment_actions.js ***!
+  \*********************************************/
+/*! exports provided: RECEIVE_COMMENTS, RECEIVE_COMMENT, REMOVE_COMMENT, CLEAR_COMMENTS, RECEIVE_COMMENT_ERRORS, CLEAR_ERRORS, clearComments, fetchChildren, submitComment, deleteComment */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RECEIVE_COMMENTS", function() { return RECEIVE_COMMENTS; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RECEIVE_COMMENT", function() { return RECEIVE_COMMENT; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "REMOVE_COMMENT", function() { return REMOVE_COMMENT; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CLEAR_COMMENTS", function() { return CLEAR_COMMENTS; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RECEIVE_COMMENT_ERRORS", function() { return RECEIVE_COMMENT_ERRORS; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CLEAR_ERRORS", function() { return CLEAR_ERRORS; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "clearComments", function() { return clearComments; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fetchChildren", function() { return fetchChildren; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "submitComment", function() { return submitComment; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deleteComment", function() { return deleteComment; });
+/* harmony import */ var _util_comment_api_util__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../util/comment_api_util */ "./frontend/util/comment_api_util.js");
+
+var RECEIVE_COMMENTS = 'RECEIVE_COMMENTS';
+var RECEIVE_COMMENT = 'RECEIVE_COMMENT';
+var REMOVE_COMMENT = 'REMOVE_COMMENT';
+var CLEAR_COMMENTS = 'CLEAR_COMMENTS';
+var RECEIVE_COMMENT_ERRORS = 'RECEIVE_COMMENT_ERRORS';
+var CLEAR_ERRORS = 'CLEAR_ERRORS';
+
+var receiveComments = function receiveComments(comments) {
+  return {
+    type: RECEIVE_COMMENTS,
+    comments: comments
+  };
+};
+
+var receiveComment = function receiveComment(comment) {
+  return {
+    type: RECEIVE_COMMENT,
+    comment: comment
+  };
+};
+
+var removeComment = function removeComment(comment) {
+  return {
+    type: REMOVE_COMMENT,
+    commentId: comment.id,
+    parentId: comment.parent_id
+  };
+};
+
+var clearComments = function clearComments() {
+  return {
+    type: CLEAR_COMMENTS
+  };
+};
+
+var receiveErrors = function receiveErrors(errors) {
+  return {
+    type: RECEIVE_COMMENT_ERRORS,
+    errors: errors
+  };
+};
+
+var fetchChildren = function fetchChildren(commentId) {
+  return function (dispatch) {
+    return _util_comment_api_util__WEBPACK_IMPORTED_MODULE_0__["getCommentChildren"](commentId).then(function (comments) {
+      return dispatch(receiveComments(comments));
+    }, function (errors) {
+      return dispatch(receiveErrors(errors.responseJSON));
+    });
+  };
+};
+var submitComment = function submitComment(postId, formComment) {
+  return function (dispatch) {
+    return _util_comment_api_util__WEBPACK_IMPORTED_MODULE_0__["createComment"](postId, formComment).then(function (savedComment) {
+      return dispatch(receiveComment(savedComment));
+    }, function (errors) {
+      return dispatch(receiveErrors(errors.responseJSON));
+    });
+  };
+};
+var deleteComment = function deleteComment(commentId) {
+  return function (dispatch) {
+    return _util_comment_api_util__WEBPACK_IMPORTED_MODULE_0__["deleteComment"](commentId).then(function (comment) {
+      return dispatch(removeComment(comment));
+    }, function (errors) {
+      return dispatch(receiveErrors(errors.responseJSON));
+    });
+  };
+};
+
+/***/ }),
+
 /***/ "./frontend/actions/post_actions.js":
 /*!******************************************!*\
   !*** ./frontend/actions/post_actions.js ***!
@@ -341,6 +434,318 @@ var App = function App() {
 
 /***/ }),
 
+/***/ "./frontend/components/comments/comment.jsx":
+/*!**************************************************!*\
+  !*** ./frontend/components/comments/comment.jsx ***!
+  \**************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _comment_container__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./comment_container */ "./frontend/components/comments/comment_container.js");
+/* harmony import */ var _comment_form__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./comment_form */ "./frontend/components/comments/comment_form.jsx");
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+
+
+
+
+var Comment =
+/*#__PURE__*/
+function (_React$Component) {
+  _inherits(Comment, _React$Component);
+
+  function Comment(props) {
+    var _this;
+
+    _classCallCheck(this, Comment);
+
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(Comment).call(this, props));
+    _this.state = {
+      replyForm: false,
+      replyDisplay: 'none',
+      showChildren: false,
+      fetchedChildren: false
+    };
+    _this.comment = _this.props.comment;
+    _this.fetchChildren = _this.props.fetchChildren;
+    _this.deleteComment = _this.props.deleteComment;
+    _this.hideForm = _this.hideForm.bind(_assertThisInitialized(_this));
+    _this.showChildrenClick = _this.showChildrenClick.bind(_assertThisInitialized(_this));
+    return _this;
+  } // TODO: When a user submits a comment, the parent comment's children should be shown, and it should be told that it has a child to increment the counter
+
+
+  _createClass(Comment, [{
+    key: "hideForm",
+    value: function hideForm() {
+      this.setState({
+        replyForm: false
+      });
+      this.showChildrenClick();
+    }
+  }, {
+    key: "showChildrenClick",
+    value: function showChildrenClick() {
+      this.setState({
+        showChildren: !this.state.showChildren
+      });
+
+      if (!this.state.fetchedChildren) {
+        this.fetchChildren(this.comment.id);
+        this.setState({
+          fetchedChildren: true
+        });
+      }
+    } // TODO: Will clicking deleteMe propagate deletions up the chain of children?
+    // TODO: deleting a parent level comment should cascade? or just null out comment text
+
+  }, {
+    key: "render",
+    value: function render() {
+      var _this2 = this;
+
+      var childComments;
+
+      if (this.state.showChildren) {
+        childComments = this.props.children.map(function (comment, i) {
+          return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_comment_container__WEBPACK_IMPORTED_MODULE_1__["default"], {
+            key: i,
+            comment: comment
+          });
+        });
+      }
+
+      var showChildrenButton;
+
+      if (this.comment.child_count > 0) {
+        var text = this.state.showChildren ? '- collapse' : "+ ".concat(this.comment.child_count, " replies");
+        showChildrenButton = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+          className: "show-replies",
+          onClick: this.showChildrenClick
+        }, text);
+      }
+
+      var embeddedReplyForm = this.state.replyForm ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "indented-child"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "comment"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_comment_form__WEBPACK_IMPORTED_MODULE_2__["default"], {
+        submitComment: this.props.submitComment,
+        parentId: this.comment.id,
+        submitCallback: this.hideForm
+      }))) : null;
+      var cssClass;
+      var indentationContainer;
+
+      if (this.props.root) {
+        cssClass = "comment root-comment";
+        indentationContainer = "";
+      } else {
+        cssClass = "comment";
+        indentationContainer = "indented-child";
+      }
+
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: indentationContainer
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: cssClass,
+        onMouseOver: function onMouseOver() {
+          return _this2.setState({
+            replyDisplay: 'flex'
+          });
+        },
+        onMouseOut: function onMouseOut() {
+          return _this2.setState({
+            replyDisplay: 'none'
+          });
+        }
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "comment-body"
+      }, this.comment.body), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "comment-reply-botton",
+        style: {
+          display: this.state.replyDisplay
+        },
+        onClick: function onClick() {
+          return _this2.setState({
+            replyForm: true
+          });
+        }
+      }, " Reply"), showChildrenButton), embeddedReplyForm, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", null, childComments));
+    }
+  }]);
+
+  return Comment;
+}(react__WEBPACK_IMPORTED_MODULE_0___default.a.Component);
+
+;
+/* harmony default export */ __webpack_exports__["default"] = (Comment);
+
+/***/ }),
+
+/***/ "./frontend/components/comments/comment_container.js":
+/*!***********************************************************!*\
+  !*** ./frontend/components/comments/comment_container.js ***!
+  \***********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+/* harmony import */ var _comment__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./comment */ "./frontend/components/comments/comment.jsx");
+/* harmony import */ var _actions_comment_actions__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../actions/comment_actions */ "./frontend/actions/comment_actions.js");
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
+
+
+
+
+
+var mapStateToProps = function mapStateToProps(state, ownProps) {
+  return {
+    comment: ownProps.comment,
+    children: Object.values(state.entities.comments[ownProps.comment.id] || {})
+  };
+};
+
+var mapDispatchToProps = function mapDispatchToProps(dispatch, ownProps) {
+  var postId = ownProps.match.params.postId;
+  return {
+    submitComment: function submitComment(formComment) {
+      return dispatch(Object(_actions_comment_actions__WEBPACK_IMPORTED_MODULE_2__["submitComment"])(postId, formComment));
+    },
+    fetchChildren: function fetchChildren(commentId) {
+      return dispatch(Object(_actions_comment_actions__WEBPACK_IMPORTED_MODULE_2__["fetchChildren"])(commentId));
+    },
+    deleteComment: function deleteComment(commentId) {
+      return dispatch(Object(_actions_comment_actions__WEBPACK_IMPORTED_MODULE_2__["deleteComment"])(commentId));
+    }
+  };
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (Object(react_router_dom__WEBPACK_IMPORTED_MODULE_3__["withRouter"])(Object(react_redux__WEBPACK_IMPORTED_MODULE_0__["connect"])(mapStateToProps, mapDispatchToProps)(_comment__WEBPACK_IMPORTED_MODULE_1__["default"])));
+
+/***/ }),
+
+/***/ "./frontend/components/comments/comment_form.jsx":
+/*!*******************************************************!*\
+  !*** ./frontend/components/comments/comment_form.jsx ***!
+  \*******************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+
+
+
+var CommentForm =
+/*#__PURE__*/
+function (_React$Component) {
+  _inherits(CommentForm, _React$Component);
+
+  function CommentForm(props) {
+    var _this;
+
+    _classCallCheck(this, CommentForm);
+
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(CommentForm).call(this, props));
+    _this.state = {
+      body: "",
+      parent_id: _this.props.parentId
+    };
+    _this.handleCommentInput = _this.handleCommentInput.bind(_assertThisInitialized(_this));
+    _this.handleSubmit = _this.handleSubmit.bind(_assertThisInitialized(_this));
+    return _this;
+  }
+
+  _createClass(CommentForm, [{
+    key: "handleCommentInput",
+    value: function handleCommentInput(e) {
+      this.setState({
+        body: e.target.value
+      });
+      e.target.style.height = "5px";
+      e.target.style.height = e.target.scrollHeight + "px";
+    }
+  }, {
+    key: "handleSubmit",
+    value: function handleSubmit(e) {
+      e.preventDefault();
+      this.props.submitComment(this.state);
+      this.setState({
+        body: ""
+      });
+
+      if (this.props.submitCallback) {
+        this.props.submitCallback();
+      }
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("form", {
+        onSubmit: this.handleSubmit,
+        className: "comment-form"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("textarea", {
+        placeholder: "Write a comment",
+        onChange: this.handleCommentInput,
+        value: this.state.body
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        type: "submit",
+        className: "comment-submit"
+      }, "Post"));
+    }
+  }]);
+
+  return CommentForm;
+}(react__WEBPACK_IMPORTED_MODULE_0___default.a.Component);
+
+/* harmony default export */ __webpack_exports__["default"] = (Object(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["withRouter"])(CommentForm));
+
+/***/ }),
+
 /***/ "./frontend/components/front_page/front_page.jsx":
 /*!*******************************************************!*\
   !*** ./frontend/components/front_page/front_page.jsx ***!
@@ -460,14 +865,7 @@ function (_React$Component) {
         return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null);
       }
 
-      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_navbar_navbar_container__WEBPACK_IMPORTED_MODULE_1__["default"], null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "grid-column-container"
-      }, gridColumns.map(function (col, i) {
-        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-          className: "grid-column",
-          key: i
-        }, col);
-      })));
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_navbar_navbar_container__WEBPACK_IMPORTED_MODULE_1__["default"], null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null));
     }
   }]);
 
@@ -555,52 +953,64 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _navbar_left__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./navbar_left */ "./frontend/components/navbar/navbar_left.jsx");
-/* harmony import */ var _navbar_center__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./navbar_center */ "./frontend/components/navbar/navbar_center.jsx");
-/* harmony import */ var _navbar_right__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./navbar_right */ "./frontend/components/navbar/navbar_right.jsx");
-
-
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
 
 
 
 var NavBar = function NavBar(_ref) {
   var currentUser = _ref.currentUser,
       logout = _ref.logout;
+
+  var menuClick = function menuClick(e) {
+    var menu = document.getElementsByClassName("avatar-menu")[0];
+    menu.setAttribute("style", "display:block");
+  };
+
+  var menuBlur = function menuBlur(e) {
+    var menu = document.getElementsByClassName("avatar-menu")[0];
+    menu.setAttribute("style", "display:none");
+  };
+
+  var navbarRight = !currentUser ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "navbar-right"
+  }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
+    to: "/login"
+  }, "Sign in"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
+    to: "/register",
+    className: "button"
+  }, "Sign up")) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "avatar-nav",
+    onClick: menuClick
+  }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, currentUser.username[0].toUpperCase()), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "avatar-menu"
+  }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", {
+    className: "avatar-menu-top"
+  }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", null, "Posts"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", null, "Favorites"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", null, "Comments"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", null, "Images"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
+    onClick: logout
+  }, "Logout")))));
   return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "navbar"
-  }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_navbar_left__WEBPACK_IMPORTED_MODULE_1__["default"], null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_navbar_center__WEBPACK_IMPORTED_MODULE_2__["default"], null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_navbar_right__WEBPACK_IMPORTED_MODULE_3__["default"], {
-    currentUser: currentUser,
-    logout: logout
-  }));
-};
-
-/* harmony default export */ __webpack_exports__["default"] = (NavBar);
-
-/***/ }),
-
-/***/ "./frontend/components/navbar/navbar_center.jsx":
-/*!******************************************************!*\
-  !*** ./frontend/components/navbar/navbar_center.jsx ***!
-  \******************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
-
-
-/* harmony default export */ __webpack_exports__["default"] = (function (props) {
-  return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+  }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "navbar-left"
+  }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
+    to: "/"
+  }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+    className: "logo"
+  }, "pictur")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
+    to: "/upload",
+    className: "button upload"
+  }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "plus-icon"
+  }, "+"), "New post")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "navbar-center"
   }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
     className: "search-bar",
     placeholder: "Images, #tags, @users oh my!",
     type: "text"
-  }));
-});
+  })), navbarRight);
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (NavBar);
 
 /***/ }),
 
@@ -640,87 +1050,6 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
 
 /***/ }),
 
-/***/ "./frontend/components/navbar/navbar_left.jsx":
-/*!****************************************************!*\
-  !*** ./frontend/components/navbar/navbar_left.jsx ***!
-  \****************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
-
-
-/* harmony default export */ __webpack_exports__["default"] = (function (props) {
-  return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-    className: "navbar-left"
-  }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
-    to: "/"
-  }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
-    className: "logo"
-  }, "pictur")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
-    to: "/upload",
-    className: "button upload"
-  }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-    className: "plus-icon"
-  }, "+"), "New post"));
-});
-
-/***/ }),
-
-/***/ "./frontend/components/navbar/navbar_right.jsx":
-/*!*****************************************************!*\
-  !*** ./frontend/components/navbar/navbar_right.jsx ***!
-  \*****************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
-
-
-/* harmony default export */ __webpack_exports__["default"] = (function (_ref) {
-  var currentUser = _ref.currentUser,
-      logout = _ref.logout;
-
-  var menuClick = function menuClick(e) {
-    var menu = document.getElementsByClassName("avatar-menu")[0];
-    menu.setAttribute("style", "display:block");
-  };
-
-  var menuBlur = function menuBlur(e) {
-    var menu = document.getElementsByClassName("avatar-menu")[0];
-    menu.setAttribute("style", "display:none");
-  };
-
-  var navbarRight = !currentUser ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-    className: "navbar-right"
-  }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
-    to: "/login"
-  }, "Sign in"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
-    to: "/register",
-    className: "button"
-  }, "Sign up")) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-    className: "avatar-nav",
-    onClick: menuClick
-  }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, currentUser.username[0].toUpperCase()), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-    className: "avatar-menu"
-  }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", {
-    className: "avatar-menu-top"
-  }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", null, "Posts"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", null, "Favorites"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", null, "Comments"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", null, "Images"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
-    onClick: logout
-  }, "Logout")))));
-  return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, navbarRight);
-});
-
-/***/ }),
-
 /***/ "./frontend/components/posts/post_show.jsx":
 /*!*************************************************!*\
   !*** ./frontend/components/posts/post_show.jsx ***!
@@ -733,6 +1062,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _post_show_image__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./post_show_image */ "./frontend/components/posts/post_show_image.jsx");
+/* harmony import */ var _comments_comment_container__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../comments/comment_container */ "./frontend/components/comments/comment_container.js");
+/* harmony import */ var _comments_comment_form__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../comments/comment_form */ "./frontend/components/comments/comment_form.jsx");
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
@@ -762,6 +1093,8 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 
 
+
+
 var PostShow =
 /*#__PURE__*/
 function (_React$Component) {
@@ -786,13 +1119,26 @@ function (_React$Component) {
       }
     }
   }, {
+    key: "componentWillUnmount",
+    value: function componentWillUnmount() {
+      this.props.clearComments();
+    }
+  }, {
     key: "render",
     value: function render() {
       var _body$classList;
 
-      var images = this.props.images.map(function (image) {
+      var images = this.props.images.map(function (image, i) {
         return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_post_show_image__WEBPACK_IMPORTED_MODULE_1__["default"], {
-          image: image
+          image: image,
+          key: i
+        });
+      });
+      var rootComments = this.props.rootComments.map(function (comment, i) {
+        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_comments_comment_container__WEBPACK_IMPORTED_MODULE_2__["default"], {
+          key: i,
+          comment: comment,
+          root: true
         });
       }); // TODO: is there better way change the class of the body depending on the page?
 
@@ -803,11 +1149,15 @@ function (_React$Component) {
       body.classList.add("bg-show-pages");
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "postShowBody"
-      }, " ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "postShowMain"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "postShowMainHeader"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, this.props.post.title), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h3", null, "by ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("strong", null, this.props.post.user.username))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", null, images)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, this.props.post.title), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h3", null, "by ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("strong", null, this.props.post.user.username))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", null, images), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "comment-container"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_comments_comment_form__WEBPACK_IMPORTED_MODULE_3__["default"], {
+        submitComment: this.props.submitComment
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", null, rootComments))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "postShowSidebar"
       }));
     }
@@ -817,6 +1167,18 @@ function (_React$Component) {
 }(react__WEBPACK_IMPORTED_MODULE_0___default.a.Component);
 
 /* harmony default export */ __webpack_exports__["default"] = (PostShow);
+/*
+entities:
+    posts:
+        1: als;dkfja;lskdf
+    comments:
+        root:
+            1 asld;fjkaks;ldf
+            2 a;sldfkja;sldfkja
+        1:
+            4 a;lsdkfja;lsdfkj
+            5 a;sldkfja;lskdfj
+*/
 
 /***/ }),
 
@@ -832,17 +1194,24 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _post_show__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./post_show */ "./frontend/components/posts/post_show.jsx");
 /* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
 /* harmony import */ var _actions_post_actions__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../actions/post_actions */ "./frontend/actions/post_actions.js");
+/* harmony import */ var _actions_comment_actions__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../actions/comment_actions */ "./frontend/actions/comment_actions.js");
+
 
 
 
 
 var msp = function msp(state, ownProps) {
   // TODO: the images.... that can't be right....
+  var allPosts = state.entities.posts;
+  var postId = ownProps.match.params.postId;
+  var post = allPosts[postId] || {
+    user: {},
+    uploads: {}
+  };
   return {
-    post: state.entities.posts[ownProps.match.params.postId] || {
-      user: {}
-    },
-    images: Object.values((state.entities.posts[ownProps.match.params.postId] || {}).uploads || {})
+    post: post,
+    images: Object.values(post.uploads || {}),
+    rootComments: Object.values(state.entities.comments.root || {})
   };
 };
 
@@ -850,6 +1219,12 @@ var mdp = function mdp(dispatch, ownProps) {
   return {
     loadPost: function loadPost() {
       return dispatch(Object(_actions_post_actions__WEBPACK_IMPORTED_MODULE_2__["fetchPost"])(ownProps.match.params.postId));
+    },
+    submitComment: function submitComment(formComment) {
+      return dispatch(Object(_actions_comment_actions__WEBPACK_IMPORTED_MODULE_3__["submitComment"])(ownProps.match.params.postId, formComment));
+    },
+    clearComments: function clearComments() {
+      return dispatch(Object(_actions_comment_actions__WEBPACK_IMPORTED_MODULE_3__["clearComments"])());
     }
   };
 };
@@ -1357,73 +1732,6 @@ function (_React$Component) {
 
 /***/ }),
 
-/***/ "./frontend/components/upload/modal.jsx":
-/*!**********************************************!*\
-  !*** ./frontend/components/upload/modal.jsx ***!
-  \**********************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _actions_ui_actions__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../actions/ui_actions */ "./frontend/actions/ui_actions.js");
-/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
-/* harmony import */ var _upload_container__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./upload_container */ "./frontend/components/upload/upload_container.js");
-
-
-
-
-
-function Modal(_ref) {
-  var modal = _ref.modal,
-      closeModal = _ref.closeModal;
-
-  if (!modal) {
-    return null;
-  }
-
-  var component;
-
-  switch (modal) {
-    case 'upload':
-      component = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_upload_container__WEBPACK_IMPORTED_MODULE_3__["default"], null);
-      break;
-
-    default:
-      return null;
-  }
-
-  return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, "Hello World!", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-    className: "modal-background",
-    onClick: closeModal
-  }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-    className: "modal-child",
-    onClick: function onClick(e) {
-      return e.stopPropagation();
-    }
-  }, component)));
-}
-
-var mapStateToProps = function mapStateToProps(state) {
-  return {
-    modal: state.ui.modal
-  };
-};
-
-var mapDispatchToProps = function mapDispatchToProps(dispatch) {
-  return {
-    closeModal: function closeModal() {
-      return dispatch(Object(_actions_ui_actions__WEBPACK_IMPORTED_MODULE_1__["closeModal"])());
-    }
-  };
-};
-
-/* harmony default export */ __webpack_exports__["default"] = (Object(react_redux__WEBPACK_IMPORTED_MODULE_2__["connect"])(mapStateToProps, mapDispatchToProps)(Modal));
-
-/***/ }),
-
 /***/ "./frontend/components/upload/new_post.jsx":
 /*!*************************************************!*\
   !*** ./frontend/components/upload/new_post.jsx ***!
@@ -1435,11 +1743,9 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _upload_container__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./upload_container */ "./frontend/components/upload/upload_container.js");
-/* harmony import */ var _navbar_navbar_right__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../navbar/navbar_right */ "./frontend/components/navbar/navbar_right.jsx");
-/* harmony import */ var _modal__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./modal */ "./frontend/components/upload/modal.jsx");
-/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
-/* harmony import */ var _actions_ui_actions__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../actions/ui_actions */ "./frontend/actions/ui_actions.js");
+/* harmony import */ var _utils_modal__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/modal */ "./frontend/components/utils/modal.jsx");
+/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+/* harmony import */ var _actions_ui_actions__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../actions/ui_actions */ "./frontend/actions/ui_actions.js");
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
@@ -1469,14 +1775,12 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 
 
-
-
  // const msp = state => ({});
 
 var mdp = function mdp(dispatch) {
   return {
     openModal: function openModal(modal) {
-      return dispatch(Object(_actions_ui_actions__WEBPACK_IMPORTED_MODULE_5__["openModal"])(modal));
+      return dispatch(Object(_actions_ui_actions__WEBPACK_IMPORTED_MODULE_3__["openModal"])(modal));
     }
   };
 };
@@ -1508,14 +1812,14 @@ function (_React$Component) {
       (_body$classList = body.classList).remove.apply(_body$classList, _toConsumableArray(body.classList));
 
       body.classList.add("bg-new-upload-page");
-      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_modal__WEBPACK_IMPORTED_MODULE_3__["default"], null);
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_utils_modal__WEBPACK_IMPORTED_MODULE_1__["default"], null);
     }
   }]);
 
   return NewPost;
 }(react__WEBPACK_IMPORTED_MODULE_0___default.a.Component);
 
-/* harmony default export */ __webpack_exports__["default"] = (Object(react_redux__WEBPACK_IMPORTED_MODULE_4__["connect"])(null, mdp)(NewPost));
+/* harmony default export */ __webpack_exports__["default"] = (Object(react_redux__WEBPACK_IMPORTED_MODULE_2__["connect"])(null, mdp)(NewPost));
 
 /***/ }),
 
@@ -1533,6 +1837,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
 /* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
+/* harmony import */ var _utils_drag_and_drop__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../utils/drag_and_drop */ "./frontend/components/utils/drag_and_drop.jsx");
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -1555,6 +1860,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 
 
+
 var Upload =
 /*#__PURE__*/
 function (_React$Component) {
@@ -1567,12 +1873,13 @@ function (_React$Component) {
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(Upload).call(this, props));
     _this.state = {
-      uploads: [],
+      files: [],
       redirect: null
     };
     _this.handleSubmit = _this.handleSubmit.bind(_assertThisInitialized(_this));
-    _this.handleFile = _this.handleFile.bind(_assertThisInitialized(_this));
+    _this.handleManualUpload = _this.handleManualUpload.bind(_assertThisInitialized(_this));
     _this.prepareRedirect = _this.prepareRedirect.bind(_assertThisInitialized(_this));
+    _this.handleDrop = _this.handleDrop.bind(_assertThisInitialized(_this));
     return _this;
   }
 
@@ -1588,7 +1895,7 @@ function (_React$Component) {
     value: function handleSubmit(e) {
       var formData = new FormData();
       formData.append('post[title]', 'test post please ignore');
-      Array.from(this.state.files).forEach(function (file) {
+      this.state.files.forEach(function (file) {
         formData.append('post[uploads][]', file);
       });
       var that = this;
@@ -1599,11 +1906,18 @@ function (_React$Component) {
       });
     }
   }, {
-    key: "handleFile",
-    value: function handleFile(e) {
+    key: "handleManualUpload",
+    value: function handleManualUpload(e) {
       e.preventDefault();
       this.setState({
-        files: e.currentTarget.files
+        files: Array.from(e.currentTarget.files)
+      }, this.handleSubmit);
+    }
+  }, {
+    key: "handleDrop",
+    value: function handleDrop(fileList) {
+      this.setState({
+        files: Array.from(fileList)
       }, this.handleSubmit);
     }
   }, {
@@ -1615,23 +1929,55 @@ function (_React$Component) {
         });
       }
 
-      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("form", {
-        className: "box"
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "upload-modal"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "box_input"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        className: "upload-drop"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_utils_drag_and_drop__WEBPACK_IMPORTED_MODULE_3__["default"], {
+        handleDrop: this.handleDrop
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "drop-here"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, "Drop images here")))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "upload-manual"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("form", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+        htmlFor: "upload"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+        className: "fas fa-image"
+      }), "Choose Photo/Video", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        accept: ".jpg,.jpeg,.png,.gif,.apng,.tiff,.tif,.bmp,.xcf,.webp",
         id: "upload",
-        className: "box_file",
         multiple: true,
         type: "file",
-        onChange: this.handleFile
-      }), "Drop images here"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
-        "for": "upload"
-      }, "Choose Photo(s)"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "box_uploading"
-      }, "Uploading..."), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "box_error"
-      }, "Things have gone pear shaped! ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null)));
+        style: {
+          display: 'none'
+        },
+        onChange: this.handleManualUpload
+      }))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "action-divider"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "small-divider"
+      }), "or", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "small-divider"
+      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "url-upload"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        type: "text",
+        placeholder: "Paste image or URL"
+      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "disabled-actions"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        className: "disabled-button"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+        className: "fas fa-brush"
+      }), "Meme Gen"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        className: "disabled-button"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+        className: "fas fa-film"
+      }), "Video to Gif"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        className: "disabled-button"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+        className: "fas fa-cloud-upload-alt"
+      }), "My Uploads"))));
     }
   }]);
 
@@ -1680,6 +2026,248 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (Object(react_redux__WEBPACK_IMPORTED_MODULE_0__["connect"])(mapStateToProps, mapDispatchToProps)(_upload__WEBPACK_IMPORTED_MODULE_1__["default"]));
+
+/***/ }),
+
+/***/ "./frontend/components/utils/drag_and_drop.jsx":
+/*!*****************************************************!*\
+  !*** ./frontend/components/utils/drag_and_drop.jsx ***!
+  \*****************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+
+
+var DragAndDrop =
+/*#__PURE__*/
+function (_React$Component) {
+  _inherits(DragAndDrop, _React$Component);
+
+  function DragAndDrop(props) {
+    var _this;
+
+    _classCallCheck(this, DragAndDrop);
+
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(DragAndDrop).call(this, props));
+    _this.state = {
+      dragging: false
+    };
+    _this.dropRef = react__WEBPACK_IMPORTED_MODULE_0___default.a.createRef();
+    _this.handleDragIn = _this.handleDrag.bind(_assertThisInitialized(_this));
+    _this.handleDragOut = _this.handleDragOut.bind(_assertThisInitialized(_this));
+    _this.handleDrop = _this.handleDrop.bind(_assertThisInitialized(_this));
+    return _this;
+  }
+
+  _createClass(DragAndDrop, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      var component = this.dropRef.current;
+      component.addEventListener('dragenter', this.handleDragIn);
+      component.addEventListener('dragleave', this.handleDragOut);
+      component.addEventListener('dragover', this.handleDrag);
+      component.addEventListener('drop', this.handleDrop);
+      this.dragCounter = 0;
+      console.log('Mounted DragAndDrop');
+    }
+  }, {
+    key: "componentWillUnmount",
+    value: function componentWillUnmount() {
+      var component = this.dropRef.current;
+      component.removeEventListener('dragenter', this.handleDragIn);
+      component.removeEventListener('dragleave', this.handleDragOut);
+      component.removeEventListener('dragover', this.handleDrag);
+      component.removeEventListener('drop', this.handleDrop);
+      console.log('Unmounted DragAndDrop');
+    }
+  }, {
+    key: "handleDragIn",
+    value: function handleDragIn(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      this.dragCounter++;
+
+      if (e.dataTransfer.items && e.dataTransfer.items.length > 0) {
+        this.setState({
+          dragging: true
+        });
+      }
+
+      console.log('Drag in detected');
+    }
+  }, {
+    key: "handleDragOut",
+    value: function handleDragOut(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      this.dragCounter--;
+      this.setState({
+        dragging: false
+      });
+      console.log('Drag out detected');
+    }
+  }, {
+    key: "handleDrop",
+    value: function handleDrop(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      this.setState({
+        dragging: false
+      });
+
+      if (e.dataTransfer.items && e.dataTransfer.items.length > 0) {
+        this.props.handleDrop(e.dataTransfer.files); // <------------- TODO: ???
+
+        e.dataTransfer.clearData();
+        this.dragCounter = 0;
+      }
+
+      console.log('Drop detected');
+    } // Just to prevent default behavior
+
+  }, {
+    key: "handleDrag",
+    value: function handleDrag(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      console.log('Preventing default drag');
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      return (// <div
+        //     ref={this.dropRef}
+        // >
+        //     {this.props.children}
+        // </div>
+        react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          style: {
+            display: 'inline-block',
+            position: 'relative'
+          },
+          ref: this.dropRef
+        }, this.state.dragging && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          style: {
+            border: 'dashed grey 4px',
+            backgroundColor: 'rgba(255,255,255,.8)',
+            position: 'absolute',
+            top: 0,
+            bottom: 0,
+            left: 0,
+            right: 0,
+            zIndex: 9999
+          }
+        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          style: {
+            position: 'absolute',
+            top: '50%',
+            right: 0,
+            left: 0,
+            textAlign: 'center',
+            color: 'grey',
+            fontSize: 36
+          }
+        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, "drop here :)"))), this.props.children)
+      );
+    }
+  }]);
+
+  return DragAndDrop;
+}(react__WEBPACK_IMPORTED_MODULE_0___default.a.Component);
+
+/* harmony default export */ __webpack_exports__["default"] = (DragAndDrop);
+
+/***/ }),
+
+/***/ "./frontend/components/utils/modal.jsx":
+/*!*********************************************!*\
+  !*** ./frontend/components/utils/modal.jsx ***!
+  \*********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _actions_ui_actions__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../actions/ui_actions */ "./frontend/actions/ui_actions.js");
+/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+/* harmony import */ var _upload_upload_container__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../upload/upload_container */ "./frontend/components/upload/upload_container.js");
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
+
+
+
+
+
+
+function Modal(_ref) {
+  var modal = _ref.modal,
+      closeModal = _ref.closeModal;
+
+  if (!modal) {
+    return null;
+  }
+
+  var component;
+
+  switch (modal) {
+    case 'upload':
+      component = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_upload_upload_container__WEBPACK_IMPORTED_MODULE_3__["default"], null);
+      break;
+
+    default:
+      return null;
+  }
+
+  return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, "Hello World!", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "modal-background",
+    onClick: closeModal
+  }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "modal-child",
+    onClick: function onClick(e) {
+      return e.stopPropagation();
+    }
+  }, component)));
+}
+
+var mapStateToProps = function mapStateToProps(state) {
+  return {
+    modal: state.ui.modal
+  };
+};
+
+var mapDispatchToProps = function mapDispatchToProps(dispatch, ownProps) {
+  return {
+    closeModal: function closeModal() {
+      dispatch(Object(_actions_ui_actions__WEBPACK_IMPORTED_MODULE_1__["closeModal"])());
+      ownProps.history.goBack();
+    }
+  };
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (Object(react_router_dom__WEBPACK_IMPORTED_MODULE_4__["withRouter"])(Object(react_redux__WEBPACK_IMPORTED_MODULE_2__["connect"])(mapStateToProps, mapDispatchToProps)(Modal)));
 
 /***/ }),
 
@@ -1771,6 +2359,62 @@ document.addEventListener("DOMContentLoaded", function () {
 
 /***/ }),
 
+/***/ "./frontend/reducers/entities/comments_reducer.js":
+/*!********************************************************!*\
+  !*** ./frontend/reducers/entities/comments_reducer.js ***!
+  \********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _actions_comment_actions__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../actions/comment_actions */ "./frontend/actions/comment_actions.js");
+/* harmony import */ var _actions_post_actions__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../actions/post_actions */ "./frontend/actions/post_actions.js");
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_2__);
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+
+
+
+var _default_state = {
+  root: {}
+}; // TODO: Should remove post remove the associated comment data?
+
+/* harmony default export */ __webpack_exports__["default"] = (function () {
+  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : _default_state;
+  var action = arguments.length > 1 ? arguments[1] : undefined;
+  Object.freeze(state);
+
+  switch (action.type) {
+    case _actions_post_actions__WEBPACK_IMPORTED_MODULE_1__["RECEIVE_POST"]:
+      return Object(lodash__WEBPACK_IMPORTED_MODULE_2__["merge"])({}, state, action.post.comments);
+
+    case _actions_comment_actions__WEBPACK_IMPORTED_MODULE_0__["RECEIVE_COMMENTS"]:
+      return Object(lodash__WEBPACK_IMPORTED_MODULE_2__["merge"])({}, state, action.comments);
+
+    case _actions_comment_actions__WEBPACK_IMPORTED_MODULE_0__["RECEIVE_COMMENT"]:
+      var parent_id = action.comment.parent_id || 'root';
+
+      var new_comment = _defineProperty({}, action.comment.id, action.comment);
+
+      return Object(lodash__WEBPACK_IMPORTED_MODULE_2__["merge"])({}, state, _defineProperty({}, parent_id, new_comment));
+
+    case _actions_comment_actions__WEBPACK_IMPORTED_MODULE_0__["REMOVE_COMMENT"]:
+      var newState = Object.assign({}, state);
+      delete newState[action.parentId || 'root'][action.commentId];
+      return newState;
+
+    case _actions_comment_actions__WEBPACK_IMPORTED_MODULE_0__["CLEAR_COMMENTS"]:
+      return {};
+
+    default:
+      return state;
+  }
+});
+
+/***/ }),
+
 /***/ "./frontend/reducers/entities/entities_reducer.js":
 /*!********************************************************!*\
   !*** ./frontend/reducers/entities/entities_reducer.js ***!
@@ -1784,6 +2428,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _users_reducer__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./users_reducer */ "./frontend/reducers/entities/users_reducer.js");
 /* harmony import */ var _posts_reducer__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./posts_reducer */ "./frontend/reducers/entities/posts_reducer.js");
 /* harmony import */ var _uploads_reducer__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./uploads_reducer */ "./frontend/reducers/entities/uploads_reducer.js");
+/* harmony import */ var _comments_reducer__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./comments_reducer */ "./frontend/reducers/entities/comments_reducer.js");
+
 
 
 
@@ -1791,7 +2437,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = (Object(redux__WEBPACK_IMPORTED_MODULE_0__["combineReducers"])({
   users: _users_reducer__WEBPACK_IMPORTED_MODULE_1__["default"],
   posts: _posts_reducer__WEBPACK_IMPORTED_MODULE_2__["default"],
-  uploads: _uploads_reducer__WEBPACK_IMPORTED_MODULE_3__["default"]
+  uploads: _uploads_reducer__WEBPACK_IMPORTED_MODULE_3__["default"],
+  comments: _comments_reducer__WEBPACK_IMPORTED_MODULE_4__["default"]
 }));
 
 /***/ }),
@@ -1823,7 +2470,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       return Object(lodash__WEBPACK_IMPORTED_MODULE_1__["merge"])({}, state, action.posts);
 
     case _actions_post_actions__WEBPACK_IMPORTED_MODULE_0__["RECEIVE_POST"]:
-      return Object(lodash__WEBPACK_IMPORTED_MODULE_1__["merge"])({}, state, _defineProperty({}, action.post.id, action.post));
+      // TODO: This might be a bad idea... should posts remember who their comments are?
+      var post = Object(lodash__WEBPACK_IMPORTED_MODULE_1__["merge"])({}, action.post);
+      delete post.comments;
+      return Object(lodash__WEBPACK_IMPORTED_MODULE_1__["merge"])({}, state, _defineProperty({}, post.id, post));
 
     case _actions_post_actions__WEBPACK_IMPORTED_MODULE_0__["REMOVE_POST"]:
       newState = Object.assign({}, state);
@@ -2123,20 +2773,68 @@ var configureStore = function configureStore() {
 
 /***/ }),
 
-/***/ "./frontend/util/post_api_util.js":
-/*!****************************************!*\
-  !*** ./frontend/util/post_api_util.js ***!
-  \****************************************/
-/*! exports provided: createPost, getPost, getPosts, updatePost, deletePost */
+/***/ "./frontend/util/comment_api_util.js":
+/*!*******************************************!*\
+  !*** ./frontend/util/comment_api_util.js ***!
+  \*******************************************/
+/*! exports provided: getCommentChildren, createComment, deleteComment */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createPost", function() { return createPost; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getPost", function() { return getPost; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getCommentChildren", function() { return getCommentChildren; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createComment", function() { return createComment; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deleteComment", function() { return deleteComment; });
+var getCommentChildren = function getCommentChildren(commentId) {
+  return $.ajax({
+    url: "/api/comments/".concat(commentId, "/children"),
+    method: 'GET'
+  });
+};
+var createComment = function createComment(postId, comment) {
+  return $.ajax({
+    url: "/api/posts/".concat(postId, "/comments"),
+    method: 'POST',
+    data: {
+      comment: comment
+    }
+  });
+};
+var deleteComment = function deleteComment(commentId) {
+  return $.ajax({
+    url: "/api/comments/".concat(commentId),
+    method: 'DELETE'
+  });
+};
+
+/***/ }),
+
+/***/ "./frontend/util/post_api_util.js":
+/*!****************************************!*\
+  !*** ./frontend/util/post_api_util.js ***!
+  \****************************************/
+/*! exports provided: getPosts, getPost, createPost, updatePost, deletePost */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getPosts", function() { return getPosts; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getPost", function() { return getPost; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createPost", function() { return createPost; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updatePost", function() { return updatePost; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deletePost", function() { return deletePost; });
+var getPosts = function getPosts() {
+  return $.ajax({
+    url: "/api/posts/",
+    method: 'GET'
+  });
+};
+var getPost = function getPost(postId) {
+  return $.ajax({
+    url: "/api/posts/".concat(postId),
+    method: 'GET'
+  });
+};
 var createPost = function createPost(post) {
   return $.ajax({
     url: '/api/posts',
@@ -2145,18 +2843,6 @@ var createPost = function createPost(post) {
     contentType: false,
     processData: false
   }); // data might not need to be an object
-};
-var getPost = function getPost(postId) {
-  return $.ajax({
-    url: "/api/posts/".concat(postId),
-    method: 'GET'
-  });
-};
-var getPosts = function getPosts() {
-  return $.ajax({
-    url: "/api/posts/",
-    method: 'GET'
-  });
 };
 var updatePost = function updatePost(post) {
   return $.ajax({

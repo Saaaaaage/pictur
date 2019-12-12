@@ -1,7 +1,8 @@
 import React from 'react';
 import { closeModal } from '../../actions/ui_actions';
 import { connect } from 'react-redux';
-import UploadContainer from './upload_container';
+import UploadContainer from '../upload/upload_container';
+import { withRouter } from 'react-router-dom'
 
 function Modal({ modal, closeModal }) {
     if (!modal) {
@@ -33,10 +34,13 @@ const mapStateToProps = state => {
     };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch, ownProps) => {
     return {
-        closeModal: () => dispatch(closeModal())
+        closeModal: () => {
+            dispatch(closeModal());
+            ownProps.history.goBack();
+        }
     };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Modal);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Modal));

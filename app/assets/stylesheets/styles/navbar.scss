@@ -8,10 +8,14 @@
     top: 0;
     display: flex;
     justify-content: space-between;
+    align-items: center;
 }
 
 .navbar-left, .navbar-right, .navbar-center {
+    display:flex;
     position:relative;
+    align-items: center;
+    height: 100%;
 }
 
 .search-bar {

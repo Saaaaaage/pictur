@@ -1,11 +1,8 @@
-export const createPost = post => {
+export const getPosts = () => {
     return $.ajax({
-        url: '/api/posts',
-        method: 'POST',
-        data: post,
-        contentType: false,
-        processData: false
-    }) // data might not need to be an object
+        url: `/api/posts/`,
+        method: 'GET'
+    })
 }
 
 export const getPost = postId => {
@@ -15,11 +12,14 @@ export const getPost = postId => {
     })
 }
 
-export const getPosts = () => {
+export const createPost = post => {
     return $.ajax({
-        url: `/api/posts/`,
-        method: 'GET'
-    })
+        url: '/api/posts',
+        method: 'POST',
+        data: post,
+        contentType: false,
+        processData: false
+    }) // data might not need to be an object
 }
 
 export const updatePost = post => {

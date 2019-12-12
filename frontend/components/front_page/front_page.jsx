@@ -62,9 +62,9 @@ class FrontPage extends React.Component {
                 <NavbarContainer/>
                 <br /><br />
 
-                <div className="grid-column-container">
+                {/* <div className="grid-column-container">
                     {gridColumns.map((col, i) => (<div className="grid-column" key={i}>{col}</div>))}
-                </div>
+                </div> */}
                 
             </div>
         )

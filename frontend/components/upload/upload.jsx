@@ -1,19 +1,21 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Redirect } from 'react-router-dom';
+import DragAndDrop from '../utils/drag_and_drop';
 
 
 class Upload extends React.Component{
     constructor(props) {
         super(props)
         this.state = {
-            uploads: [],
+            files: [],
             redirect: null
         }
 
         this.handleSubmit = this.handleSubmit.bind(this);
-        this.handleFile = this.handleFile.bind(this);
+        this.handleManualUpload = this.handleManualUpload.bind(this);
         this.prepareRedirect = this.prepareRedirect.bind(this);
+        this.handleDrop = this.handleDrop.bind(this);
     }
 
     prepareRedirect() {
@@ -24,7 +26,7 @@ class Upload extends React.Component{
         let formData = new FormData();
         formData.append('post[title]', 'test post please ignore');
 
-        Array.from(this.state.files).forEach(file => {
+        this.state.files.forEach(file => {
             formData.append('post[uploads][]', file);
         })
 
@@ -37,9 +39,13 @@ class Upload extends React.Component{
             );
     }
 
-    handleFile(e) {
+    handleManualUpload(e) {
         e.preventDefault();
-        this.setState({ files: e.currentTarget.files }, this.handleSubmit)
+        this.setState({ files: Array.from(e.currentTarget.files) }, this.handleSubmit)
+    }
+
+    handleDrop(fileList) {
+        this.setState({ files: Array.from(fileList) }, this.handleSubmit)
     }
 
     render() {
@@ -47,23 +53,54 @@ class Upload extends React.Component{
             return <Redirect to={this.state.redirect}/>
         }
         return (
-            <form className="box">
-                <div className="box_input">
-                    <input
-                        id="upload"
-                        className="box_file"
-                        multiple
-                        type="file"
-                        onChange={this.handleFile}
-                    />
-                    Drop images here
+            <div className="upload-modal">
+                <div className="upload-drop">
+                    <DragAndDrop handleDrop={this.handleDrop}>
+                        <div className="drop-here">
+                            <span>Drop images here</span>
+                        </div>
+                    </DragAndDrop>
                 </div>
-                <label for="upload">
-                    Choose Photo(s)
-                </label>
-                <div className='box_uploading'>Uploading...</div>
-                <div className='box_error'>Things have gone pear shaped! <span></span></div>
-            </form>
+                <div className="upload-manual">
+                    <form>
+                        <label htmlFor="upload">
+                            <i className="fas fa-image"></i>
+                            Choose Photo/Video
+                            <input
+                                accept=".jpg,.jpeg,.png,.gif,.apng,.tiff,.tif,.bmp,.xcf,.webp"
+                                id="upload"
+                                multiple
+                                type="file"
+                                style={{display: 'none'}}
+                                onChange={this.handleManualUpload}
+                            />
+                        </label>
+                    </form>
+                    <div className="action-divider">
+                        <div className='small-divider'></div>
+                        or
+                        <div className='small-divider'></div>
+                    </div>
+                    <div className="url-upload">
+                        <input type="text" placeholder="Paste image or URL"/>
+                    </div>
+                    <div className="disabled-actions">
+                        <button className="disabled-button">
+                            <i className="fas fa-brush"></i>
+                            Meme Gen
+                        </button>
+                        <button className="disabled-button">
+                            <i className="fas fa-film"></i>
+                            Video to Gif
+                        </button>
+                        <button className="disabled-button">
+                            <i className="fas fa-cloud-upload-alt"></i>
+                            My Uploads
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
         )
     }
 }

@@ -9,7 +9,9 @@ Rails.application.routes.draw do
     resources :posts, only: [:index, :create, :show, :update, :destroy] do
       resources :comments, only: [:index, :create]
     end
-    resources :comments, only: [:show, :destroy]
+    resources :comments, only: [:show, :destroy] do
+      get 'children', only: :children
+    end
 
   end
 end

@@ -5,7 +5,7 @@ class Api::CommentsController < ApplicationController
 
     def create
         @comment = Comment.new(comment_params)
-        @comment.post_id = Post.find(:post_id).id
+        @comment.post_id = Post.find(params[:post_id]).id
         @comment.user_id = current_user.id
         if @comment.save
             render :show
@@ -16,6 +16,12 @@ class Api::CommentsController < ApplicationController
 
     def show
         @comment = Comment.find(params[:id])
+    end
+
+    def children
+        comment = Comment.find(params[:comment_id])
+        @comments = comment.children
+        render :index
     end
 
     def destroy

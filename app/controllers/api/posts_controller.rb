@@ -7,7 +7,8 @@ class Api::PostsController < ApplicationController
     end
 
     def show
-        @post = Post.with_attached_uploads.find(params[:id])
+        # TODO: Comment retrieval is super inefficient: fix it!
+        @post = Post.with_attached_uploads.includes(:user).find(params[:id])
     end
 
     def create

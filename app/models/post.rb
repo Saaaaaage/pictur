@@ -30,13 +30,18 @@ class Post < ApplicationRecord
         self.uploads.first.variant(resize: "240x").processed if self.uploads.first.variable?
     end
 
-    def comments_by_parent
-        fast_comments = Hash.new {|hash, key| hash[key] = []}
-
-        self.comments.includes(:user).each do |comment|
-            fast_comments[comment.parent_id] << comment
-        end
-
-        fast_comments
+    def root_comments
+        self.comments.where(comments: {parent_id: nil})
     end
+
+    # This gets all comments for a post organized by parent_id
+    # def comments_by_parent
+    #     fast_comments = Hash.new {|hash, key| hash[key] = []}
+
+    #     self.comments.includes(:user).each do |comment|
+    #         fast_comments[comment.parent_id] << comment
+    #     end
+
+    #     fast_comments
+    # end
 end

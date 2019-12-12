@@ -1,0 +1,115 @@
+.indented-child {
+    padding-left: 40px;
+}
+
+.comment-container {
+    margin-top: 20px;
+}
+
+.comment-container ul {
+    margin-top: 20px;
+}
+
+.comment-form {
+    padding: 10px 15px 15px;
+    background-color: #2C2F34;
+    border: 2px solid #53555b;
+    border-radius: 4px;
+    // cursor: text;
+    margin: 0;
+    position: relative;
+}
+
+.comment > .comment-form {
+    border: 0px solid transparent;
+    padding: 10px 15px 15px 0;
+}
+
+.comment .comment-submit {
+    margin: 0;
+}
+
+.comment-form textarea {
+    resize: none;
+    width: 100%;
+    overflow: hidden;
+    min-height: 50px;
+}
+
+.comment-submit {
+    background-color: #1bb76e;
+    color: #ddddd1;
+    border-radius: 2px;
+    font-weight: 700;
+    cursor: pointers;
+    padding: 10px 25px;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    margin: 0 10px 10px 0;
+}
+
+.comment {
+    background-color: #2c2f34;
+    word-wrap: break-word;
+    margin-bottom: 12px;
+    border-radius: 0 6px 6px 6px;
+    padding: 9px 12px 11px 15px;
+    line-height: 16px;
+    background: #2c2f34;
+    position: relative;
+
+}
+
+.comment-body {
+    padding: 9px 60px 6px 0;
+}
+
+.comment::before {
+    content: " ";
+    display: table;
+
+    border-width: 0 10px 10px 0;
+    border-style: solid;
+    border-color: transparent #2c2f34;
+    position: absolute;
+    top: 0;
+    left: -9px;
+}
+
+.root-comment {
+    border-radius: 6px 6px 6px 0;
+}
+
+.root-comment::before {
+    border-width: 10px 10px 0 0;
+    bottom: 0;
+    top: inherit;
+}
+
+.comment-reply-botton {
+    background-color: #4a4c51;
+    border-radius: 0 6px 6px 0;
+    width: 56px;
+    position: absolute;
+    right:0;
+    top:0;
+    height: 100%;
+
+    display: flex;
+    // flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    cursor: pointer;
+}
+
+.show-replies {
+    font-size: 11px;
+    font-weight: 700;
+    color: #bbb;
+    position: absolute;
+    cursor: pointer;
+    bottom: -16px;
+    left: 14px;
+}

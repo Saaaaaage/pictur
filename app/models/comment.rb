@@ -34,13 +34,13 @@ class Comment < ApplicationRecord
         self.post_id ||= self.parent.post_id if self.parent
     end
 
-    def all_my_children
-        fast_comments = Hash.new {|hash, key| hash[key] = []}
+    # def all_my_children
+    #     fast_comments = Hash.new {|hash, key| hash[key] = []}
 
-        self.children.includes(:user).each do |comment|
-            fast_comments[comment.parent_id] << comment
-        end
+    #     self.children.includes(:user).each do |comment|
+    #         fast_comments[comment.parent_id] << comment
+    #     end
 
-        fast_comments
-    end
+    #     fast_comments
+    # end
 end

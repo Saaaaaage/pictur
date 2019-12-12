@@ -1,7 +1,5 @@
 import React from 'react';
-import UploadContainer from './upload_container';
-import NavBarRight from '../navbar/navbar_right'
-import Modal from './modal';
+import Modal from '../utils/modal';
 import {connect} from 'react-redux';
 import { openModal } from '../../actions/ui_actions';
 

@@ -3,7 +3,7 @@ import {
     RECEIVE_POST,
     REMOVE_POST
 } from '../../actions/post_actions';
-import {merge} from 'lodash';
+import { merge } from 'lodash';
 
 export default (state = {}, action) => {
     Object.freeze(state);
@@ -12,7 +12,10 @@ export default (state = {}, action) => {
         case RECEIVE_POSTS:
             return merge({}, state, action.posts)
         case RECEIVE_POST:
-            return merge({}, state, { [action.post.id]: action.post })
+            // TODO: This might be a bad idea... should posts remember who their comments are?
+            const post = merge({}, action.post);
+            delete post.comments;
+            return merge({}, state, { [post.id]: post })
         case REMOVE_POST:
             newState = Object.assign({}, state)
             delete newState[action.postId]

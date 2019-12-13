@@ -19,8 +19,7 @@ const NavBar = ({currentUser, logout}) => {
             <Link to='/register' className='button'>Sign up</Link>
         </div>
     ) : (
-            <div>
-
+            <div className='navbar-right'>
                 <div className="avatar-nav" onClick={menuClick}>
                     <p>
                         {currentUser.username[0].toUpperCase()}
@@ -46,7 +45,7 @@ const NavBar = ({currentUser, logout}) => {
                         pictur
                     </span>
                 </Link>
-                <Link to="/upload" className="button upload">
+                <Link to="/upload" className="upload-button">
                     <div className="plus-icon">+</div>
                     New post
                 </Link>

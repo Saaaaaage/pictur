@@ -20,7 +20,7 @@ class DragAndDrop extends React.Component {
         component.addEventListener('dragover', this.handleDrag);
         component.addEventListener('drop', this.handleDrop);
         this.dragCounter = 0;
-        console.log('Mounted DragAndDrop')
+        // console.log('Mounted DragAndDrop')
     }
 
     componentWillUnmount() {
@@ -29,7 +29,7 @@ class DragAndDrop extends React.Component {
         component.removeEventListener('dragleave', this.handleDragOut);
         component.removeEventListener('dragover', this.handleDrag);
         component.removeEventListener('drop', this.handleDrop);
-        console.log('Unmounted DragAndDrop')
+        // console.log('Unmounted DragAndDrop')
     }
 
     
@@ -40,14 +40,14 @@ class DragAndDrop extends React.Component {
         if (e.dataTransfer.items && e.dataTransfer.items.length > 0) {
             this.setState({dragging: true})
         }
-        console.log('Drag in detected');
+        // console.log('Drag in detected');
     }
     handleDragOut (e) { 
         e.preventDefault();
         e.stopPropagation();
         this.dragCounter--;
         this.setState({dragging: false})
-        console.log('Drag out detected');
+        // console.log('Drag out detected');
     }
     handleDrop (e) { 
         e.preventDefault();
@@ -58,14 +58,14 @@ class DragAndDrop extends React.Component {
             e.dataTransfer.clearData();
             this.dragCounter = 0;
         }
-        console.log('Drop detected');
+        // console.log('Drop detected');
     }
 
     // Just to prevent default behavior
     handleDrag (e) {
         e.preventDefault();
         e.stopPropagation();
-        console.log('Preventing default drag');
+        // console.log('Preventing default drag');
     }
 
     render() {

@@ -1,7 +1,7 @@
 
 .navbar {
     background-color: #171544;
-    padding: 10px;
+    padding: 5px;
     height: 50px;
     position: -webkit-sticky;
     position: sticky;
@@ -9,6 +9,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: 20px;
 }
 
 .navbar-left, .navbar-right, .navbar-center {
@@ -18,21 +19,53 @@
     height: 100%;
 }
 
-.search-bar {
-    width: 450px;
-    height: 25px;
-    border-radius: 3px;
-    border: 0px solid transparent;
-    opacity: 0.8;
-    padding: 3px 8px 3px 8px;
+.navbar-left, .navbar-right {
+    min-width: 255px;
 }
+
+.navbar-center {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.navbar-right {
+    display:flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding-right: 5px;
+}
+
+.search-bar {
+    background: hsla(0,0%,100%,.25);
+    border: 1px solid transparent;
+    padding: 8px 35px 8px 10px;
+    border-radius: 3px;
+    width: 100%;
+    opacity: .8;
+    max-width: 550px;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: .4px;
+    color: #fff;
+    text-shadow: inherit;
+}
+
+.search-bar::placeholder{
+    color: hsla(0,0%,100%,.6);
+    font-weight: 200;
+    letter-spacing: .4px;
+    font-size: 14px;
+    font-family: Proxima Nova Regular,Helvetica Neue,Helvetica,Arial,sans-serif;
+}
+    
 
 .search-bar:focus {
     opacity: 0.9;
 }
 
 .logo {
-    font-size: 40px;
+    font-size: 35px;
     font-family: 'Baloo';
     font-weight: 700;
 }
@@ -42,18 +75,21 @@
     margin-right: 15px;
     color: #1bb76e;
     background-color: #fff;
-    padding: 2px 5px 2px 5px;
+    padding: 0px 5px 0px 5px;
     border-radius: 3px;
     box-shadow: 0px 4px #75ebb4;
 }
 
 
 .avatar-nav {
+    display:flex;
     background-image: url(earth.svg);
     background-size: contain;
     height: 35px;
     width: 35px;
     position: relative;
+    align-items: center;
+    justify-content: center;
 }
 
 .avatar-nav p {
@@ -91,4 +127,22 @@
 }
 .avatar-menu-bottom {
     background-color: #565F6E;   
+}
+
+.upload-button {
+    text-align: center;
+    height: 25px;
+    display: inline-block;
+    padding: 3px 11px 6px 9px;
+    border-radius: 3px;
+    font-size: 15px;
+    font-weight: 700;
+    width: auto;
+    background-color: #1bb76e;
+    color: #fff;
+    box-shadow: 0 6px 10px 0 rgba(27,28,30, 0.31);
+    margin: auto 15px;
+    cursor: pointer;
+    display:flex;
+    align-items: center;
 }

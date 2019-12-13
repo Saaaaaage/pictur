@@ -20,6 +20,15 @@ class Post < ApplicationRecord
     has_many :comments, inverse_of: :post
     has_many_attached :uploads
 
+    has_many :post_tags,
+        class_name: "PostTag",
+        primary_key: :id,
+        foreign_key: :post_id,
+        inverse_of: :post
+    has_many :tags,
+        through: :post_tags,
+        source: :tag
+
     # TODO: either this doesn't work, or it takes a long time to process
     def ensure_thumbnail!
         # puts "ensuring thumbnail for post no. #{self.id}"

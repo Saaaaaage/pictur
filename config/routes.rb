@@ -12,6 +12,7 @@ Rails.application.routes.draw do
     resources :comments, only: [:show, :destroy] do
       get 'children', only: :children
     end
+    resources :tags, only: [:index]
 
   end
 end

@@ -357,6 +357,42 @@ var logout = function logout() {
 
 /***/ }),
 
+/***/ "./frontend/actions/tag_actions.js":
+/*!*****************************************!*\
+  !*** ./frontend/actions/tag_actions.js ***!
+  \*****************************************/
+/*! exports provided: RECEIVE_TAGS, RECEIVE_TAG_ERRORS, fetchTags */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RECEIVE_TAGS", function() { return RECEIVE_TAGS; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RECEIVE_TAG_ERRORS", function() { return RECEIVE_TAG_ERRORS; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fetchTags", function() { return fetchTags; });
+/* harmony import */ var _util_tag_api_util__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../util/tag_api_util */ "./frontend/util/tag_api_util.js");
+
+var RECEIVE_TAGS = 'RECEIVE_TAGS';
+var RECEIVE_TAG_ERRORS = 'RECEIVE_TAG_ERRORS';
+
+var receiveTags = function receiveTags(tags) {
+  return {
+    type: RECEIVE_TAGS,
+    tags: tags
+  };
+};
+
+var fetchTags = function fetchTags() {
+  return function (dispatch) {
+    return _util_tag_api_util__WEBPACK_IMPORTED_MODULE_0__["fatchTags"]().then(function (tags) {
+      return dispatch(receiveTags(tags));
+    }, function (errors) {
+      return dispatch(receiveErrors(errors.responseJSON));
+    });
+  };
+};
+
+/***/ }),
+
 /***/ "./frontend/actions/ui_actions.js":
 /*!****************************************!*\
   !*** ./frontend/actions/ui_actions.js ***!
@@ -759,7 +795,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _navbar_navbar_container__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../navbar/navbar_container */ "./frontend/components/navbar/navbar_container.js");
 /* harmony import */ var _post_preview__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./post_preview */ "./frontend/components/front_page/post_preview.jsx");
-/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
+/* harmony import */ var _tag_banner_container__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./tag_banner_container */ "./frontend/components/front_page/tag_banner_container.js");
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
@@ -791,6 +828,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 
 
+
 var FrontPage =
 /*#__PURE__*/
 function (_React$Component) {
@@ -808,6 +846,7 @@ function (_React$Component) {
       columns: 1
     };
     _this.updateWindowDimensions = _this.updateWindowDimensions.bind(_assertThisInitialized(_this));
+    _this.greetings = ['"I don\'t have an ego. My Facebook photo is a landscape."', '"Some flies are too awesome for the wall."', '"Augh! Ghost pirate!!"', '"Ya live by the ghost...ya die by the ghost."', '"The guy from Labyrinth just turned into a bird!"', '"Ow! My arm came off! I can\'t belive that happened"', '"Was something supposed to happen? Are we invisible now, or something?"', '"It feels like someone someone with a fever is yelling at my pants."', '"It\'s like he channels dead crazy people!"', '"Are these they?"', '"Jock rock my ass! Listen to those lyrics, man! It’s all about love, and longing!"'];
     return _this;
   }
 
@@ -833,6 +872,11 @@ function (_React$Component) {
         height: window.innerHeight,
         columns: Math.max(Math.floor((window.innerWidth - 100) / 240), 1)
       });
+    }
+  }, {
+    key: "generateGreeting",
+    value: function generateGreeting() {
+      return this.greetings[Math.floor(Math.random() * this.greetings.length)];
     }
   }, {
     key: "render",
@@ -865,7 +909,16 @@ function (_React$Component) {
         return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null);
       }
 
-      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_navbar_navbar_container__WEBPACK_IMPORTED_MODULE_1__["default"], null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null));
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_navbar_navbar_container__WEBPACK_IMPORTED_MODULE_1__["default"], null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "greeting"
+      }, this.generateGreeting()), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_tag_banner_container__WEBPACK_IMPORTED_MODULE_3__["default"], null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "grid-column-container"
+      }, gridColumns.map(function (col, i) {
+        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          className: "grid-column",
+          key: i
+        }, col);
+      })));
     }
   }]);
 
@@ -942,6 +995,161 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./frontend/components/front_page/tag.jsx":
+/*!************************************************!*\
+  !*** ./frontend/components/front_page/tag.jsx ***!
+  \************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
+
+
+/* harmony default export */ __webpack_exports__["default"] = (function (props) {
+  return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
+    to: "/tags/".concat(props.tag.id),
+    style: {
+      background: props.background
+    },
+    className: "banner-tag"
+  }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "tag-title"
+  }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+    className: "tag-name"
+  }, props.tag.name), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+    className: "tag-posts"
+  }, props.tag.post_count, " Posts")));
+});
+
+/***/ }),
+
+/***/ "./frontend/components/front_page/tag_banner.jsx":
+/*!*******************************************************!*\
+  !*** ./frontend/components/front_page/tag_banner.jsx ***!
+  \*******************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _tag__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./tag */ "./frontend/components/front_page/tag.jsx");
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+
+
+
+var TagBanner =
+/*#__PURE__*/
+function (_React$Component) {
+  _inherits(TagBanner, _React$Component);
+
+  function TagBanner(props) {
+    var _this;
+
+    _classCallCheck(this, TagBanner);
+
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(TagBanner).call(this, props));
+    _this.randomBackgrounds = {
+      purple: 'linear-gradient(rgb(74, 88, 251), rgb(46, 48, 53))',
+      pink: 'linear-gradient(rgb(255, 81, 186), rgb(46, 48, 53))',
+      orange: 'linear-gradient(rgb(255, 125, 0), rgb(46, 48, 53))',
+      green: 'linear-gradient(rgb(1, 185, 107), rgb(46, 48, 53))',
+      teal: 'linear-gradient(rgb(32, 190, 232), rgb(46, 48, 53))',
+      blue: 'linear-gradient(rgb(34, 126, 250), rgb(46, 48, 53))',
+      lavender: 'linear-gradient(rgb(198, 193, 255), rgb(46, 48, 53))',
+      navy: 'linear-gradient(rgb(28, 44, 93), rgb(46, 48, 53))'
+    };
+    return _this;
+  }
+
+  _createClass(TagBanner, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      this.props.fetchTags();
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var _this2 = this;
+
+      var bgKeys = Object.keys(this.randomBackgrounds);
+      var tags = this.props.tags.map(function (tag, i) {
+        var background = _this2.randomBackgrounds[bgKeys[i % bgKeys.length]];
+        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_tag__WEBPACK_IMPORTED_MODULE_1__["default"], {
+          background: background,
+          tag: tag,
+          key: i
+        });
+      });
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "tag-banner"
+      }, tags);
+    }
+  }]);
+
+  return TagBanner;
+}(react__WEBPACK_IMPORTED_MODULE_0___default.a.Component);
+
+/* harmony default export */ __webpack_exports__["default"] = (TagBanner);
+
+/***/ }),
+
+/***/ "./frontend/components/front_page/tag_banner_container.js":
+/*!****************************************************************!*\
+  !*** ./frontend/components/front_page/tag_banner_container.js ***!
+  \****************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+/* harmony import */ var _actions_tag_actions__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../actions/tag_actions */ "./frontend/actions/tag_actions.js");
+/* harmony import */ var _tag_banner_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./tag_banner.jsx */ "./frontend/components/front_page/tag_banner.jsx");
+
+
+
+
+var msp = function msp(state) {
+  return {
+    tags: Object.values(state.entities.tags || {})
+  };
+};
+
+var mdp = function mdp(dispatch) {
+  return {
+    fetchTags: function fetchTags() {
+      return dispatch(Object(_actions_tag_actions__WEBPACK_IMPORTED_MODULE_1__["fetchTags"])());
+    }
+  };
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (Object(react_redux__WEBPACK_IMPORTED_MODULE_0__["connect"])(msp, mdp)(_tag_banner_jsx__WEBPACK_IMPORTED_MODULE_2__["default"]));
+
+/***/ }),
+
 /***/ "./frontend/components/navbar/navbar.jsx":
 /*!***********************************************!*\
   !*** ./frontend/components/navbar/navbar.jsx ***!
@@ -978,7 +1186,9 @@ var NavBar = function NavBar(_ref) {
   }, "Sign in"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
     to: "/register",
     className: "button"
-  }, "Sign up")) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+  }, "Sign up")) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "navbar-right"
+  }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "avatar-nav",
     onClick: menuClick
   }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, currentUser.username[0].toUpperCase()), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -998,7 +1208,7 @@ var NavBar = function NavBar(_ref) {
     className: "logo"
   }, "pictur")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
     to: "/upload",
-    className: "button upload"
+    className: "upload-button"
   }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "plus-icon"
   }, "+"), "New post")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -2429,6 +2639,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _posts_reducer__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./posts_reducer */ "./frontend/reducers/entities/posts_reducer.js");
 /* harmony import */ var _uploads_reducer__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./uploads_reducer */ "./frontend/reducers/entities/uploads_reducer.js");
 /* harmony import */ var _comments_reducer__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./comments_reducer */ "./frontend/reducers/entities/comments_reducer.js");
+/* harmony import */ var _tags_reducer__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./tags_reducer */ "./frontend/reducers/entities/tags_reducer.js");
+
 
 
 
@@ -2438,7 +2650,8 @@ __webpack_require__.r(__webpack_exports__);
   users: _users_reducer__WEBPACK_IMPORTED_MODULE_1__["default"],
   posts: _posts_reducer__WEBPACK_IMPORTED_MODULE_2__["default"],
   uploads: _uploads_reducer__WEBPACK_IMPORTED_MODULE_3__["default"],
-  comments: _comments_reducer__WEBPACK_IMPORTED_MODULE_4__["default"]
+  comments: _comments_reducer__WEBPACK_IMPORTED_MODULE_4__["default"],
+  tags: _tags_reducer__WEBPACK_IMPORTED_MODULE_5__["default"]
 }));
 
 /***/ }),
@@ -2479,6 +2692,36 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       newState = Object.assign({}, state);
       delete newState[action.postId];
       return newState;
+
+    default:
+      return state;
+  }
+});
+
+/***/ }),
+
+/***/ "./frontend/reducers/entities/tags_reducer.js":
+/*!****************************************************!*\
+  !*** ./frontend/reducers/entities/tags_reducer.js ***!
+  \****************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _actions_tag_actions__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../actions/tag_actions */ "./frontend/actions/tag_actions.js");
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_1__);
+
+
+/* harmony default export */ __webpack_exports__["default"] = (function () {
+  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+  var action = arguments.length > 1 ? arguments[1] : undefined;
+  Object.freeze(state);
+
+  switch (action.type) {
+    case _actions_tag_actions__WEBPACK_IMPORTED_MODULE_0__["RECEIVE_TAGS"]:
+      return Object(lodash__WEBPACK_IMPORTED_MODULE_1__["merge"])({}, state, action.tags);
 
     default:
       return state;
@@ -2948,6 +3191,25 @@ var logout = function logout() {
   return $.ajax({
     url: '/api/session',
     method: 'DELETE'
+  });
+};
+
+/***/ }),
+
+/***/ "./frontend/util/tag_api_util.js":
+/*!***************************************!*\
+  !*** ./frontend/util/tag_api_util.js ***!
+  \***************************************/
+/*! exports provided: fatchTags */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fatchTags", function() { return fatchTags; });
+var fatchTags = function fatchTags() {
+  return $.ajax({
+    url: '/api/tags',
+    method: "GET"
   });
 };
 

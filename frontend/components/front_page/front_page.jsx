@@ -1,6 +1,7 @@
 import React from 'react';
 import NavbarContainer from '../navbar/navbar_container';
 import PostPreview from './post_preview';
+import TagBannerContainer from './tag_banner_container'
 import {Link} from 'react-router-dom';
 
 class FrontPage extends React.Component {
@@ -9,9 +10,22 @@ class FrontPage extends React.Component {
         this.state = {
             width: 0,
             height: 0,
-            columns: 1
+            columns: 1,
         }
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
+        this.greetings = [
+            '"I don\'t have an ego. My Facebook photo is a landscape."',
+            '"Some flies are too awesome for the wall."',
+            '"Augh! Ghost pirate!!"',
+            '"Ya live by the ghost...ya die by the ghost."',
+            '"The guy from Labyrinth just turned into a bird!"',
+            '"Ow! My arm came off! I can\'t belive that happened"',
+            '"Was something supposed to happen? Are we invisible now, or something?"',
+            '"It feels like someone someone with a fever is yelling at my pants."',
+            '"It\'s like he channels dead crazy people!"',
+            '"Are these they?"',
+            '"Jock rock my ass! Listen to those lyrics, man! It’s all about love, and longing!"'
+        ]
     }
 
     componentDidMount(){
@@ -31,8 +45,12 @@ class FrontPage extends React.Component {
         this.setState({
             width: window.innerWidth,
             height: window.innerHeight,
-            columns: Math.max(Math.floor((window.innerWidth - 100) / 240), 1)
+            columns: Math.max(Math.floor((window.innerWidth - 100) / 240), 1),
         });
+    }
+
+    generateGreeting() {
+        return this.greetings[Math.floor(Math.random() * this.greetings.length)]
     }
 
     render () {
@@ -60,11 +78,15 @@ class FrontPage extends React.Component {
         return (
             <div>
                 <NavbarContainer/>
-                <br /><br />
 
-                {/* <div className="grid-column-container">
+                <div className="greeting">{this.generateGreeting()}</div>
+
+                <TagBannerContainer/>
+
+
+                <div className="grid-column-container">
                     {gridColumns.map((col, i) => (<div className="grid-column" key={i}>{col}</div>))}
-                </div> */}
+                </div>
                 
             </div>
         )

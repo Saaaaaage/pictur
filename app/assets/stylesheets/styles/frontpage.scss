@@ -43,3 +43,15 @@
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
 }
+
+.greeting {
+    font-size: 24px;
+    font-family: Proxima Nova ExtraBold,Helvetica Neue,Helvetica,Arial,sans-serif;
+    letter-spacing: .6px;
+    color: #aed8ea;
+    text-align: center;
+    margin-top: 12px;
+    min-height: 34px;
+    position: relative;
+    margin-bottom: 30px;
+}

@@ -10,6 +10,7 @@
 
     padding: 0 100px 0 100px;
     margin-bottom: 50px;
+    // z-index: 1000;
 }
 
 // TODO: Why does setting width allow the div to shrink?? it's gotta be min width
@@ -33,6 +34,8 @@
     -webkit-transition: transform .3s;
 
     overflow: hidden;
+
+    // position: relative;
 }
 
 .banner-tag:hover {

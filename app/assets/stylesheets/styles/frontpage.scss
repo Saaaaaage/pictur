@@ -1,6 +1,8 @@
 .grid-column-container {
     display: flex;
     justify-content: center;
+    margin-top: 280px;
+    // transform: translate(0,290px);
 }
 
 .grid-column {
@@ -54,4 +56,5 @@
     min-height: 34px;
     position: relative;
     margin-bottom: 30px;
+    padding-top: 65px;
 }

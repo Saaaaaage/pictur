@@ -2,6 +2,7 @@ import React from 'react';
 import Modal from '../utils/modal';
 import {connect} from 'react-redux';
 import { openModal } from '../../actions/ui_actions';
+import NavbarContainer from '../navbar/navbar_container';
 
 // const msp = state => ({});
 const mdp = dispatch => ({
@@ -23,7 +24,10 @@ class NewPost extends React.Component {
         body.classList.add("bg-new-upload-page");
 
         return (
-            <Modal/>
+            <div>
+                <NavbarContainer />
+                <Modal />
+            </div>
         )
     }
 }

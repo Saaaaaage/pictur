@@ -1,6 +1,37 @@
 
+.tricky-header {
+    position: absolute;
+    width: 100%;
+    top: 0;
+    min-height: 305px;
+    height: 305px;
+    padding-bottom: 76px;
+}
+
+.tricky-header-bg {
+    position: absolute;
+    width: 100%;
+    top: 0;
+    min-height: 305px;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.3) 20%), url(beach-test.jpg);
+    z-index: -1;
+    background-size: cover;
+    background-repeat: no-repeat;
+    height: 305px;
+    padding-bottom: 76px;
+}
+
+.is-fixed {
+    transition: box-shadow .4s;
+    bottom: auto;
+    position: fixed;
+    z-index: 100;
+    box-shadow: 0 0 25px 5px #000;
+}
+
 .navbar {
-    background-color: #171544;
+    // background-color: #171544;
+    background-color: transparent;
     padding: 5px;
     height: 50px;
     position: -webkit-sticky;
@@ -10,6 +41,7 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
+    z-index: 101;
 }
 
 .navbar-left, .navbar-right, .navbar-center {

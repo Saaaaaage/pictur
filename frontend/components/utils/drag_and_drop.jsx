@@ -70,12 +70,7 @@ class DragAndDrop extends React.Component {
 
     render() {
         return (
-            // <div
-            //     ref={this.dropRef}
-            // >
-            //     {this.props.children}
-            // </div>
-
+            // TODO: Clean this up and give it active styling based on hover state
             <div style={{ display: 'inline-block', position: 'relative' }} ref={this.dropRef}>
                 {this.state.dragging &&
                     <div style={{border: 'dashed grey 4px',backgroundColor: 'rgba(255,255,255,.8)',position: 'absolute',top: 0,bottom: 0,left: 0,right: 0,zIndex: 9999}}>

@@ -843,10 +843,15 @@ function (_React$Component) {
     _this.state = {
       width: 0,
       height: 0,
-      columns: 1
+      columns: 1,
+      scrollPos: 0,
+      trickyHeaderClasses: "tricky-header",
+      trickyHeaderTop: 0
     };
     _this.updateWindowDimensions = _this.updateWindowDimensions.bind(_assertThisInitialized(_this));
-    _this.greetings = ['"I don\'t have an ego. My Facebook photo is a landscape."', '"Some flies are too awesome for the wall."', '"Augh! Ghost pirate!!"', '"Ya live by the ghost...ya die by the ghost."', '"The guy from Labyrinth just turned into a bird!"', '"Ow! My arm came off! I can\'t belive that happened"', '"Was something supposed to happen? Are we invisible now, or something?"', '"It feels like someone someone with a fever is yelling at my pants."', '"It\'s like he channels dead crazy people!"', '"Are these they?"', '"Jock rock my ass! Listen to those lyrics, man! It’s all about love, and longing!"'];
+    _this.listenToScroll = _this.listenToScroll.bind(_assertThisInitialized(_this));
+    _this.greetings = ['"I don\'t have an ego. My Facebook photo is a landscape."', '"Some flies are too awesome for the wall."', '"We\'re the only species on earth that observes shark week."', '"Hey, did you hear about the turtle in China? Two packs a day!"', '"Well, it\'s been real, but I have a date to catch. Or should I say.. A catch to date."', '"Cool cool cool."', '"Six seasons and a movie!"', '"I painted a tunnel on the side of the library. When it dries, I\'m going for it."', '"Oh my god! I\'m finally popular enough to be in the yearbook!"', '"Everybody loves pelicans, they bring babies!"', '"A passing grade? Like a C? Why don\'t I just get pregnant at a bus station?"', '"Who the hell are you always texting? Everyone you know is here!"', '"It\'s not a pen, it\'s a principle!"', '"Accidents don\'t just happen over and over and over again, okay ? This isn\'t budget daycare."', '"Never change, or do. I\'m not your boss."', '"There is a time and place for subtlety, and that time was before Scary Movie."', '"Sometimes I think I lost something really important to me, and then it turns out I already ate it."', '"First time I was punched in the face, I was like \'Oh no!\', but then I was like \'this is a story..\'"', '"Streets ahead."', '"I was never one to hold a grudge. My father held grudges, I\'ll always hate him for that."', '"We\'re all kind of crazytown bananapants."', '"Blaming a bridge collapse on a school is like blaming owls for why I suck at analogies."', '"I know what a metaphor is! It\'s like a thought with another thought\'s hat on."', '"Fire can\'t go through doors, stupid. It\'s not a ghost."', '"Shut your pompous vortex of overlapping fangs!"', '"Augh! Ghost pirate!!"', '"Ya live by the ghost...ya die by the ghost."', '"The guy from Labyrinth just turned into a bird!"', '"Ow! My arm came off! I can\'t belive that happened"', '"Was something supposed to happen? Are we invisible now, or something?"', '"It\'s like he channels dead crazy people!"', '"Are these they?"', '"Jock rock my ass! Listen to those lyrics, man! It’s all about love, and longing!"', '"You were a daydreamer. A sassmouth! And, not infrequently, a bit of a gigglepuss!"', '"I gotta admit I always wanted to get Edgar Allan Poe in a headlock. That thing is like a pumpkin!"'];
+    _this.chosenGreeting = _this.greetings[Math.floor(Math.random() * _this.greetings.length)];
     return _this;
   }
 
@@ -858,11 +863,33 @@ function (_React$Component) {
       window.addEventListener('resize', this.updateWindowDimensions); // Add posts to state
 
       this.props.fetchPosts();
+      this.listenToScroll();
+      window.addEventListener('scroll', this.listenToScroll);
     }
   }, {
     key: "componentWillUnmount",
     value: function componentWillUnmount() {
       window.removeEventListener('resize', this.updateWindowDimensions);
+      window.removeEventListener('scroll', this.listenToScroll);
+    }
+  }, {
+    key: "listenToScroll",
+    value: function listenToScroll() {
+      // scroll position!
+      var scrollPos = document.documentElement.scrollTop; // height of the window!
+      // const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      // percent of the way down the page!
+      // const scrolled = winScroll / height;
+
+      this.setState({
+        scrollPos: scrollPos
+      });
+      console.log(scrollPos);
+      var newState = {
+        scrollPos: scrollPos
+      };
+      scrollPos > 202 ? (newState.trickyHeaderTop = -312, newState.trickyHeaderClasses = "tricky-header is-fixed") : (newState.trickyHeaderTop = scrollPos / -2, newState.trickyHeaderClasses = "tricky-header");
+      this.setState(newState);
     }
   }, {
     key: "updateWindowDimensions",
@@ -872,11 +899,6 @@ function (_React$Component) {
         height: window.innerHeight,
         columns: Math.max(Math.floor((window.innerWidth - 100) / 240), 1)
       });
-    }
-  }, {
-    key: "generateGreeting",
-    value: function generateGreeting() {
-      return this.greetings[Math.floor(Math.random() * this.greetings.length)];
     }
   }, {
     key: "render",
@@ -909,9 +931,16 @@ function (_React$Component) {
         return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null);
       }
 
-      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_navbar_navbar_container__WEBPACK_IMPORTED_MODULE_1__["default"], null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: this.state.trickyHeaderClasses,
+        style: {
+          top: this.state.trickyHeaderTop
+        }
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "greeting"
-      }, this.generateGreeting()), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_tag_banner_container__WEBPACK_IMPORTED_MODULE_3__["default"], null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      }, this.chosenGreeting), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_tag_banner_container__WEBPACK_IMPORTED_MODULE_3__["default"], null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "tricky-header-bg"
+      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_navbar_navbar_container__WEBPACK_IMPORTED_MODULE_1__["default"], null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "grid-column-container"
       }, gridColumns.map(function (col, i) {
         return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -1956,6 +1985,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_modal__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/modal */ "./frontend/components/utils/modal.jsx");
 /* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
 /* harmony import */ var _actions_ui_actions__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../actions/ui_actions */ "./frontend/actions/ui_actions.js");
+/* harmony import */ var _navbar_navbar_container__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../navbar/navbar_container */ "./frontend/components/navbar/navbar_container.js");
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
@@ -1981,6 +2011,7 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
 
 
 
@@ -2022,7 +2053,7 @@ function (_React$Component) {
       (_body$classList = body.classList).remove.apply(_body$classList, _toConsumableArray(body.classList));
 
       body.classList.add("bg-new-upload-page");
-      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_utils_modal__WEBPACK_IMPORTED_MODULE_1__["default"], null);
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_navbar_navbar_container__WEBPACK_IMPORTED_MODULE_4__["default"], null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_utils_modal__WEBPACK_IMPORTED_MODULE_1__["default"], null));
     }
   }]);
 
@@ -2299,8 +2330,7 @@ function (_React$Component) {
       component.addEventListener('dragleave', this.handleDragOut);
       component.addEventListener('dragover', this.handleDrag);
       component.addEventListener('drop', this.handleDrop);
-      this.dragCounter = 0;
-      console.log('Mounted DragAndDrop');
+      this.dragCounter = 0; // console.log('Mounted DragAndDrop')
     }
   }, {
     key: "componentWillUnmount",
@@ -2309,8 +2339,7 @@ function (_React$Component) {
       component.removeEventListener('dragenter', this.handleDragIn);
       component.removeEventListener('dragleave', this.handleDragOut);
       component.removeEventListener('dragover', this.handleDrag);
-      component.removeEventListener('drop', this.handleDrop);
-      console.log('Unmounted DragAndDrop');
+      component.removeEventListener('drop', this.handleDrop); // console.log('Unmounted DragAndDrop')
     }
   }, {
     key: "handleDragIn",
@@ -2323,9 +2352,8 @@ function (_React$Component) {
         this.setState({
           dragging: true
         });
-      }
+      } // console.log('Drag in detected');
 
-      console.log('Drag in detected');
     }
   }, {
     key: "handleDragOut",
@@ -2335,8 +2363,7 @@ function (_React$Component) {
       this.dragCounter--;
       this.setState({
         dragging: false
-      });
-      console.log('Drag out detected');
+      }); // console.log('Drag out detected');
     }
   }, {
     key: "handleDrop",
@@ -2352,26 +2379,20 @@ function (_React$Component) {
 
         e.dataTransfer.clearData();
         this.dragCounter = 0;
-      }
+      } // console.log('Drop detected');
 
-      console.log('Drop detected');
     } // Just to prevent default behavior
 
   }, {
     key: "handleDrag",
     value: function handleDrag(e) {
       e.preventDefault();
-      e.stopPropagation();
-      console.log('Preventing default drag');
+      e.stopPropagation(); // console.log('Preventing default drag');
     }
   }, {
     key: "render",
     value: function render() {
-      return (// <div
-        //     ref={this.dropRef}
-        // >
-        //     {this.props.children}
-        // </div>
+      return (// TODO: Clean this up and give it active styling based on hover state
         react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
           style: {
             display: 'inline-block',
@@ -2451,7 +2472,7 @@ function Modal(_ref) {
       return null;
   }
 
-  return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, "Hello World!", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+  return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "modal-background",
     onClick: closeModal
   }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -2459,7 +2480,7 @@ function Modal(_ref) {
     onClick: function onClick(e) {
       return e.stopPropagation();
     }
-  }, component)));
+  }, component));
 }
 
 var mapStateToProps = function mapStateToProps(state) {

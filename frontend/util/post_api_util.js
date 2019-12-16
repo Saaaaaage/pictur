@@ -12,6 +12,7 @@ export const getPost = postId => {
     })
 }
 
+// post is FormData object
 export const createPost = post => {
     return $.ajax({
         url: '/api/posts',
@@ -19,14 +20,17 @@ export const createPost = post => {
         data: post,
         contentType: false,
         processData: false
-    }) // data might not need to be an object
+    })
 }
 
+// post is FormData object
 export const updatePost = post => {
     return $.ajax({
-        url: '/api/posts',
+        url: `/api/posts/${post.get('post[id]')}`,
         method: 'PATCH',
-        data: { post }
+        data: post,
+        contentType: false,
+        processData: false
     })
 }
 

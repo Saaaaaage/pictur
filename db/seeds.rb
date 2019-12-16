@@ -82,13 +82,13 @@ tag_names.each do |name|
   tags << tag
 end
 
-# puts 'Creating posts and uploading images...'
+# # puts 'Creating posts and uploading images...'
 # path = "/Users/sage/Desktop/public_domain_images"
 # posts = []
 # Dir.foreach(path) do |filename|
 #   next unless ['jpg', 'jpeg'].include?(filename.split(".")[-1])
   
-#   puts '...Creating a post...'
+#   # puts '...Creating a post...'
 #   post = Post.create!({
 #       user: pam,
 #       title: filename.split(".")[0].split("-").map(&:capitalize).join(" ").tr("0-9", ""),
@@ -96,18 +96,18 @@ end
 #   })
 #   posts << post
 
-#   puts "...Attaching an image: #{filename}"
+#   # puts "...Attaching an image: #{filename}"
 #   post.uploads.attach(io: File.open(path + '/' + filename), filename: filename)
 
-#   # break if Post.all.length > 2
+#   break if Post.all.length > 15
 # end
 
-# puts 'Creating root level comments...'
+# # puts 'Creating root level comments...'
 # comments = []
 # posts.each do |post|
 #   3.times do
 #     quote = Faker::TvShows::VentureBros.quote
-#     puts "\t#{quote}"
+#     # puts "\t#{quote}"
 #     comment = Comment.create!({
 #       body: quote,
 #       post: post,
@@ -117,11 +117,11 @@ end
 #   end
 # end
 
-# puts 'Creating child comments...'
+# # puts 'Creating child comments...'
 # (comments.length * 10).times do |i|
 #   quote = Faker::TvShows::VentureBros.quote
 #   parent = comments.sample
-#   puts "\t#{i}. #{quote}"
+#   # puts "\t#{i}. #{quote}"
 #   comment = Comment.create!({
 #     body: quote,
 #     post_id: parent.post_id,
@@ -132,4 +132,4 @@ end
 # end
 
 
-# puts 'Done!'
+# # puts 'Done!'

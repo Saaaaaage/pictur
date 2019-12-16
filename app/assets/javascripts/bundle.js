@@ -1314,7 +1314,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _navbar_navbar_container__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../navbar/navbar_container */ "./frontend/components/navbar/navbar_container.js");
-/* harmony import */ var _actions_post_actions__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../actions/post_actions */ "./frontend/actions/post_actions.js");
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_3__);
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
@@ -1358,18 +1359,20 @@ function (_React$Component) {
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(PostEdit).call(this, props));
     _this.state = {
-      post: _this.props.post
+      title: ""
     };
     _this.handleTitleInput = _this.handleTitleInput.bind(_assertThisInitialized(_this));
+    _this.pushTitleChange = _.debounce(_this.pushTitleChange, 1000).bind(_assertThisInitialized(_this));
     return _this;
   }
 
   _createClass(PostEdit, [{
     key: "componentDidMount",
     value: function componentDidMount() {
-      this.props.fetchPost();
-      this.setState({
-        post: this.props.post
+      var _this2 = this;
+
+      this.props.fetchPost().then(function () {
+        _this2.setState(_this2.props.post);
       });
     }
   }, {
@@ -1378,12 +1381,16 @@ function (_React$Component) {
       this.setState({
         title: e.target.value
       });
+      this.pushTitleChange();
     }
+  }, {
+    key: "pushTitleChange",
+    value: function pushTitleChange() {}
   }, {
     key: "render",
     value: function render() {
       var _body$classList,
-          _this2 = this;
+          _this3 = this;
 
       var images = this.props.images.map(function (img, i) {
         return react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
@@ -1424,13 +1431,13 @@ function (_React$Component) {
         className: "pe-title-input",
         placeholder: "Give your post a title...",
         onChange: this.handleTitleInput,
-        value: this.props.post.title
+        value: this.state.title
       }), images, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
         className: "add-image-container"
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("button", {
         className: "add-image-button",
         onClick: function onClick() {
-          return _this2.props.openModal('upload');
+          return _this3.props.openModal('edit-upload');
         }
       }, "+ Add image")), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_utils_modal__WEBPACK_IMPORTED_MODULE_0__["default"], null)), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
         className: "pe-sidebar-container"
@@ -2266,6 +2273,47 @@ function (_React$Component) {
 
 /***/ }),
 
+/***/ "./frontend/components/upload/edit_post_upload_container.js":
+/*!******************************************************************!*\
+  !*** ./frontend/components/upload/edit_post_upload_container.js ***!
+  \******************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+/* harmony import */ var _upload__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./upload */ "./frontend/components/upload/upload.jsx");
+/* harmony import */ var _actions_post_actions__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../actions/post_actions */ "./frontend/actions/post_actions.js");
+/* harmony import */ var _actions_ui_actions__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../actions/ui_actions */ "./frontend/actions/ui_actions.js");
+
+
+
+
+
+var mapStateToProps = function mapStateToProps(_ref) {
+  var entities = _ref.entities,
+      session = _ref.session;
+  return {
+    currentUser: entities.users[session.id]
+  };
+};
+
+var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+  return {
+    formAction: function formAction(post) {
+      return dispatch(Object(_actions_post_actions__WEBPACK_IMPORTED_MODULE_2__["updatePost"])(post));
+    },
+    closeModal: function closeModal() {
+      return dispatch(Object(_actions_ui_actions__WEBPACK_IMPORTED_MODULE_3__["closeModal"])());
+    }
+  };
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (Object(react_redux__WEBPACK_IMPORTED_MODULE_0__["connect"])(mapStateToProps, mapDispatchToProps)(_upload__WEBPACK_IMPORTED_MODULE_1__["default"]));
+
+/***/ }),
+
 /***/ "./frontend/components/upload/new_post.jsx":
 /*!*************************************************!*\
   !*** ./frontend/components/upload/new_post.jsx ***!
@@ -2335,7 +2383,7 @@ function (_React$Component) {
   _createClass(NewPost, [{
     key: "componentDidMount",
     value: function componentDidMount() {
-      this.props.openModal('upload');
+      this.props.openModal('new-upload');
     }
   }, {
     key: "render",
@@ -2356,6 +2404,49 @@ function (_React$Component) {
 }(react__WEBPACK_IMPORTED_MODULE_0___default.a.Component);
 
 /* harmony default export */ __webpack_exports__["default"] = (Object(react_redux__WEBPACK_IMPORTED_MODULE_2__["connect"])(null, mdp)(NewPost));
+
+/***/ }),
+
+/***/ "./frontend/components/upload/new_post_upload_container.js":
+/*!*****************************************************************!*\
+  !*** ./frontend/components/upload/new_post_upload_container.js ***!
+  \*****************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+/* harmony import */ var _upload__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./upload */ "./frontend/components/upload/upload.jsx");
+/* harmony import */ var _actions_post_actions__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../actions/post_actions */ "./frontend/actions/post_actions.js");
+/* harmony import */ var _actions_ui_actions__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../actions/ui_actions */ "./frontend/actions/ui_actions.js");
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
+
+
+
+
+
+
+var mapStateToProps = function mapStateToProps(_ref) {
+  var entities = _ref.entities,
+      session = _ref.session;
+  return {
+    currentUser: entities.users[session.id]
+  };
+};
+
+var mapDispatchToProps = function mapDispatchToProps(dispatch, ownProps) {
+  return {
+    formAction: function formAction(post) {
+      return dispatch(Object(_actions_post_actions__WEBPACK_IMPORTED_MODULE_2__["submitPost"])(post));
+    } // closeModal: () => {
+    //     dispatch(closeModal());
+    // }
+
+  };
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (Object(react_router_dom__WEBPACK_IMPORTED_MODULE_4__["withRouter"])(Object(react_redux__WEBPACK_IMPORTED_MODULE_0__["connect"])(mapStateToProps, mapDispatchToProps)(_upload__WEBPACK_IMPORTED_MODULE_1__["default"])));
 
 /***/ }),
 
@@ -2397,6 +2488,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 
 
+
 var Upload =
 /*#__PURE__*/
 function (_React$Component) {
@@ -2430,14 +2522,16 @@ function (_React$Component) {
     key: "handleSubmit",
     value: function handleSubmit(e) {
       var formData = new FormData();
-      formData.append('post[title]', 'test post please ignore');
+      formData.append('post[id]', this.props.match.params.postId);
+      formData.append('post[title]', "this is going to be the title of the post");
       this.state.files.forEach(function (file) {
         formData.append('post[uploads][]', file);
       });
       var that = this;
-      this.props.submitPost(formData).then(function (action) {
+      this.props.formAction(formData).then(function (action) {
+        that.props.closeModal();
         that.setState({
-          redirect: "/posts/".concat(action.post.id)
+          redirect: "/posts/".concat(action.post.id, "/edit")
         });
       });
     }
@@ -2520,48 +2614,7 @@ function (_React$Component) {
   return Upload;
 }(react__WEBPACK_IMPORTED_MODULE_0___default.a.Component);
 
-/* harmony default export */ __webpack_exports__["default"] = (Upload);
-
-/***/ }),
-
-/***/ "./frontend/components/upload/upload_container.js":
-/*!********************************************************!*\
-  !*** ./frontend/components/upload/upload_container.js ***!
-  \********************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
-/* harmony import */ var _upload__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./upload */ "./frontend/components/upload/upload.jsx");
-/* harmony import */ var _actions_post_actions__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../actions/post_actions */ "./frontend/actions/post_actions.js");
-/* harmony import */ var _actions_ui_actions__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../actions/ui_actions */ "./frontend/actions/ui_actions.js");
-
-
-
-
-
-var mapStateToProps = function mapStateToProps(_ref) {
-  var entities = _ref.entities,
-      session = _ref.session;
-  return {
-    currentUser: entities.users[session.id]
-  };
-};
-
-var mapDispatchToProps = function mapDispatchToProps(dispatch) {
-  return {
-    submitPost: function submitPost(post) {
-      return dispatch(Object(_actions_post_actions__WEBPACK_IMPORTED_MODULE_2__["submitPost"])(post));
-    },
-    closeModal: function closeModal() {
-      return dispatch(Object(_actions_ui_actions__WEBPACK_IMPORTED_MODULE_3__["closeModal"])());
-    }
-  };
-};
-
-/* harmony default export */ __webpack_exports__["default"] = (Object(react_redux__WEBPACK_IMPORTED_MODULE_0__["connect"])(mapStateToProps, mapDispatchToProps)(_upload__WEBPACK_IMPORTED_MODULE_1__["default"]));
+/* harmony default export */ __webpack_exports__["default"] = (Object(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["withRouter"])(Upload));
 
 /***/ }),
 
@@ -2740,8 +2793,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _actions_ui_actions__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../actions/ui_actions */ "./frontend/actions/ui_actions.js");
 /* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
-/* harmony import */ var _upload_upload_container__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../upload/upload_container */ "./frontend/components/upload/upload_container.js");
-/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
+/* harmony import */ var _upload_new_post_upload_container__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../upload/new_post_upload_container */ "./frontend/components/upload/new_post_upload_container.js");
+/* harmony import */ var _upload_edit_post_upload_container__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../upload/edit_post_upload_container */ "./frontend/components/upload/edit_post_upload_container.js");
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
+
 
 
 
@@ -2759,8 +2814,12 @@ function Modal(_ref) {
   var component;
 
   switch (modal) {
-    case 'upload':
-      component = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_upload_upload_container__WEBPACK_IMPORTED_MODULE_3__["default"], null);
+    case 'new-upload':
+      component = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_upload_new_post_upload_container__WEBPACK_IMPORTED_MODULE_3__["default"], null);
+      break;
+
+    case 'edit-upload':
+      component = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_upload_edit_post_upload_container__WEBPACK_IMPORTED_MODULE_4__["default"], null);
       break;
 
     default:
@@ -2787,13 +2846,12 @@ var mapStateToProps = function mapStateToProps(state) {
 var mapDispatchToProps = function mapDispatchToProps(dispatch, ownProps) {
   return {
     closeModal: function closeModal() {
-      dispatch(Object(_actions_ui_actions__WEBPACK_IMPORTED_MODULE_1__["closeModal"])());
-      ownProps.history.goBack();
+      dispatch(Object(_actions_ui_actions__WEBPACK_IMPORTED_MODULE_1__["closeModal"])()); // ownProps.history.goBack();
     }
   };
 };
 
-/* harmony default export */ __webpack_exports__["default"] = (Object(react_router_dom__WEBPACK_IMPORTED_MODULE_4__["withRouter"])(Object(react_redux__WEBPACK_IMPORTED_MODULE_2__["connect"])(mapStateToProps, mapDispatchToProps)(Modal)));
+/* harmony default export */ __webpack_exports__["default"] = (Object(react_router_dom__WEBPACK_IMPORTED_MODULE_5__["withRouter"])(Object(react_redux__WEBPACK_IMPORTED_MODULE_2__["connect"])(mapStateToProps, mapDispatchToProps)(Modal)));
 
 /***/ }),
 
@@ -3393,7 +3451,8 @@ var getPost = function getPost(postId) {
     url: "/api/posts/".concat(postId),
     method: 'GET'
   });
-};
+}; // post is FormData object
+
 var createPost = function createPost(post) {
   return $.ajax({
     url: '/api/posts',
@@ -3401,15 +3460,16 @@ var createPost = function createPost(post) {
     data: post,
     contentType: false,
     processData: false
-  }); // data might not need to be an object
-};
+  });
+}; // post is FormData object
+
 var updatePost = function updatePost(post) {
   return $.ajax({
-    url: '/api/posts',
+    url: "/api/posts/".concat(post.get('post[id]')),
     method: 'PATCH',
-    data: {
-      post: post
-    }
+    data: post,
+    contentType: false,
+    processData: false
   });
 };
 var deletePost = function deletePost(postId) {

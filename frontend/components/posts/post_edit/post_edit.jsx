@@ -1,28 +1,32 @@
 import Modal from '../../utils/modal';
 import React from 'react';
 import NavbarContainer from '../../navbar/navbar_container';
-import { fetchPost } from '../../../actions/post_actions';
+import { debounce } from 'lodash';
 
 class PostEdit extends React.Component {
     constructor(props) {
         super(props)
-        this.state = {
-            post: this.props.post
-        }
-        this.handleTitleInput = this.handleTitleInput.bind(this);
+        this.state = {title: ""};
+        this.handleTitleInput = this.handleTitleInput.bind(this)
+        this.pushTitleChange = _.debounce(this.pushTitleChange, 1000).bind(this);
     }
 
     componentDidMount() {
-        this.props.fetchPost();
-        this.setState({post: this.props.post})
+        this.props.fetchPost().then(
+            () => {this.setState(this.props.post)}
+        )
     }
 
     handleTitleInput(e) {
-        this.setState({title: e.target.value})
+        this.setState({ title: e.target.value })
+        this.pushTitleChange();
+    }
+
+    pushTitleChange() {
+        
     }
 
     render () {
-
         const images = this.props.images.map((img, i) => {
             return (
                 <div className="pe-upload" key={i}>
@@ -59,13 +63,13 @@ class PostEdit extends React.Component {
                             className="pe-title-input"
                             placeholder="Give your post a title..."
                             onChange={this.handleTitleInput}
-                            value={this.props.post.title}
+                            value={this.state.title}
                         />
                         {images}
                         <div className="add-image-container">
                             <button
                                 className="add-image-button"
-                                onClick={() => this.props.openModal('upload')}
+                                onClick={() => this.props.openModal('edit-upload')}
                             >
                                 + Add image
                             </button>

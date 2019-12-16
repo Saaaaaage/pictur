@@ -1,7 +1,8 @@
 import React from 'react';
 import { closeModal } from '../../actions/ui_actions';
 import { connect } from 'react-redux';
-import UploadContainer from '../upload/upload_container';
+import NewPostUploadContainer from '../upload/new_post_upload_container';
+import EditPostUploadContainer from '../upload/edit_post_upload_container';
 import { withRouter } from 'react-router-dom'
 
 function Modal({ modal, closeModal }) {
@@ -10,8 +11,11 @@ function Modal({ modal, closeModal }) {
     }
     let component;
     switch (modal) {
-        case 'upload':
-            component = <UploadContainer />;
+        case 'new-upload':
+            component = <NewPostUploadContainer />;
+            break;
+        case 'edit-upload':
+            component = <EditPostUploadContainer />;
             break;
         default:
             return null;
@@ -35,7 +39,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     return {
         closeModal: () => {
             dispatch(closeModal());
-            ownProps.history.goBack();
+            // ownProps.history.goBack();
         }
     };
 };

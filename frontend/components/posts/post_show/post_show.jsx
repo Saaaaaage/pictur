@@ -1,7 +1,8 @@
 import React from 'react';
 import PostShowImage from './post_show_image';
-import CommentContainer from '../comments/comment_container';
-import CommentForm from '../comments/comment_form';
+import NavbarContainer from '../../navbar/navbar_container';
+import CommentContainer from '../../comments/comment_container';
+import CommentForm from '../../comments/comment_form';
 
 class PostShow extends React.Component {
     constructor(props) {
@@ -43,25 +44,29 @@ class PostShow extends React.Component {
         body.classList.remove(...body.classList);
         body.classList.add("bg-show-pages");
         return (
-            <div className="postShowBody">
-                <div className="postShowMain">
-                    <div className="postShowMainHeader">
-                        <h1>{this.props.post.title}</h1>
-                        <h3>by <strong>{this.props.post.user.username}</strong></h3>
-                    </div>
-                    <ul>{images}</ul>
+            <div>
+                <NavbarContainer />
+                <div className="postShowBody">
+                    <div className="postShowMain">
+                        <div className="postShowMainHeader">
+                            <h1>{this.props.post.title}</h1>
+                            <h3>by <strong>{this.props.post.user.username}</strong></h3>
+                        </div>
+                        <ul>{images}</ul>
 
-                    <div className="comment-container">
-                        <CommentForm
-                            submitComment={this.props.submitComment}
-                        />
-                        <ul>{rootComments}</ul>
+                        <div className="comment-container">
+                            <CommentForm
+                                submitComment={this.props.submitComment}
+                            />
+                            <ul>{rootComments}</ul>
+                        </div>
                     </div>
-                </div>
-                <div className="postShowSidebar">
+                    <div className="postShowSidebar">
 
+                    </div>
                 </div>
             </div>
+            
         )
     }
 }

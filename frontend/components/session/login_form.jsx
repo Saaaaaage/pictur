@@ -37,12 +37,20 @@ class LoginForm extends React.Component {
         // body.classList.forEach(c => body.classList.remove(c));
         body.classList.remove(...body.classList);
         body.classList.add("bg-auth-pages");
-
+        
         return (
             <div className="auth-container">
-                <span>{this.props.errors.join(" | ")}</span>
                 <form id="login-form" onSubmit={this.handleSubmit}>
                     <div className='auth-input-group'>
+                        {this.props.errors.length > 0 &&
+                            <input
+                            className='auth-input-group auth-input-field auth-error'
+                            value={this.props.errors.join(" | ")}
+                            disabled
+                            />
+                                
+                            
+                        }
                         <input className="auth-input-field"
                             type="text"
                             placeholder="Username"

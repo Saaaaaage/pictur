@@ -1,10 +1,10 @@
 import PostShow from './post_show';
 import {connect} from 'react-redux';
-import { fetchPost } from '../../actions/post_actions';
+import { fetchPost } from '../../../actions/post_actions';
 import {
     clearComments,
     submitComment
-} from '../../actions/comment_actions';
+} from '../../../actions/comment_actions';
 
 const msp = (state, ownProps) => {
     // TODO: the images.... that can't be right....

@@ -20,7 +20,12 @@ const NavBar = ({currentUser, logout}) => {
         </div>
     ) : (
             <div className='navbar-right'>
-                <div className="avatar-nav" onClick={menuClick}>
+                <div
+                    className="avatar-nav"
+                    onClick={menuClick}
+                    onBlur={menuBlur}
+                    tabIndex="0"
+                >
                     <p>
                         {currentUser.username[0].toUpperCase()}
                     </p>

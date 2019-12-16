@@ -12,6 +12,8 @@
 # TODO: counter_cache won't actually work until we add a new column to the DB to track counts
 # https://blog.appsignal.com/2018/06/19/activerecords-counter-cache.html
 class PostTag < ApplicationRecord
+    validates :post_id, uniqueness: { scope: :tag_id }
+    
     belongs_to :tag,
         counter_cache: true
     belongs_to :post,

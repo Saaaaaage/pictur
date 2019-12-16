@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { getUser } from '../../util/user_api_util'
+// import * as UserApiUtil from '../../util/user_api_util';
+import { debounce } from 'lodash';
 
 class RegisterForm extends React.Component {
     constructor(props) {
@@ -14,10 +15,10 @@ class RegisterForm extends React.Component {
                 phone_number: ""
             },
             formErrors: {
-                username: 'Sorry, that username is unavailable',
-                email: 'Invalid email',
-                password: 'Password must be at least 6 characters',
-                retype_password: "Your passwords do not match!"
+                username: '',
+                email: '',
+                password: '',
+                retype_password: ""
             }
         };
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -32,15 +33,50 @@ class RegisterForm extends React.Component {
         }
     }
 
+
     // TODO: front-end field validation
     validate(field) {
         return e => {
+            let error = "";
             switch (field) {
                 case "username":
+                    // Check for only letters and numbers
+                    const username_re = /^[a-z0-9]+$/i;
+                    if (!username_re.test(e.target.value)) {
+                        error = 'Usernames can only contain letters and numbers';
+                        break;
+                    }
+
+                    // Check availability
+                    $.ajax({
+                        url: `api/username_available/${e.target.value}`,
+                        method: 'GET',
+                        success: ((result) => {
+                            if (!result) {
+                                this.setState({ formErrors: { ...this.state.formErrors, [field]: 'Sorry, that username is unavailable.' } })
+                            }
+                        }).bind(this)
+                    })
+                    break;
+                case "email":
+                    const re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+                    if (!re.test(e.target.value)) {
+                        error = 'Invalid email address';
+                    }
+                    break;
+                case "password":
+                    if (this.state.formUser.password.length < 6)
+                        error = 'Password must be at least 6 characters';
+                    break;
+                case "retype_password":
+                    if (this.state.formUser.password != this.state.formUser.retype_password) {
+                        error = 'Your passwords do not match!';
+                    }
                     break;
                 default:
                     break;
             }
+            this.setState({ formErrors: { ...this.state.formErrors, [field]: error } })
         }
     }
 
@@ -63,7 +99,9 @@ class RegisterForm extends React.Component {
                 <span>{this.props.errors.join(" | ")}</span>
                 <form onSubmit={this.handleSubmit} id='register-form'>
                     <div className='auth-input-group'>
-                        <div className="auth-input-error">{this.state.formErrors.username}</div>
+                        {this.state.formErrors.username &&
+                            <div className="auth-input-error">{this.state.formErrors.username}</div>
+                        }
                         <input className="auth-input-field"
                             type="text"
                             placeholder="Username"
@@ -71,7 +109,9 @@ class RegisterForm extends React.Component {
                             onChange={this.update("username")}
                             onBlur={this.validate("username")}
                         />
-                        <div className="auth-input-error">{this.state.formErrors.email}</div>
+                        {this.state.formErrors.email &&
+                            <div className="auth-input-error">{this.state.formErrors.email}</div>
+                        }
                         <input className="auth-input-field"
                             type="email"
                             placeholder="Email"
@@ -79,7 +119,9 @@ class RegisterForm extends React.Component {
                             onChange={this.update("email")}
                             onBlur={this.validate("email")}
                         />
-                        <div className="auth-input-error">{this.state.formErrors.password}</div>
+                        {this.state.formErrors.password &&
+                            <div className="auth-input-error">{this.state.formErrors.password}</div>
+                        }
                         <input className="auth-input-field"
                             type="password"
                             placeholder="Password"
@@ -87,7 +129,9 @@ class RegisterForm extends React.Component {
                             onChange={this.update("password")}
                             onBlur={this.validate("password")}
                         />
-                        <div className="auth-input-error">{this.state.formErrors.retype_password}</div>
+                        {this.state.formErrors.retype_password &&
+                            <div className="auth-input-error">{this.state.formErrors.retype_password}</div>
+                        }
                         <input className="auth-input-field"
                             type="password"
                             placeholder="Retype Password"
@@ -100,7 +144,7 @@ class RegisterForm extends React.Component {
                             placeholder="Phone Number"
                             value={this.state.formUser.phone_number}
                             onChange={this.update("phone_number")}
-                            onBlur={this.validate("phone_number")}
+                            // onBlur={this.validate("phone_number")}
                         />
                     </div>
                 </form>

@@ -24,6 +24,11 @@
     box-sizing: border-box;
 }
 
+.auth-error {
+    color: #d43030!important;
+    font-size: 15px!important;
+}
+
 .auth-input-group {
     border-radius: 5px;
     background-color: #2C2F34;
@@ -76,11 +81,11 @@
     position: absolute;
     width: 0;
     height: 0;
-    border-width: 7px;
+    border-width: 8px;
     border-style: solid;
     border-color: transparent #d43030 transparent transparent;
     top: 2px;
-    left: -13px;
+    left: -15px;
     opacity: 0.9;
 }
 

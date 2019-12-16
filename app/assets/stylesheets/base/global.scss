@@ -17,9 +17,10 @@ body {
 .bg-user-pages {
     background-color: #061234;
 }
-.bg-new-upload-page {
+.bg-new-upload-page, .bg-post-edit-page {
     background-color: #272a33;
 }
+
 
 *:focus {
     outline: none;

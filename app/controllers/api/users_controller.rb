@@ -11,6 +11,10 @@ class Api::UsersController < ApplicationController
         end
     end
 
+    def username_available?
+        render json: !User.find_by(username: params[:username])
+    end
+
     def show
         @user = User.find(params[:id])
     end

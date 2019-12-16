@@ -38,6 +38,7 @@ gem 'bcrypt'
 gem 'jquery-rails'
 gem "image_processing"
 gem "mini_magick"
+gem "aws-sdk-s3"
 
 
 group :development, :test do

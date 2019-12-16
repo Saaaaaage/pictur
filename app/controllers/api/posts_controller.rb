@@ -37,7 +37,7 @@ class Api::PostsController < ApplicationController
     def destroy
         @post = Post.find(params[:id])
         if current_user.id == @post.user.id
-            if @post.destroy
+            if (@post.uploads.purge and @post.destroy)
                 render :show
             else
                 render json: @post.errors.full_messages, status: 400

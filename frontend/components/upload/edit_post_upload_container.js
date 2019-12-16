@@ -1,6 +1,6 @@
-import {connect} from 'react-redux';
-import Upload from'./upload';
-import { submitPost } from '../../actions/post_actions';
+import { connect } from 'react-redux';
+import Upload from './upload';
+import { updatePost } from '../../actions/post_actions';
 import { openModal, closeModal } from '../../actions/ui_actions';
 
 const mapStateToProps = ({ entities, session }) => ({
@@ -8,8 +8,8 @@ const mapStateToProps = ({ entities, session }) => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-    submitPost: post => dispatch(submitPost(post)),
+    formAction: post => dispatch(updatePost(post)),
     closeModal: () => dispatch(closeModal())
 });
 
-export default connect(mapStateToProps,mapDispatchToProps)(Upload);
+export default connect(mapStateToProps, mapDispatchToProps)(Upload);

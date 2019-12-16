@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Redirect } from 'react-router-dom';
 import DragAndDrop from '../utils/drag_and_drop';
+import { withRouter } from 'react-router-dom'
 
 
 class Upload extends React.Component{
@@ -23,18 +24,21 @@ class Upload extends React.Component{
     }
 
     handleSubmit(e) {
+
         let formData = new FormData();
-        formData.append('post[title]', 'test post please ignore');
+        formData.append('post[id]', this.props.match.params.postId);
+        formData.append('post[title]', "this is going to be the title of the post");
 
         this.state.files.forEach(file => {
             formData.append('post[uploads][]', file);
         })
 
         const that = this;
-        this.props.submitPost(formData)
+        this.props.formAction(formData)
             .then(
                 action => {
-                    that.setState({ redirect: `/posts/${action.post.id}`})
+                    that.props.closeModal();
+                    that.setState({ redirect: `/posts/${action.post.id}/edit`})
                 }
             );
     }
@@ -104,4 +108,4 @@ class Upload extends React.Component{
         )
     }
 }
-export default Upload
+export default withRouter(Upload)

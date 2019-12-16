@@ -13,7 +13,7 @@ const mdp = dispatch => ({
 class NewPost extends React.Component {
 
     componentDidMount() {
-        this.props.openModal('upload');
+        this.props.openModal('new-upload');
     }
 
     render () {

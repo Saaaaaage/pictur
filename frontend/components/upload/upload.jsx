@@ -27,7 +27,7 @@ class Upload extends React.Component{
 
         let formData = new FormData();
         formData.append('post[id]', this.props.match.params.postId);
-        formData.append('post[title]', "this is going to be the title of the post");
+        // formData.append('post[title]', "this is going to be the title of the post");
 
         this.state.files.forEach(file => {
             formData.append('post[uploads][]', file);
@@ -37,8 +37,8 @@ class Upload extends React.Component{
         this.props.formAction(formData)
             .then(
                 action => {
-                    that.props.closeModal();
                     that.setState({ redirect: `/posts/${action.post.id}/edit`})
+                    that.props.closeModal();
                 }
             );
     }

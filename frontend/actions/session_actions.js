@@ -21,6 +21,10 @@ const receiveErrors = errors => ({
     errors
 });
 
+export const clearErrors = () => ({
+    type: CLEAR_ERRORS
+})
+
 export const register = formUser => dispatch => UserAPI.registerUser(formUser)
     .then(
         user => dispatch(receiveCurrentUser(user)),

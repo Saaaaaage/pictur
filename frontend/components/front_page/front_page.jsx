@@ -32,7 +32,7 @@ class FrontPage extends React.Component {
             '"A passing grade? Like a C? Why don\'t I just get pregnant at a bus station?"',
             '"Who the hell are you always texting? Everyone you know is here!"',
             '"It\'s not a pen, it\'s a principle!"',
-            '"Accidents don\'t just happen over and over and over again, okay ? This isn\'t budget daycare."',
+            '"Accidents don\'t just happen over and over and over again, okay? This isn\'t budget daycare."',
             '"Never change, or do. I\'m not your boss."',
             '"There is a time and place for subtlety, and that time was before Scary Movie."',
             '"Sometimes I think I lost something really important to me, and then it turns out I already ate it."',
@@ -119,7 +119,7 @@ class FrontPage extends React.Component {
 
         
         // This works way better than I expected it to...
-        let gridColumns = null;
+        let gridColumns = [];
         if (this.props.posts.length > 0) {
             gridColumns = new Array(this.state.columns);
             gridColumns.fill('');
@@ -128,8 +128,6 @@ class FrontPage extends React.Component {
                     gridColumns[i % this.state.columns].push(<PostPreview post={post} key={i} />)
                 }
             );
-        } else {
-            return <div></div>
         }
         
         return (
@@ -144,11 +142,16 @@ class FrontPage extends React.Component {
                 </div>
                 <NavbarContainer/>
 
-                {/* <div> */}
+                { gridColumns.length > 0 ? (
                     <div className="grid-column-container">
                         {gridColumns.map((col, i) => (<div className="grid-column" key={i}>{col}</div>))}
                     </div>
-                {/* </div> */}
+                ) : (
+                        <div className="grid-column-container" style={{ margin: '380px 0 0 0'}}>
+                        <h2>It appears there's nothing here... Why not make an account and do some posting?</h2>
+                    </div>
+                )
+                }
                 
             </div>
         )

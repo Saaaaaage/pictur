@@ -6,8 +6,11 @@ import { debounce } from 'lodash';
 class PostEdit extends React.Component {
     constructor(props) {
         super(props)
-        this.state = {title: ""};
-        this.handleTitleInput = this.handleTitleInput.bind(this)
+        this.state = {
+            title: ""
+        };
+        this.handleTitleInput = this.handleTitleInput.bind(this);
+        this.publish = this.publish.bind(this);
         this.pushTitleChange = _.debounce(this.pushTitleChange, 1000).bind(this);
     }
 
@@ -23,7 +26,36 @@ class PostEdit extends React.Component {
     }
 
     pushTitleChange() {
-        
+        this.props.updatePostAttributes({
+            title: this.state.title,
+            id: this.props.post.id
+        })
+    }
+
+    publish(type) {
+        const payload = {
+            title: this.state.title,
+            id: this.props.post.id
+        }
+        switch (type) {
+            case 'public':
+                payload["public"] = true;
+                break;
+            case 'hidden':
+                payload["public"] = false;
+                break;
+            default:
+                break;
+        }
+
+        this.props.updatePostAttributes(payload).then(
+            (
+                () => {
+                    debugger
+                    this.props.history.push(`/posts/${this.props.post.id}`)
+                }
+            ).bind(this)
+        )
     }
 
     render () {
@@ -82,10 +114,16 @@ class PostEdit extends React.Component {
                                 <div className="pe-sidebar-section-header">
                                     POST
                                 </div>
-                                <button className="pe-sidebar-btn pe-community-post-btn">
+                                <button
+                                    className="pe-sidebar-btn pe-community-post-btn"
+                                    onClick={() => this.publish('public')}
+                                >
                                     To Community
                                 </button>
-                                <button className="pe-sidebar-btn pe-community-hidden-btn">
+                                <button
+                                    className="pe-sidebar-btn pe-community-hidden-btn"
+                                    onClick={() => this.publish('hidden')}
+                                >
                                     Hidden
                                 </button>
                             </div>

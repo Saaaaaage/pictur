@@ -45,7 +45,13 @@ export const submitPost = formPost => dispatch => PostAPI.createPost(formPost)
         errors => dispatch(receiveErrors(errors.responseJSON))
     )
 
-export const updatePost = formPost => dispatch => PostAPI.updatePost(formPost)
+export const updatePostUploads = formPost => dispatch => PostAPI.updatePostUploads(formPost)
+    .then(
+        updatedPost => dispatch(receivePost(updatedPost)),
+        errors => dispatch(receiveErrors(errors.responseJSON))
+    )
+
+export const updatePostAttributes = formPost => dispatch => PostAPI.updatePostAttributes(formPost)
     .then(
         updatedPost => dispatch(receivePost(updatedPost)),
         errors => dispatch(receiveErrors(errors.responseJSON))

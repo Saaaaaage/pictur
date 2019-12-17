@@ -183,7 +183,7 @@ var deleteComment = function deleteComment(commentId) {
 /*!******************************************!*\
   !*** ./frontend/actions/post_actions.js ***!
   \******************************************/
-/*! exports provided: RECEIVE_POSTS, RECEIVE_POST, REMOVE_POST, RECEIVE_POST_ERRORS, CLEAR_ERRORS, fetchPosts, fetchPost, submitPost, updatePost, deletePost */
+/*! exports provided: RECEIVE_POSTS, RECEIVE_POST, REMOVE_POST, RECEIVE_POST_ERRORS, CLEAR_ERRORS, fetchPosts, fetchPost, submitPost, updatePostUploads, updatePostAttributes, deletePost */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -196,7 +196,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fetchPosts", function() { return fetchPosts; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fetchPost", function() { return fetchPost; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "submitPost", function() { return submitPost; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updatePost", function() { return updatePost; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updatePostUploads", function() { return updatePostUploads; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updatePostAttributes", function() { return updatePostAttributes; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deletePost", function() { return deletePost; });
 /* harmony import */ var _util_post_api_util__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../util/post_api_util */ "./frontend/util/post_api_util.js");
 
@@ -261,9 +262,18 @@ var submitPost = function submitPost(formPost) {
     });
   };
 };
-var updatePost = function updatePost(formPost) {
+var updatePostUploads = function updatePostUploads(formPost) {
   return function (dispatch) {
-    return _util_post_api_util__WEBPACK_IMPORTED_MODULE_0__["updatePost"](formPost).then(function (updatedPost) {
+    return _util_post_api_util__WEBPACK_IMPORTED_MODULE_0__["updatePostUploads"](formPost).then(function (updatedPost) {
+      return dispatch(receivePost(updatedPost));
+    }, function (errors) {
+      return dispatch(receiveErrors(errors.responseJSON));
+    });
+  };
+};
+var updatePostAttributes = function updatePostAttributes(formPost) {
+  return function (dispatch) {
+    return _util_post_api_util__WEBPACK_IMPORTED_MODULE_0__["updatePostAttributes"](formPost).then(function (updatedPost) {
       return dispatch(receivePost(updatedPost));
     }, function (errors) {
       return dispatch(receiveErrors(errors.responseJSON));
@@ -286,7 +296,7 @@ var deletePost = function deletePost(postId) {
 /*!*********************************************!*\
   !*** ./frontend/actions/session_actions.js ***!
   \*********************************************/
-/*! exports provided: RECEIVE_CURRENT_USER, LOGOUT_CURRENT_USER, RECEIVE_SESSION_ERRORS, CLEAR_ERRORS, register, login, logout */
+/*! exports provided: RECEIVE_CURRENT_USER, LOGOUT_CURRENT_USER, RECEIVE_SESSION_ERRORS, CLEAR_ERRORS, clearErrors, register, login, logout */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -295,6 +305,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LOGOUT_CURRENT_USER", function() { return LOGOUT_CURRENT_USER; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RECEIVE_SESSION_ERRORS", function() { return RECEIVE_SESSION_ERRORS; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CLEAR_ERRORS", function() { return CLEAR_ERRORS; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "clearErrors", function() { return clearErrors; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "register", function() { return register; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "login", function() { return login; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "logout", function() { return logout; });
@@ -327,6 +338,11 @@ var receiveErrors = function receiveErrors(errors) {
   };
 };
 
+var clearErrors = function clearErrors() {
+  return {
+    type: CLEAR_ERRORS
+  };
+};
 var register = function register(formUser) {
   return function (dispatch) {
     return _util_user_api_util__WEBPACK_IMPORTED_MODULE_1__["registerUser"](formUser).then(function (user) {
@@ -859,7 +875,7 @@ function (_React$Component) {
     };
     _this.updateWindowDimensions = _this.updateWindowDimensions.bind(_assertThisInitialized(_this));
     _this.listenToScroll = _this.listenToScroll.bind(_assertThisInitialized(_this));
-    _this.greetings = ['"I don\'t have an ego. My Facebook photo is a landscape."', '"Some flies are too awesome for the wall."', '"We\'re the only species on earth that observes shark week."', '"Hey, did you hear about the turtle in China? Two packs a day!"', '"Well, it\'s been real, but I have a date to catch. Or should I say.. A catch to date."', '"Cool cool cool."', '"Six seasons and a movie!"', '"I painted a tunnel on the side of the library. When it dries, I\'m going for it."', '"Oh my god! I\'m finally popular enough to be in the yearbook!"', '"Everybody loves pelicans, they bring babies!"', '"A passing grade? Like a C? Why don\'t I just get pregnant at a bus station?"', '"Who the hell are you always texting? Everyone you know is here!"', '"It\'s not a pen, it\'s a principle!"', '"Accidents don\'t just happen over and over and over again, okay ? This isn\'t budget daycare."', '"Never change, or do. I\'m not your boss."', '"There is a time and place for subtlety, and that time was before Scary Movie."', '"Sometimes I think I lost something really important to me, and then it turns out I already ate it."', '"First time I was punched in the face, I was like \'Oh no!\', but then I was like \'this is a story..\'"', '"Streets ahead."', '"I was never one to hold a grudge. My father held grudges, I\'ll always hate him for that."', '"We\'re all kind of crazytown bananapants."', '"Blaming a bridge collapse on a school is like blaming owls for why I suck at analogies."', '"I know what a metaphor is! It\'s like a thought with another thought\'s hat on."', '"Fire can\'t go through doors, stupid. It\'s not a ghost."', '"Shut your pompous vortex of overlapping fangs!"', '"Augh! Ghost pirate!!"', '"Ya live by the ghost...ya die by the ghost."', '"The guy from Labyrinth just turned into a bird!"', '"Ow! My arm came off! I can\'t belive that happened"', '"Was something supposed to happen? Are we invisible now, or something?"', '"It\'s like he channels dead crazy people!"', '"Are these they?"', '"Jock rock my ass! Listen to those lyrics, man! It’s all about love, and longing!"', '"You were a daydreamer. A sassmouth! And, not infrequently, a bit of a gigglepuss!"', '"I gotta admit I always wanted to get Edgar Allan Poe in a headlock. That thing is like a pumpkin!"'];
+    _this.greetings = ['"I don\'t have an ego. My Facebook photo is a landscape."', '"Some flies are too awesome for the wall."', '"We\'re the only species on earth that observes shark week."', '"Hey, did you hear about the turtle in China? Two packs a day!"', '"Well, it\'s been real, but I have a date to catch. Or should I say.. A catch to date."', '"Cool cool cool."', '"Six seasons and a movie!"', '"I painted a tunnel on the side of the library. When it dries, I\'m going for it."', '"Oh my god! I\'m finally popular enough to be in the yearbook!"', '"Everybody loves pelicans, they bring babies!"', '"A passing grade? Like a C? Why don\'t I just get pregnant at a bus station?"', '"Who the hell are you always texting? Everyone you know is here!"', '"It\'s not a pen, it\'s a principle!"', '"Accidents don\'t just happen over and over and over again, okay? This isn\'t budget daycare."', '"Never change, or do. I\'m not your boss."', '"There is a time and place for subtlety, and that time was before Scary Movie."', '"Sometimes I think I lost something really important to me, and then it turns out I already ate it."', '"First time I was punched in the face, I was like \'Oh no!\', but then I was like \'this is a story..\'"', '"Streets ahead."', '"I was never one to hold a grudge. My father held grudges, I\'ll always hate him for that."', '"We\'re all kind of crazytown bananapants."', '"Blaming a bridge collapse on a school is like blaming owls for why I suck at analogies."', '"I know what a metaphor is! It\'s like a thought with another thought\'s hat on."', '"Fire can\'t go through doors, stupid. It\'s not a ghost."', '"Shut your pompous vortex of overlapping fangs!"', '"Augh! Ghost pirate!!"', '"Ya live by the ghost...ya die by the ghost."', '"The guy from Labyrinth just turned into a bird!"', '"Ow! My arm came off! I can\'t belive that happened"', '"Was something supposed to happen? Are we invisible now, or something?"', '"It\'s like he channels dead crazy people!"', '"Are these they?"', '"Jock rock my ass! Listen to those lyrics, man! It’s all about love, and longing!"', '"You were a daydreamer. A sassmouth! And, not infrequently, a bit of a gigglepuss!"', '"I gotta admit I always wanted to get Edgar Allan Poe in a headlock. That thing is like a pumpkin!"'];
     _this.chosenGreeting = _this.greetings[Math.floor(Math.random() * _this.greetings.length)];
     return _this;
   }
@@ -922,7 +938,7 @@ function (_React$Component) {
 
       body.classList.add("bg-front-page"); // This works way better than I expected it to...
 
-      var gridColumns = null;
+      var gridColumns = [];
 
       if (this.props.posts.length > 0) {
         gridColumns = new Array(this.state.columns);
@@ -936,8 +952,6 @@ function (_React$Component) {
             key: i
           }));
         });
-      } else {
-        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null);
       }
 
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -949,14 +963,19 @@ function (_React$Component) {
         className: "greeting"
       }, this.chosenGreeting), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_tag_banner_container__WEBPACK_IMPORTED_MODULE_3__["default"], null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "tricky-header-bg"
-      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_navbar_navbar_container__WEBPACK_IMPORTED_MODULE_1__["default"], null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_navbar_navbar_container__WEBPACK_IMPORTED_MODULE_1__["default"], null), gridColumns.length > 0 ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "grid-column-container"
       }, gridColumns.map(function (col, i) {
         return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
           className: "grid-column",
           key: i
         }, col);
-      })));
+      })) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "grid-column-container",
+        style: {
+          margin: '380px 0 0 0'
+        }
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h2", null, "It appears there's nothing here... Why not make an account and do some posting?")));
     }
   }]);
 
@@ -1171,8 +1190,12 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var msp = function msp(state) {
+  var tags = Object.values(state.entities.tags || {});
+  var sorted = tags.sort(function (a, b) {
+    return b.post_count - a.post_count;
+  });
   return {
-    tags: Object.values(state.entities.tags || {})
+    tags: sorted
   };
 };
 
@@ -1362,6 +1385,7 @@ function (_React$Component) {
       title: ""
     };
     _this.handleTitleInput = _this.handleTitleInput.bind(_assertThisInitialized(_this));
+    _this.publish = _this.publish.bind(_assertThisInitialized(_this));
     _this.pushTitleChange = _.debounce(_this.pushTitleChange, 1000).bind(_assertThisInitialized(_this));
     return _this;
   }
@@ -1385,12 +1409,46 @@ function (_React$Component) {
     }
   }, {
     key: "pushTitleChange",
-    value: function pushTitleChange() {}
+    value: function pushTitleChange() {
+      this.props.updatePostAttributes({
+        title: this.state.title,
+        id: this.props.post.id
+      });
+    }
+  }, {
+    key: "publish",
+    value: function publish(type) {
+      var _this3 = this;
+
+      var payload = {
+        title: this.state.title,
+        id: this.props.post.id
+      };
+
+      switch (type) {
+        case 'public':
+          payload["public"] = true;
+          break;
+
+        case 'hidden':
+          payload["public"] = false;
+          break;
+
+        default:
+          break;
+      }
+
+      this.props.updatePostAttributes(payload).then(function () {
+        debugger;
+
+        _this3.props.history.push("/posts/".concat(_this3.props.post.id));
+      }.bind(this));
+    }
   }, {
     key: "render",
     value: function render() {
       var _body$classList,
-          _this3 = this;
+          _this4 = this;
 
       var images = this.props.images.map(function (img, i) {
         return react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
@@ -1437,7 +1495,7 @@ function (_React$Component) {
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("button", {
         className: "add-image-button",
         onClick: function onClick() {
-          return _this3.props.openModal('edit-upload');
+          return _this4.props.openModal('edit-upload');
         }
       }, "+ Add image")), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_utils_modal__WEBPACK_IMPORTED_MODULE_0__["default"], null)), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
         className: "pe-sidebar-container"
@@ -1448,9 +1506,15 @@ function (_React$Component) {
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
         className: "pe-sidebar-section-header"
       }, "POST"), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("button", {
-        className: "pe-sidebar-btn pe-community-post-btn"
+        className: "pe-sidebar-btn pe-community-post-btn",
+        onClick: function onClick() {
+          return _this4.publish('public');
+        }
       }, "To Community"), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("button", {
-        className: "pe-sidebar-btn pe-community-hidden-btn"
+        className: "pe-sidebar-btn pe-community-hidden-btn",
+        onClick: function onClick() {
+          return _this4.publish('hidden');
+        }
       }, "Hidden")), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
         className: "pe-sidebar-section"
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
@@ -1519,8 +1583,8 @@ var mdp = function mdp(dispatch, ownProps) {
     fetchPost: function fetchPost() {
       return dispatch(Object(_actions_post_actions__WEBPACK_IMPORTED_MODULE_1__["fetchPost"])(ownProps.match.params.postId));
     },
-    updatePost: function updatePost(formPost) {
-      return dispatch(Object(_actions_post_actions__WEBPACK_IMPORTED_MODULE_1__["updatePost"])(formPost));
+    updatePostAttributes: function updatePostAttributes(formPost) {
+      return dispatch(Object(_actions_post_actions__WEBPACK_IMPORTED_MODULE_1__["updatePostAttributes"])(formPost));
     },
     deletePost: function deletePost() {
       return dispatch(Object(_actions_post_actions__WEBPACK_IMPORTED_MODULE_1__["deletePost"])(ownProps.match.params.postId));
@@ -1841,6 +1905,9 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
   return {
     login: function login(formUser) {
       return dispatch(Object(_actions_session_actions__WEBPACK_IMPORTED_MODULE_2__["login"])(formUser));
+    },
+    clearErrors: function clearErrors() {
+      return dispatch(Object(_actions_session_actions__WEBPACK_IMPORTED_MODULE_2__["clearErrors"])());
     }
   };
 };
@@ -1913,6 +1980,16 @@ function (_React$Component) {
   }
 
   _createClass(LoginForm, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      this.props.clearErrors();
+    }
+  }, {
+    key: "componentWillUnmount",
+    value: function componentWillUnmount() {
+      this.props.clearErrors();
+    }
+  }, {
     key: "update",
     value: function update(field) {
       var _this2 = this;
@@ -2018,6 +2095,9 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
   return {
     register: function register(formUser) {
       return dispatch(Object(_actions_session_actions__WEBPACK_IMPORTED_MODULE_2__["register"])(formUser));
+    },
+    clearErrors: function clearErrors() {
+      return dispatch(Object(_actions_session_actions__WEBPACK_IMPORTED_MODULE_2__["clearErrors"])());
     }
   };
 };
@@ -2100,7 +2180,8 @@ function (_React$Component) {
         username: '',
         email: '',
         password: '',
-        retype_password: ""
+        retype_password: '',
+        phone_number: ''
       }
     };
     _this.handleSubmit = _this.handleSubmit.bind(_assertThisInitialized(_this));
@@ -2109,6 +2190,16 @@ function (_React$Component) {
   }
 
   _createClass(RegisterForm, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      this.props.clearErrors();
+    }
+  }, {
+    key: "componentWillUnmount",
+    value: function componentWillUnmount() {
+      this.props.clearErrors();
+    }
+  }, {
     key: "update",
     value: function update(field) {
       var _this2 = this;
@@ -2176,6 +2267,13 @@ function (_React$Component) {
 
             break;
 
+          case "phone_number":
+            if (!_this3.state.formUser.phone_number) {
+              error = 'Just put some text';
+            }
+
+            break;
+
           default:
             break;
         }
@@ -2184,6 +2282,17 @@ function (_React$Component) {
           formErrors: _objectSpread({}, _this3.state.formErrors, _defineProperty({}, field, error))
         });
       };
+    }
+  }, {
+    key: "submitable",
+    value: function submitable() {
+      var noErrors = Object.values(this.state.formErrors).every(function (val) {
+        return val === "";
+      });
+      var filledFields = Object.values(this.state.formUser).every(function (val) {
+        return !!val;
+      });
+      return noErrors && filledFields;
     }
   }, {
     key: "handleSubmit",
@@ -2247,21 +2356,24 @@ function (_React$Component) {
         value: this.state.formUser.retype_password,
         onChange: this.update("retype_password"),
         onBlur: this.validate("retype_password")
-      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+      }), this.state.formErrors.phone_number && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "auth-input-error"
+      }, this.state.formErrors.phone_number), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
         className: "auth-input-field",
         type: "text",
         placeholder: "Phone Number",
         value: this.state.formUser.phone_number,
-        onChange: this.update("phone_number") // onBlur={this.validate("phone_number")}
-
+        onChange: this.update("phone_number"),
+        onBlur: this.validate("phone_number")
       }))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "after-form-group"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
         to: "/login"
       }, "sign in"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
         type: "submit",
-        className: "button button-auth",
-        form: "register-form"
+        className: "button button-auth ".concat(this.submitable() ? "" : "button-disabled"),
+        form: "register-form",
+        disabled: !this.submitable()
       }, "Sign Up")));
     }
   }]);
@@ -2302,7 +2414,7 @@ var mapStateToProps = function mapStateToProps(_ref) {
 var mapDispatchToProps = function mapDispatchToProps(dispatch) {
   return {
     formAction: function formAction(post) {
-      return dispatch(Object(_actions_post_actions__WEBPACK_IMPORTED_MODULE_2__["updatePost"])(post));
+      return dispatch(Object(_actions_post_actions__WEBPACK_IMPORTED_MODULE_2__["updatePostUploads"])(post));
     },
     closeModal: function closeModal() {
       return dispatch(Object(_actions_ui_actions__WEBPACK_IMPORTED_MODULE_3__["closeModal"])());
@@ -2439,10 +2551,10 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch, ownProps) {
   return {
     formAction: function formAction(post) {
       return dispatch(Object(_actions_post_actions__WEBPACK_IMPORTED_MODULE_2__["submitPost"])(post));
-    } // closeModal: () => {
-    //     dispatch(closeModal());
-    // }
-
+    },
+    closeModal: function closeModal() {
+      return dispatch(Object(_actions_ui_actions__WEBPACK_IMPORTED_MODULE_3__["closeModal"])());
+    }
   };
 };
 
@@ -2522,17 +2634,17 @@ function (_React$Component) {
     key: "handleSubmit",
     value: function handleSubmit(e) {
       var formData = new FormData();
-      formData.append('post[id]', this.props.match.params.postId);
-      formData.append('post[title]', "this is going to be the title of the post");
+      formData.append('post[id]', this.props.match.params.postId); // formData.append('post[title]', "this is going to be the title of the post");
+
       this.state.files.forEach(function (file) {
         formData.append('post[uploads][]', file);
       });
       var that = this;
       this.props.formAction(formData).then(function (action) {
-        that.props.closeModal();
         that.setState({
           redirect: "/posts/".concat(action.post.id, "/edit")
         });
+        that.props.closeModal();
       });
     }
   }, {
@@ -3430,7 +3542,7 @@ var deleteComment = function deleteComment(commentId) {
 /*!****************************************!*\
   !*** ./frontend/util/post_api_util.js ***!
   \****************************************/
-/*! exports provided: getPosts, getPost, createPost, updatePost, deletePost */
+/*! exports provided: getPosts, getPost, createPost, updatePostUploads, updatePostAttributes, deletePost */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -3438,7 +3550,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getPosts", function() { return getPosts; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getPost", function() { return getPost; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createPost", function() { return createPost; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updatePost", function() { return updatePost; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updatePostUploads", function() { return updatePostUploads; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updatePostAttributes", function() { return updatePostAttributes; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deletePost", function() { return deletePost; });
 var getPosts = function getPosts() {
   return $.ajax({
@@ -3463,13 +3576,22 @@ var createPost = function createPost(post) {
   });
 }; // post is FormData object
 
-var updatePost = function updatePost(post) {
+var updatePostUploads = function updatePostUploads(post) {
   return $.ajax({
     url: "/api/posts/".concat(post.get('post[id]')),
     method: 'PATCH',
     data: post,
     contentType: false,
     processData: false
+  });
+};
+var updatePostAttributes = function updatePostAttributes(post) {
+  return $.ajax({
+    url: "/api/posts/".concat(post.id),
+    method: 'PATCH',
+    data: {
+      post: post
+    }
   });
 };
 var deletePost = function deletePost(postId) {
@@ -53210,7 +53332,7 @@ function warning(message) {
 /*!***************************************************************!*\
   !*** ./node_modules/react-router-dom/esm/react-router-dom.js ***!
   \***************************************************************/
-/*! exports provided: MemoryRouter, Prompt, Redirect, Route, Router, StaticRouter, Switch, __RouterContext, generatePath, matchPath, useHistory, useLocation, useParams, useRouteMatch, withRouter, BrowserRouter, HashRouter, Link, NavLink */
+/*! exports provided: BrowserRouter, HashRouter, Link, NavLink, MemoryRouter, Prompt, Redirect, Route, Router, StaticRouter, Switch, __RouterContext, generatePath, matchPath, useHistory, useLocation, useParams, useRouteMatch, withRouter */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";

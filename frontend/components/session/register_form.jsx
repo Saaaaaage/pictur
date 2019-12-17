@@ -18,11 +18,20 @@ class RegisterForm extends React.Component {
                 username: '',
                 email: '',
                 password: '',
-                retype_password: ""
+                retype_password: '',
+                phone_number: ''
             }
         };
         this.handleSubmit = this.handleSubmit.bind(this);
         this.validate = this.validate.bind(this);
+    }
+
+    componentDidMount() {
+        this.props.clearErrors();
+    }
+
+    componentWillUnmount() {
+        this.props.clearErrors();
     }
 
     update(field) {
@@ -73,11 +82,22 @@ class RegisterForm extends React.Component {
                         error = 'Your passwords do not match!';
                     }
                     break;
+                case "phone_number":
+                    if (!this.state.formUser.phone_number) {
+                        error = 'Just put some text';
+                    }
+                    break;
                 default:
                     break;
             }
             this.setState({ formErrors: { ...this.state.formErrors, [field]: error } })
         }
+    }
+
+    submitable() {
+        const noErrors = Object.values(this.state.formErrors).every(val => val === "");
+        const filledFields = Object.values(this.state.formUser).every(val => !!val);
+        return noErrors && filledFields;
     }
 
     handleSubmit(e) {
@@ -139,18 +159,26 @@ class RegisterForm extends React.Component {
                             onChange={this.update("retype_password")}
                             onBlur={this.validate("retype_password")}
                         />
+                        {this.state.formErrors.phone_number &&
+                            <div className="auth-input-error">{this.state.formErrors.phone_number}</div>
+                        }
                         <input className="auth-input-field"
                             type="text"
                             placeholder="Phone Number"
                             value={this.state.formUser.phone_number}
                             onChange={this.update("phone_number")}
-                            // onBlur={this.validate("phone_number")}
+                            onBlur={this.validate("phone_number")}
                         />
                     </div>
                 </form>
                 <div className='after-form-group'>
                     <Link to='/login'>sign in</Link>
-                    <button type="submit" className="button button-auth" form="register-form">Sign Up</button>
+                    <button
+                        type="submit"
+                        className={`button button-auth ${this.submitable() ? "" : "button-disabled"}`}
+                        form="register-form"
+                        disabled={!this.submitable()}
+                    >Sign Up</button>
                 </div>
             </div>
         )

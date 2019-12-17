@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { fetchPost, updatePost, deletePost } from '../../../actions/post_actions';
+import { fetchPost, updatePost, deletePost, updatePostAttributes } from '../../../actions/post_actions';
 import PostEdit from './post_edit';
 import { openModal } from '../../../actions/ui_actions';
 
@@ -17,7 +17,7 @@ const mdp = (dispatch, ownProps) => {
     // TODO: add updateDescription and updateSortOrder
     return {
         fetchPost: () => dispatch(fetchPost(ownProps.match.params.postId)),
-        updatePost: formPost => dispatch(updatePost(formPost)),
+        updatePostAttributes: formPost => dispatch(updatePostAttributes(formPost)),
         deletePost: () => dispatch(deletePost(ownProps.match.params.postId)),
         openModal: (modal) => dispatch(openModal(modal))
     }

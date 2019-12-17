@@ -6,9 +6,9 @@ import { merge } from 'lodash';
 
 export default (state = {}, action) => {
     Object.freeze(state);
-    let newState
+    let newState;
     switch (action.type) {
         default:
-            return state
+            return state;
     }
 }

@@ -3,7 +3,9 @@ Rails.application.routes.draw do
 
   root to: "static_pages#root"
   namespace :api, defaults: {format: :json} do
-    resources :users, only: [:create, :show, :update, :destroy]
+    resources :users, only: [:create, :show, :update, :destroy] do
+      get 'posts', to: 'posts#by_user'
+    end
     get '/username_available/:username', to: 'users#username_available?'
 
     resource  :session, only: [:create, :destroy]
@@ -14,7 +16,9 @@ Rails.application.routes.draw do
     resources :comments, only: [:show, :destroy] do
       get 'children', only: :children
     end
-    resources :tags, only: [:index]
+    resources :tags, only: [:index, :show] do
+      get 'posts', to: 'posts#by_tag'
+    end
 
   end
 end

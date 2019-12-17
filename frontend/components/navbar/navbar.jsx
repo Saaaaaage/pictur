@@ -6,12 +6,12 @@ const NavBar = ({currentUser, logout}) => {
     const menuClick = e => {
         const menu = document.getElementsByClassName("avatar-menu")[0];
         menu.setAttribute("style", "display:block")
-    }
+    };
 
     const menuBlur = e => {
         const menu = document.getElementsByClassName("avatar-menu")[0];
         menu.setAttribute("style", "display:none")
-    }
+    };
 
     const navbarRight = !currentUser ? (
         <div className='navbar-right'>
@@ -31,7 +31,7 @@ const NavBar = ({currentUser, logout}) => {
                     </p>
                     <div className='avatar-menu'>
                         <ul className="avatar-menu-top">
-                            <li>Posts</li>
+                            <li><Link to={`/users/${currentUser.id}`}>Posts</Link></li>
                             <li>Favorites</li>
                             <li>Comments</li>
                             <li>Images</li>

@@ -1,0 +1,15 @@
+.user-banner-bg {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.3) 20%), url(nebula-bg.jpeg)!important;
+}
+
+.user-banner {
+    font-size: 24px;
+    font-family: Proxima Nova ExtraBold,Helvetica Neue,Helvetica,Arial,sans-serif;
+    letter-spacing: .6px;
+    color: #aed8ea;
+    margin-top: 12px;
+    min-height: 34px;
+    position: relative;
+    margin-bottom: 30px;
+    padding-top: 65px;
+}

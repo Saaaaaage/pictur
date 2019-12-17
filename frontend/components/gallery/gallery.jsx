@@ -1,10 +1,10 @@
 import React from 'react';
 import NavbarContainer from '../navbar/navbar_container';
 import PostPreview from './post_preview';
-import TagBannerContainer from './tag_banner_container'
+import TagBannerContainer from './gallery_banner/index_banner_container';
 import {Link} from 'react-router-dom';
 
-class FrontPage extends React.Component {
+class Gallery extends React.Component {
     constructor (props) {
         super(props);
         this.state = {
@@ -18,45 +18,6 @@ class FrontPage extends React.Component {
         };
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
         this.listenToScroll = this.listenToScroll.bind(this);
-        this.greetings = [
-            '"I don\'t have an ego. My Facebook photo is a landscape."',
-            '"Some flies are too awesome for the wall."',
-            '"We\'re the only species on earth that observes shark week."',
-            '"Hey, did you hear about the turtle in China? Two packs a day!"',
-            '"Well, it\'s been real, but I have a date to catch. Or should I say.. A catch to date."',
-            '"Cool cool cool."',
-            '"Six seasons and a movie!"',
-            '"I painted a tunnel on the side of the library. When it dries, I\'m going for it."',
-            '"Oh my god! I\'m finally popular enough to be in the yearbook!"',
-            '"Everybody loves pelicans, they bring babies!"',
-            '"A passing grade? Like a C? Why don\'t I just get pregnant at a bus station?"',
-            '"Who the hell are you always texting? Everyone you know is here!"',
-            '"It\'s not a pen, it\'s a principle!"',
-            '"Accidents don\'t just happen over and over and over again, okay? This isn\'t budget daycare."',
-            '"Never change, or do. I\'m not your boss."',
-            '"There is a time and place for subtlety, and that time was before Scary Movie."',
-            '"Sometimes I think I lost something really important to me, and then it turns out I already ate it."',
-            '"First time I was punched in the face, I was like \'Oh no!\', but then I was like \'this is a story..\'"',
-            '"Streets ahead."',
-            '"I was never one to hold a grudge. My father held grudges, I\'ll always hate him for that."',
-            '"We\'re all kind of crazytown bananapants."',
-            '"Blaming a bridge collapse on a school is like blaming owls for why I suck at analogies."',
-            '"I know what a metaphor is! It\'s like a thought with another thought\'s hat on."',
-            '"Fire can\'t go through doors, stupid. It\'s not a ghost."',
-            '"Shut your pompous vortex of overlapping fangs!"',
-
-            '"Augh! Ghost pirate!!"',
-            '"Ya live by the ghost...ya die by the ghost."',
-            '"The guy from Labyrinth just turned into a bird!"',
-            '"Ow! My arm came off! I can\'t belive that happened"',
-            '"Was something supposed to happen? Are we invisible now, or something?"',
-            '"It\'s like he channels dead crazy people!"',
-            '"Are these they?"',
-            '"Jock rock my ass! Listen to those lyrics, man! It’s all about love, and longing!"',
-            '"You were a daydreamer. A sassmouth! And, not infrequently, a bit of a gigglepuss!"',
-            '"I gotta admit I always wanted to get Edgar Allan Poe in a headlock. That thing is like a pumpkin!"',
-        ];
-        this.chosenGreeting = this.greetings[Math.floor(Math.random() * this.greetings.length)]
     }
 
     componentDidMount(){
@@ -65,7 +26,9 @@ class FrontPage extends React.Component {
         window.addEventListener('resize', this.updateWindowDimensions);
 
         // Add posts to state
+        this.props.clearPosts(); // TODO: is this the best way to make sure we only display the appropriate images??
         this.props.fetchPosts();
+        this.props.fetchOwner();
 
         this.listenToScroll();
         window.addEventListener('scroll', this.listenToScroll);
@@ -87,7 +50,6 @@ class FrontPage extends React.Component {
         // const scrolled = winScroll / height;
 
         this.setState({ scrollPos: scrollPos});
-        console.log(scrollPos);
         
         let newState = { scrollPos: scrollPos };
         scrollPos > 202 ? (
@@ -136,9 +98,7 @@ class FrontPage extends React.Component {
                     className={this.state.trickyHeaderClasses}
                     style={{ top: this.state.trickyHeaderTop }}                    
                 >
-                    <div className="greeting">{this.chosenGreeting}</div>
-                    <TagBannerContainer />
-                    <div className="tricky-header-bg"></div>
+                    {this.props.bannerObject}
                 </div>
                 <NavbarContainer/>
 
@@ -148,7 +108,7 @@ class FrontPage extends React.Component {
                     </div>
                 ) : (
                         <div className="grid-column-container" style={{ margin: '380px 0 0 0'}}>
-                        <h2>It appears there's nothing here... Why not make an account and do some posting?</h2>
+                        <h2>...</h2>
                     </div>
                 )
                 }
@@ -158,4 +118,4 @@ class FrontPage extends React.Component {
     }
 }
 
-export default FrontPage;
+export default Gallery;

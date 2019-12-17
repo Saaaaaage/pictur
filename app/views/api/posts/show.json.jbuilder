@@ -8,3 +8,10 @@ json.comments do
         end
     end
 end
+json.tags do
+    @post.tags.each do |tag|
+        json.set! tag.id do
+            json.extract! tag, :id, :name
+        end
+    end
+end

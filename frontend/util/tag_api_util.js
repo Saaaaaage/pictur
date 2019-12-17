@@ -11,3 +11,10 @@ export const fetchTag = tagId => {
         method: "GET"
     });
 };
+
+export const findTags = query => {
+    return $.ajax({
+        url: `/api/findTags?query=${query}`,
+        method: 'GET'
+    });
+};

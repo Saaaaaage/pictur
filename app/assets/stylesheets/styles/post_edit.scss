@@ -11,6 +11,7 @@
 
 .pe-sidebar-container {
     min-width: 308px;
+    max-width: 308px;
     margin: 15px 0 0 45px;
 }
 
@@ -134,10 +135,15 @@
     margin-left: 10px;
 }
 
-.pe-add-tags {
-    height: 15px;
+.pe-tag-container {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.pe-tags {
+    padding: 0 10px 0 10px;
+    height: 35px;
     margin: 0 10px 15px 0;
-    padding: 11px 20px;
     background: #585d6a;
     box-shadow: 0 4px 5px rgba(0,0,0,.24);
     border-radius: 54px;
@@ -146,6 +152,26 @@
     color: #fff;
     letter-spacing: .02em;
     white-space: nowrap;
+    position: relative;
+    display:flex;
+    align-items:center;
+    justify-content: center;
+}
+
+.pe-add-tags {
+    margin: 0 10px 15px 0;
+    // padding: 11px 20px;
+    height: 35px;
+    width: 80px;
+    background: #585d6a;
+    box-shadow: 0 4px 5px rgba(0,0,0,.24);
+    border-radius: 54px;
+    font-size: 14px;
+    line-height: 14px;
+    color: #fff;
+    letter-spacing: .02em;
+    white-space: nowrap;
+    position: relative;
 }
 
 .pe-add-tags:hover {

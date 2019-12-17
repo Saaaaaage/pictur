@@ -2,26 +2,36 @@ import Modal from '../../utils/modal';
 import React from 'react';
 import NavbarContainer from '../../navbar/navbar_container';
 import { debounce } from 'lodash';
+import AddTagsDialogue from './add_tags';
 
 class PostEdit extends React.Component {
     constructor(props) {
-        super(props)
+        super(props);
         this.state = {
-            title: ""
+            title: "",
+            addTagDialogue: false,
+            tagSearchString: "",
+            tagSearchResults: [],
+            tags: {},
+
         };
         this.handleTitleInput = this.handleTitleInput.bind(this);
+        this.handleTagSearchInput = this.handleTagSearchInput.bind(this);
         this.publish = this.publish.bind(this);
         this.pushTitleChange = _.debounce(this.pushTitleChange, 1000).bind(this);
+        this.findTags = _.debounce(this.findTags, 500).bind(this);
+        this.showAddTagDialogue = this.showAddTagDialogue.bind(this);
+        this.hideAddTagDialogue = this.hideAddTagDialogue.bind(this);
     }
 
     componentDidMount() {
         this.props.fetchPost().then(
-            () => {this.setState(this.props.post)}
-        )
+            () => {this.setState(this.props.post);}
+        );
     }
 
     handleTitleInput(e) {
-        this.setState({ title: e.target.value })
+        this.setState({ title: e.target.value });
         this.pushTitleChange();
     }
 
@@ -29,14 +39,29 @@ class PostEdit extends React.Component {
         this.props.updatePostAttributes({
             title: this.state.title,
             id: this.props.post.id
-        })
+        });
+    }
+
+    handleTagSearchInput(e) {
+        this.setState({ tagSearchString: e.target.value });
+        this.findTags();
+    }
+
+    findTags() {
+        if (this.state.tagSearchString.length > 1) {
+            this.props.findTags(this.state.tagSearchString).then(
+                (tags => {
+                    this.setState({tagSearchResults: Object.values(tags)});
+                }).bind(this)
+            );
+        }
     }
 
     publish(type) {
         const payload = {
             title: this.state.title,
             id: this.props.post.id
-        }
+        };
         switch (type) {
             case 'public':
                 payload["public"] = true;
@@ -51,11 +76,28 @@ class PostEdit extends React.Component {
         this.props.updatePostAttributes(payload).then(
             (
                 () => {
-                    debugger
-                    this.props.history.push(`/posts/${this.props.post.id}`)
+                    this.props.history.push(`/posts/${this.props.post.id}`);
                 }
             ).bind(this)
-        )
+        );
+    }
+
+    showAddTagDialogue(e) {
+        console.log("opening");
+        console.log(document.activeElement);
+        this.setState(
+            { addTagDialogue: true },
+            () => document.getElementById("tagSearch").focus()
+        );
+    }
+    hideAddTagDialogue(e) {
+        console.log("closing");
+        console.log(document.activeElement);
+        if (
+            document.getElementById("tagSearch") != document.activeElement
+        ) {
+            this.setState({ addTagDialogue: false });
+        }
     }
 
     render () {
@@ -72,6 +114,14 @@ class PostEdit extends React.Component {
             )
         })
 
+        const tags = Object.values(this.state.tags).map(tag => {
+            return (
+                <div
+                    className="pe-tags"
+                    key={tag.id}
+                >{tag.name}</div>
+            )
+        })
 
         // TODO: is there better way change the class of the body depending on the page?
         const body = document.getElementsByTagName('body')[0];
@@ -81,7 +131,6 @@ class PostEdit extends React.Component {
 
         const bgIndicator = this.state.title ? "pe-banner-titled" : "pe-banner-untitled";
         
-        // debugger
         return (
             <div>
                 <div className={`pe-banner ${bgIndicator}`}></div>
@@ -131,7 +180,38 @@ class PostEdit extends React.Component {
                                 <div className="pe-sidebar-section-header">
                                     ADD TAGS
                                 </div>
-                                <button className="pe-add-tags">+ Tag</button>
+                                
+                                
+                                <div className="pe-tag-container">
+                                    {tags}
+
+                                    <div
+                                        className="pe-add-tags"
+                                        onClick={this.showAddTagDialogue}
+                                        onBlur={this.hideAddTagDialogue}
+                                        tabIndex="0"
+                                        id="addTagButton"
+                                    >
+                                        <input
+                                            type="text"
+                                            id="tagSearch"
+                                            placeholder="+ Tag"
+                                            onChange={this.handleTagSearchInput}
+                                        />
+                                        {this.state.addTagDialogue &&
+                                            <AddTagsDialogue
+                                                tags={this.state.tagSearchResults}
+                                            />
+                                        }
+                                    </div>
+                                </div>
+
+
+
+
+
+
+
                             </div>
                             <div className='pe-sidebar-section'>
                                 <div className="pe-sidebar-section-header">

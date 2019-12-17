@@ -7,4 +7,9 @@ class Api::TagsController < ApplicationController
     def show
         @tag = Tag.all.joins(:posts).where(posts: {public: true}).select('tags.*, count(*) as post_count').group('tags.id').find(params[:id])
     end
+
+    def find_tags
+        @tags = Tag.search(params[:query])
+        render :index
+    end
 end

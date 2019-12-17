@@ -13,12 +13,15 @@ Rails.application.routes.draw do
     resources :posts, only: [:index, :create, :show, :update, :destroy] do
       resources :comments, only: [:index, :create]
     end
+
     resources :comments, only: [:show, :destroy] do
       get 'children', only: :children
     end
+
     resources :tags, only: [:index, :show] do
       get 'posts', to: 'posts#by_tag'
     end
+    get 'findTags', to: 'tags#find_tags'
 
   end
 end

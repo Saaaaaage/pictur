@@ -21,4 +21,14 @@ class Tag < ApplicationRecord
     has_many :posts,
         through: :post_tags,
         source: :post
+    
+    def self.search(query)
+        Tag.all
+            .joins(:posts)
+            .where(posts: {public: true})
+            .where('lower(name) like ?', "%#{sanitize_sql_like(query)}%")
+            .select('tags.*, count(*) as post_count')
+            .group('tags.id')
+            .order('post_count')
+    end
 end

@@ -2,6 +2,7 @@ import { connect } from 'react-redux';
 import { fetchPost, updatePost, deletePost, updatePostAttributes } from '../../../actions/post_actions';
 import PostEdit from './post_edit';
 import { openModal } from '../../../actions/ui_actions';
+import { findTags } from '../../../util/tag_api_util';
 
 const msp = (state, ownProps) => {
     const allPosts = state.entities.posts;
@@ -10,8 +11,8 @@ const msp = (state, ownProps) => {
     return {
         post: post,
         images: Object.values(post.uploads || {}),
-    }
-}
+    };
+};
 
 const mdp = (dispatch, ownProps) => {
     // TODO: add updateDescription and updateSortOrder
@@ -19,8 +20,10 @@ const mdp = (dispatch, ownProps) => {
         fetchPost: () => dispatch(fetchPost(ownProps.match.params.postId)),
         updatePostAttributes: formPost => dispatch(updatePostAttributes(formPost)),
         deletePost: () => dispatch(deletePost(ownProps.match.params.postId)),
-        openModal: (modal) => dispatch(openModal(modal))
-    }
-}
+        openModal: (modal) => dispatch(openModal(modal)),
+        findTags: query => findTags(query)
+        
+    };
+};
 
 export default connect(msp, mdp)(PostEdit);

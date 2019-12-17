@@ -92,7 +92,8 @@ end
 #   post = Post.create!({
 #       user: pam,
 #       title: filename.split(".")[0].split("-").map(&:capitalize).join(" ").tr("0-9", ""),
-#       tags: tags.sample(3)
+#       tags: tags.sample(3),
+#       public: true
 #   })
 #   posts << post
 

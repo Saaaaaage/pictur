@@ -11,9 +11,7 @@ const mapStateToProps = ({ entities, session }) => ({
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
         formAction: post => dispatch(submitPost(post)),
-        // closeModal: () => {
-        //     dispatch(closeModal());
-        // }
+        closeModal: () => dispatch(closeModal())
     }
 };
 

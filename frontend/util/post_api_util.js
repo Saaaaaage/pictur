@@ -24,13 +24,21 @@ export const createPost = post => {
 }
 
 // post is FormData object
-export const updatePost = post => {
+export const updatePostUploads = post => {
     return $.ajax({
         url: `/api/posts/${post.get('post[id]')}`,
         method: 'PATCH',
         data: post,
         contentType: false,
         processData: false
+    })
+}
+
+export const updatePostAttributes = post => {
+    return $.ajax({
+        url: `/api/posts/${post.id}`,
+        method: 'PATCH',
+        data: {post}
     })
 }
 

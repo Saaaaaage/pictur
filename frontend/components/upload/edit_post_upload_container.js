@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import Upload from './upload';
-import { updatePost } from '../../actions/post_actions';
+import { updatePostUploads } from '../../actions/post_actions';
 import { openModal, closeModal } from '../../actions/ui_actions';
 
 const mapStateToProps = ({ entities, session }) => ({
@@ -8,7 +8,7 @@ const mapStateToProps = ({ entities, session }) => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-    formAction: post => dispatch(updatePost(post)),
+    formAction: post => dispatch(updatePostUploads(post)),
     closeModal: () => dispatch(closeModal())
 });
 

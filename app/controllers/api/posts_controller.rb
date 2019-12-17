@@ -6,6 +6,20 @@ class Api::PostsController < ApplicationController
         @posts = Post.with_attached_uploads.includes(:user).where(public: true).all
     end
 
+    def by_user
+        if current_user == User.find(params[:user_id])
+            @posts = Post.with_attached_uploads.includes(:user).joins(:user).where(users: {id: params[:user_id]}).all
+        else
+            @posts = Post.with_attached_uploads.includes(:user).joins(:user).where(public: true, users: {id: params[:user_id]}).all
+        end
+        render :index
+    end
+
+    def by_tag
+        @posts = Post.with_attached_uploads.includes(:user).joins(:tags).where(public: true, tags: {id: params[:tag_id]}).all
+        render :index
+    end
+
     def show
         # TODO: Comment retrieval is super inefficient: fix it!
         @post = Post.with_attached_uploads.includes(:user).find(params[:id])

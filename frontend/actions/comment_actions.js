@@ -37,16 +37,16 @@ export const fetchChildren = commentId => dispatch => CommentApi.getCommentChild
     .then(
         comments => dispatch(receiveComments(comments)),
         errors => dispatch(receiveErrors(errors.responseJSON))
-    )
+    );
 
 export const submitComment = (postId, formComment) => dispatch => CommentApi.createComment(postId, formComment)
     .then(
         savedComment => dispatch(receiveComment(savedComment)),
         errors => dispatch(receiveErrors(errors.responseJSON))
-    )
+    );
 
 export const deleteComment = commentId => dispatch => CommentApi.deleteComment(commentId)
     .then(
         comment => dispatch(removeComment(comment)),
         errors => dispatch(receiveErrors(errors.responseJSON))
-    )
+    );

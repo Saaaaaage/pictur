@@ -9,32 +9,32 @@
 
 # TODO: Find a way to make this file play nice with Heroku
 
-# puts "Destroying post/tag relationships..."
+puts "Destroying post/tag relationships..."
 PostTag.destroy_all
 
-# puts "Destroying tags..."
+puts "Destroying tags..."
 Tag.destroy_all
 
-# puts 'Destroying comments...'
+puts 'Destroying comments...'
 Comment.destroy_all
 
-# puts 'Destroying uploads...'
+puts 'Destroying uploads...'
 Post.all.each do |post|
   post.uploads.purge
 end
 
-# puts 'Destroying posts...'
+puts 'Destroying posts...'
 Post.destroy_all
 
-# puts "Destroying users ..."
+puts "Destroying users ..."
 User.destroy_all
 
-# puts 'Resetting keys'
+puts 'Resetting keys'
 ActiveRecord::Base.connection.tables.each do |t|
   ActiveRecord::Base.connection.reset_pk_sequence!(t)
 end
 
-# puts 'Creating Pam'
+puts 'Creating Pam'
 pam = User.create!({
   username: "pam",
   password: "i<3jim",
@@ -42,95 +42,72 @@ pam = User.create!({
   phone_number: "123 456 7890"
 })
 
-# puts 'Creating tags...'
-tag_names = [
-  'Stock Photo',
-  'Oddly Satisfying',
-  'Recipes',
-  'Aww',
-  'Memes',
-  'Gaming',
-  'The Great Outdoors',
-  'Funny',
-  'Anime',
-  'Comics',
-  'Virtual Reality',
-  'Kittens',
-  'Chocolate',
-  'Deal With It',
-  'Awesome',
-  'Eat What You Want',
-  'Doug',
-  'Avocado',
-  'Wallpaper',
-  'Otter',
-  'Owl',
-  'Neat',
-  'Dogs Are The Best People',
-  'Movies And Tv',
-  'Fail',
-  'Thats So Pam',
-  'Like A Boss',
-  'Squad',
-  'Life Goal',
-  'Potato',
-  'Banana',
+puts 'Creating posts and tags and uploading images...'
+path = "/Users/appacademystudent/Desktop/public_domain_images"
+posts = []
+created_tags = []
+illegal_tags = [
+  'And', 'With', "The"
 ]
-tags = []
-tag_names.each do |name|
-  tag = Tag.create!({name: name})
-  tags << tag
+Dir.foreach(path) do |filename|
+  next unless ['jpg', 'jpeg'].include?(filename.split(".")[-1])
+  
+  puts '...Creating a post...'
+  words = filename.tr("0-9", "").split(".")[0].split("-").map(&:capitalize)
+
+  puts 'Creating tags...'
+  my_tags = []
+  words.each do |name|
+    if name.length > 2 and !illegal_tags.include?(name)
+      my_tags.push( Tag.find_by(name: name) || Tag.create!({name: name}) ) if name.length > 2
+    end
+  end
+
+  post = Post.create!({
+      user: pam,
+      title: words.join(" "),
+      tags: my_tags,
+      public: true
+  })
+  posts << post
+
+  puts "...Attaching an image: #{filename}"
+  post.uploads.attach(io: File.open(path + '/' + filename), filename: filename)
+
+  # break if Post.all.length > 2
 end
 
-# # puts 'Creating posts and uploading images...'
-# path = "/Users/sage/Desktop/public_domain_images"
-# posts = []
-# Dir.foreach(path) do |filename|
-#   next unless ['jpg', 'jpeg'].include?(filename.split(".")[-1])
-  
-#   # puts '...Creating a post...'
-#   post = Post.create!({
-#       user: pam,
-#       title: filename.split(".")[0].split("-").map(&:capitalize).join(" ").tr("0-9", ""),
-#       tags: tags.sample(3),
-#       public: true
-#   })
-#   posts << post
+puts 'Creating root level comments...'
+comments = []
+posts.each do |post|
+  if post.id
+    3.times do
+      quote = Faker::TvShows::VentureBros.quote
+      puts "\t#{quote}"
+      # debugger
+      comment = Comment.create!({
+        body: quote,
+        post: post,
+        user: pam
+      })
+      comments << comment
+    end
+  end
+end
 
-#   # puts "...Attaching an image: #{filename}"
-#   post.uploads.attach(io: File.open(path + '/' + filename), filename: filename)
-
-#   break if Post.all.length > 15
-# end
-
-# # puts 'Creating root level comments...'
-# comments = []
-# posts.each do |post|
-#   3.times do
-#     quote = Faker::TvShows::VentureBros.quote
-#     # puts "\t#{quote}"
-#     comment = Comment.create!({
-#       body: quote,
-#       post: post,
-#       user: pam
-#     })
-#     comments << comment
-#   end
-# end
-
-# # puts 'Creating child comments...'
-# (comments.length * 10).times do |i|
-#   quote = Faker::TvShows::VentureBros.quote
-#   parent = comments.sample
-#   # puts "\t#{i}. #{quote}"
-#   comment = Comment.create!({
-#     body: quote,
-#     post_id: parent.post_id,
-#     user: pam,
-#     parent: parent
-#   })
-#   comments << comment
-# end
+puts 'Creating child comments...'
+(comments.length * 10).times do |i|
+  quote = Faker::TvShows::VentureBros.quote
+  parent = comments.sample
+  puts "\t#{i}. #{quote}"
+  comment = Comment.create!({
+    body: quote,
+    post_id: parent.post_id,
+    user: pam,
+    parent: parent
+  })
+  comments << comment
+end
 
 
-# # puts 'Done!'
+puts 'Done!'

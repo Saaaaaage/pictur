@@ -23,13 +23,13 @@ const receiveErrors = errors => ({
 
 export const clearErrors = () => ({
     type: CLEAR_ERRORS
-})
+});
 
 export const register = formUser => dispatch => UserAPI.registerUser(formUser)
     .then(
         user => dispatch(receiveCurrentUser(user)),
         errors => dispatch(receiveErrors(errors.responseJSON))
-    )
+    );
 
 export const login = formUser => dispatch => SessionAPI.login(formUser)
     .then(
@@ -41,4 +41,4 @@ export const logout = () => dispatch => SessionAPI.logout()
     .then(
         () => dispatch(logoutCurrentUser()),
         errors => dispatch(receiveErrors(errors.responseJSON))
-    )
+    );

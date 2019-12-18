@@ -21,13 +21,20 @@ export default (state = _default_state, action) => {
         case RECEIVE_COMMENTS:
             return merge({}, state, action.comments);
         case RECEIVE_COMMENT:
-            const parent_id = action.comment.parent_id || 'root';
-            const new_comment = { [action.comment.id]: action.comment };
+            let parent_id = action.comment.parent_id || 'root';
+            let new_comment = { [action.comment.id]: action.comment };
             return merge({}, state, { [parent_id]: new_comment });
         case REMOVE_COMMENT:
-            const newState = Object.assign({}, state)
-            delete newState[action.parentId || 'root'][action.commentId];
-            return newState;
+            // debugger
+            if (action.comment.deleted) {
+                let parent_id = action.comment.parent_id || 'root';
+                let deleted_comment = { [action.comment.id]: action.comment };
+                return merge({}, state, { [parent_id]: deleted_comment });
+            } else {
+                const newState = Object.assign({}, state);
+                delete newState[action.comment.parent_id || 'root'][action.comment.id];
+                return newState;
+            }
         case CLEAR_COMMENTS:
             return {};
         default:

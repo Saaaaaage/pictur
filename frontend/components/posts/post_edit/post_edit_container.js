@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import { fetchPost, updatePost, deletePost, updatePostAttributes } from '../../../actions/post_actions';
 import PostEdit from './post_edit';
 import { openModal } from '../../../actions/ui_actions';
-import { findTags } from '../../../util/tag_api_util';
+import { findTags, findOrCreateTag } from '../../../util/tag_api_util';
 
 const msp = (state, ownProps) => {
     const allPosts = state.entities.posts;
@@ -21,8 +21,8 @@ const mdp = (dispatch, ownProps) => {
         updatePostAttributes: formPost => dispatch(updatePostAttributes(formPost)),
         deletePost: () => dispatch(deletePost(ownProps.match.params.postId)),
         openModal: (modal) => dispatch(openModal(modal)),
-        findTags: query => findTags(query)
-        
+        findTags: query => findTags(query),
+        findOrCreateTag: query => findOrCreateTag(query)
     };
 };
 

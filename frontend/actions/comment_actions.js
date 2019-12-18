@@ -20,8 +20,7 @@ const receiveComment = comment => ({
 
 const removeComment = comment => ({
     type: REMOVE_COMMENT,
-    commentId: comment.id,
-    parentId: comment.parent_id
+    comment
 });
 
 export const clearComments = () => ({
@@ -32,6 +31,12 @@ const receiveErrors = errors => ({
     type: RECEIVE_COMMENT_ERRORS,
     errors
 });
+
+export const fetchComment = commentId => dispatch => CommentApi.getComment(commentId)
+    .then(
+        comment => dispatch(receiveComment(comment)),
+        errors => dispatch(receiveErrors(errors.responseJSON))
+    );
 
 export const fetchChildren = commentId => dispatch => CommentApi.getCommentChildren(commentId)
     .then(

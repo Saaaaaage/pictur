@@ -62,6 +62,21 @@
 
 }
 
+.comment-header {
+    font-size: 11px;
+    margin-bottom: 4px;
+    color: #bbb;
+}
+
+.comment-header a {
+    font-weight: 600;
+    margin-right: 10px;
+}
+
+.comment-header a:hover {
+    text-decoration: underline;
+}
+
 .comment-body {
     padding: 9px 60px 6px 0;
 }

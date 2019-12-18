@@ -29,6 +29,7 @@ class Tag < ApplicationRecord
             .where('lower(name) like ?', "%#{sanitize_sql_like(query)}%")
             .select('tags.*, count(*) as post_count')
             .group('tags.id')
+            .limit(5)
             .order('post_count')
     end
 end

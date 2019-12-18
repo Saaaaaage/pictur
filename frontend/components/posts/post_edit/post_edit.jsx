@@ -2,7 +2,8 @@ import Modal from '../../utils/modal';
 import React from 'react';
 import NavbarContainer from '../../navbar/navbar_container';
 import { debounce } from 'lodash';
-import AddTagsDialogue from './add_tags';
+import AddTagsDialogue from './add_tags_dialogue';
+import PostEditTag from './post_edit_tag';
 
 class PostEdit extends React.Component {
     constructor(props) {
@@ -19,14 +20,23 @@ class PostEdit extends React.Component {
         this.handleTagSearchInput = this.handleTagSearchInput.bind(this);
         this.publish = this.publish.bind(this);
         this.pushTitleChange = _.debounce(this.pushTitleChange, 1000).bind(this);
+        this.pushTagsChange = _.debounce(this.pushTagsChange, 1000).bind(this);
         this.findTags = _.debounce(this.findTags, 500).bind(this);
         this.showAddTagDialogue = this.showAddTagDialogue.bind(this);
         this.hideAddTagDialogue = this.hideAddTagDialogue.bind(this);
+        this.handleRemoveTag = this.handleRemoveTag.bind(this);
+        this.handleAddTag = this.handleAddTag.bind(this);
+        this.attemptNewTag = this.attemptNewTag.bind(this);
     }
 
     componentDidMount() {
         this.props.fetchPost().then(
             () => {this.setState(this.props.post);}
+        );
+        this.props.findTags("").then(
+            tags => {
+                this.setState({ tagSearchResults: Object.values(tags)});
+            }
         );
     }
 
@@ -57,6 +67,39 @@ class PostEdit extends React.Component {
         }
     }
 
+    handleRemoveTag(tagId) {
+        let stateTags = this.state.tags;
+        delete stateTags[tagId];
+        this.setState({tags: stateTags});
+        this.pushTagsChange();
+    }
+
+    handleAddTag(tag) {
+        let stateTags = this.state.tags;
+        stateTags[tag.id] = tag;
+        this.setState({
+            tags: stateTags,
+            tagSearchString: "",
+            addTagDialogue: false
+        });
+        this.pushTagsChange();
+
+    }
+
+    pushTagsChange() {
+        this.props.updatePostAttributes({
+            id: this.props.post.id,
+            tag_ids: Object.keys(this.state.tags)
+        });
+    }
+
+    attemptNewTag(tagString) {
+        console.log(`attempting to create tag: ${tagString}`);
+        this.props.findOrCreateTag(tagString).then(
+            tag => this.handleAddTag(tag)
+        );
+    }
+
     publish(type) {
         const payload = {
             title: this.state.title,
@@ -84,7 +127,8 @@ class PostEdit extends React.Component {
 
     showAddTagDialogue(e) {
         console.log("opening");
-        console.log(document.activeElement);
+        // console.log(document.activeElement);
+        console.log(e.target);
         this.setState(
             { addTagDialogue: true },
             () => document.getElementById("tagSearch").focus()
@@ -92,12 +136,9 @@ class PostEdit extends React.Component {
     }
     hideAddTagDialogue(e) {
         console.log("closing");
-        console.log(document.activeElement);
-        if (
-            document.getElementById("tagSearch") != document.activeElement
-        ) {
-            this.setState({ addTagDialogue: false });
-        }
+        // console.log(document.activeElement);
+        console.log(e.target);
+        this.setState({ addTagDialogue: false });
     }
 
     render () {
@@ -116,10 +157,7 @@ class PostEdit extends React.Component {
 
         const tags = Object.values(this.state.tags).map(tag => {
             return (
-                <div
-                    className="pe-tags"
-                    key={tag.id}
-                >{tag.name}</div>
+                <PostEditTag tag={tag} key={tag.id} removeTag={this.handleRemoveTag}/>
             )
         })
 
@@ -196,11 +234,19 @@ class PostEdit extends React.Component {
                                             type="text"
                                             id="tagSearch"
                                             placeholder="+ Tag"
+                                            value={this.state.tagSearchString}
                                             onChange={this.handleTagSearchInput}
+                                            onKeyUp={e => {
+                                                if (e.keyCode === 13) {
+                                                    e.preventDefault();
+                                                    this.attemptNewTag(this.state.tagSearchString);
+                                                }
+                                            }}
                                         />
                                         {this.state.addTagDialogue &&
                                             <AddTagsDialogue
                                                 tags={this.state.tagSearchResults}
+                                                addTag={this.handleAddTag}
                                             />
                                         }
                                     </div>

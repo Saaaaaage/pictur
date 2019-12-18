@@ -5,12 +5,14 @@ import { Link } from 'react-router-dom'
 const NavBar = ({currentUser, logout}) => {
     const menuClick = e => {
         const menu = document.getElementsByClassName("avatar-menu")[0];
-        menu.setAttribute("style", "display:block")
+        menu.setAttribute("style", "display:block");
     };
 
     const menuBlur = e => {
         const menu = document.getElementsByClassName("avatar-menu")[0];
-        menu.setAttribute("style", "display:none")
+        if (event.relatedTarget.tagName.toLowerCase() != 'a') {
+            menu.setAttribute("style", "display:none");
+        }
     };
 
     const navbarRight = !currentUser ? (

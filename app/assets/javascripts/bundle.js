@@ -90,7 +90,7 @@
 /*!*********************************************!*\
   !*** ./frontend/actions/comment_actions.js ***!
   \*********************************************/
-/*! exports provided: RECEIVE_COMMENTS, RECEIVE_COMMENT, REMOVE_COMMENT, CLEAR_COMMENTS, RECEIVE_COMMENT_ERRORS, CLEAR_ERRORS, clearComments, fetchChildren, submitComment, deleteComment */
+/*! exports provided: RECEIVE_COMMENTS, RECEIVE_COMMENT, REMOVE_COMMENT, CLEAR_COMMENTS, RECEIVE_COMMENT_ERRORS, CLEAR_ERRORS, clearComments, fetchComment, fetchChildren, submitComment, deleteComment */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -102,6 +102,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RECEIVE_COMMENT_ERRORS", function() { return RECEIVE_COMMENT_ERRORS; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CLEAR_ERRORS", function() { return CLEAR_ERRORS; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "clearComments", function() { return clearComments; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fetchComment", function() { return fetchComment; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fetchChildren", function() { return fetchChildren; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "submitComment", function() { return submitComment; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deleteComment", function() { return deleteComment; });
@@ -131,8 +132,7 @@ var receiveComment = function receiveComment(comment) {
 var removeComment = function removeComment(comment) {
   return {
     type: REMOVE_COMMENT,
-    commentId: comment.id,
-    parentId: comment.parent_id
+    comment: comment
   };
 };
 
@@ -149,6 +149,15 @@ var receiveErrors = function receiveErrors(errors) {
   };
 };
 
+var fetchComment = function fetchComment(commentId) {
+  return function (dispatch) {
+    return _util_comment_api_util__WEBPACK_IMPORTED_MODULE_0__["getComment"](commentId).then(function (comment) {
+      return dispatch(receiveComment(comment));
+    }, function (errors) {
+      return dispatch(receiveErrors(errors.responseJSON));
+    });
+  };
+};
 var fetchChildren = function fetchChildren(commentId) {
   return function (dispatch) {
     return _util_comment_api_util__WEBPACK_IMPORTED_MODULE_0__["getCommentChildren"](commentId).then(function (comments) {
@@ -613,6 +622,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _comment_container__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./comment_container */ "./frontend/components/comments/comment_container.js");
 /* harmony import */ var _comment_form__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./comment_form */ "./frontend/components/comments/comment_form.jsx");
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -635,6 +645,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 
 
+
 var Comment =
 /*#__PURE__*/
 function (_React$Component) {
@@ -650,18 +661,26 @@ function (_React$Component) {
       replyForm: false,
       replyDisplay: 'none',
       showChildren: false,
-      fetchedChildren: false
+      fetchedChildren: false,
+      body: ""
     };
-    _this.comment = _this.props.comment;
-    _this.fetchChildren = _this.props.fetchChildren;
-    _this.deleteComment = _this.props.deleteComment;
     _this.hideForm = _this.hideForm.bind(_assertThisInitialized(_this));
     _this.showChildrenClick = _this.showChildrenClick.bind(_assertThisInitialized(_this));
+    _this.handleDelete = _this.handleDelete.bind(_assertThisInitialized(_this));
     return _this;
-  } // TODO: When a user submits a comment, the parent comment's children should be shown, and it should be told that it has a child to increment the counter
-
+  }
 
   _createClass(Comment, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      var _this2 = this;
+
+      this.props.fetchComment().then(function (comment) {
+        _this2.setState(comment);
+      }.bind(this));
+    } // TODO: When a user submits a comment, the parent comment's children should be shown, and it should be told that it has a child to increment the counter
+
+  }, {
     key: "hideForm",
     value: function hideForm() {
       this.setState({
@@ -677,18 +696,21 @@ function (_React$Component) {
       });
 
       if (!this.state.fetchedChildren) {
-        this.fetchChildren(this.comment.id);
+        this.props.fetchChildren(this.props.comment.id);
         this.setState({
           fetchedChildren: true
         });
       }
-    } // TODO: Will clicking deleteMe propagate deletions up the chain of children?
-    // TODO: deleting a parent level comment should cascade? or just null out comment text
-
+    }
+  }, {
+    key: "handleDelete",
+    value: function handleDelete(e) {
+      this.props.deleteComment(this.props.comment.id);
+    }
   }, {
     key: "render",
     value: function render() {
-      var _this2 = this;
+      var _this3 = this;
 
       var childComments;
 
@@ -703,8 +725,8 @@ function (_React$Component) {
 
       var showChildrenButton;
 
-      if (this.comment.child_count > 0) {
-        var text = this.state.showChildren ? '- collapse' : "+ ".concat(this.comment.child_count, " replies");
+      if (this.props.comment.child_count > 0) {
+        var text = this.state.showChildren ? '- collapse' : "+ ".concat(this.props.comment.child_count, " replies");
         showChildrenButton = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
           className: "show-replies",
           onClick: this.showChildrenClick
@@ -717,7 +739,7 @@ function (_React$Component) {
         className: "comment"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_comment_form__WEBPACK_IMPORTED_MODULE_2__["default"], {
         submitComment: this.props.submitComment,
-        parentId: this.comment.id,
+        parentId: this.props.comment.id,
         submitCallback: this.hideForm
       }))) : null;
       var cssClass;
@@ -736,24 +758,30 @@ function (_React$Component) {
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: cssClass,
         onMouseOver: function onMouseOver() {
-          return _this2.setState({
+          return _this3.setState({
             replyDisplay: 'flex'
           });
         },
         onMouseOut: function onMouseOut() {
-          return _this2.setState({
+          return _this3.setState({
             replyDisplay: 'none'
           });
         }
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "comment-header"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_3__["Link"], {
+        to: "/users/".concat(this.props.comment.user_id)
+      }, this.props.comment.username), this.props.comment.user_id === this.props.currentUserId && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        onClick: this.handleDelete
+      }, "delete")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "comment-body"
-      }, this.comment.body), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      }, this.props.comment.body), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "comment-reply-botton",
         style: {
           display: this.state.replyDisplay
         },
         onClick: function onClick() {
-          return _this2.setState({
+          return _this3.setState({
             replyForm: true
           });
         }
@@ -788,8 +816,13 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var mapStateToProps = function mapStateToProps(state, ownProps) {
+  var parentId = ownProps.comment.parent_id || 'root';
+  var commentId = ownProps.comment.id;
+  var comment = state.entities.comments[parentId][commentId];
   return {
-    comment: ownProps.comment,
+    comment: comment,
+    body: comment.body,
+    currentUserId: state.session.id,
     children: Object.values(state.entities.comments[ownProps.comment.id] || {})
   };
 };
@@ -805,6 +838,9 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch, ownProps) {
     },
     deleteComment: function deleteComment(commentId) {
       return dispatch(Object(_actions_comment_actions__WEBPACK_IMPORTED_MODULE_2__["deleteComment"])(commentId));
+    },
+    fetchComment: function fetchComment() {
+      return dispatch(Object(_actions_comment_actions__WEBPACK_IMPORTED_MODULE_2__["fetchComment"])(ownProps.comment.id));
     }
   };
 };
@@ -1512,7 +1548,10 @@ var NavBar = function NavBar(_ref) {
 
   var menuBlur = function menuBlur(e) {
     var menu = document.getElementsByClassName("avatar-menu")[0];
-    menu.setAttribute("style", "display:none");
+
+    if (event.relatedTarget.tagName.toLowerCase() != 'a') {
+      menu.setAttribute("style", "display:none");
+    }
   };
 
   var navbarRight = !currentUser ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -1601,10 +1640,10 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
 
 /***/ }),
 
-/***/ "./frontend/components/posts/post_edit/add_tags.jsx":
-/*!**********************************************************!*\
-  !*** ./frontend/components/posts/post_edit/add_tags.jsx ***!
-  \**********************************************************/
+/***/ "./frontend/components/posts/post_edit/add_tags_dialogue.jsx":
+/*!*******************************************************************!*\
+  !*** ./frontend/components/posts/post_edit/add_tags_dialogue.jsx ***!
+  \*******************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -1649,8 +1688,8 @@ function (_React$Component) {
 
   _createClass(AddTags, [{
     key: "returnSelected",
-    value: function returnSelected(e) {
-      debugger;
+    value: function returnSelected(tag) {
+      this.props.addTag(tag);
     }
   }, {
     key: "render",
@@ -1661,7 +1700,9 @@ function (_React$Component) {
         return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
           key: tag.id,
           className: "addTagLi",
-          onClick: _this2.returnSelected
+          onMouseDown: function onMouseDown() {
+            return _this2.returnSelected(tag);
+          }
         }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, tag.name), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, tag.post_count, " posts"));
       });
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -1694,7 +1735,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _navbar_navbar_container__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../navbar/navbar_container */ "./frontend/components/navbar/navbar_container.js");
 /* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
 /* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _add_tags__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./add_tags */ "./frontend/components/posts/post_edit/add_tags.jsx");
+/* harmony import */ var _add_tags_dialogue__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./add_tags_dialogue */ "./frontend/components/posts/post_edit/add_tags_dialogue.jsx");
+/* harmony import */ var _post_edit_tag__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./post_edit_tag */ "./frontend/components/posts/post_edit/post_edit_tag.jsx");
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
@@ -1727,6 +1769,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 
 
+
 var PostEdit =
 /*#__PURE__*/
 function (_React$Component) {
@@ -1749,9 +1792,13 @@ function (_React$Component) {
     _this.handleTagSearchInput = _this.handleTagSearchInput.bind(_assertThisInitialized(_this));
     _this.publish = _this.publish.bind(_assertThisInitialized(_this));
     _this.pushTitleChange = _.debounce(_this.pushTitleChange, 1000).bind(_assertThisInitialized(_this));
+    _this.pushTagsChange = _.debounce(_this.pushTagsChange, 1000).bind(_assertThisInitialized(_this));
     _this.findTags = _.debounce(_this.findTags, 500).bind(_assertThisInitialized(_this));
     _this.showAddTagDialogue = _this.showAddTagDialogue.bind(_assertThisInitialized(_this));
     _this.hideAddTagDialogue = _this.hideAddTagDialogue.bind(_assertThisInitialized(_this));
+    _this.handleRemoveTag = _this.handleRemoveTag.bind(_assertThisInitialized(_this));
+    _this.handleAddTag = _this.handleAddTag.bind(_assertThisInitialized(_this));
+    _this.attemptNewTag = _this.attemptNewTag.bind(_assertThisInitialized(_this));
     return _this;
   }
 
@@ -1762,6 +1809,11 @@ function (_React$Component) {
 
       this.props.fetchPost().then(function () {
         _this2.setState(_this2.props.post);
+      });
+      this.props.findTags("").then(function (tags) {
+        _this2.setState({
+          tagSearchResults: Object.values(tags)
+        });
       });
     }
   }, {
@@ -1802,9 +1854,49 @@ function (_React$Component) {
       }
     }
   }, {
+    key: "handleRemoveTag",
+    value: function handleRemoveTag(tagId) {
+      var stateTags = this.state.tags;
+      delete stateTags[tagId];
+      this.setState({
+        tags: stateTags
+      });
+      this.pushTagsChange();
+    }
+  }, {
+    key: "handleAddTag",
+    value: function handleAddTag(tag) {
+      var stateTags = this.state.tags;
+      stateTags[tag.id] = tag;
+      this.setState({
+        tags: stateTags,
+        tagSearchString: "",
+        addTagDialogue: false
+      });
+      this.pushTagsChange();
+    }
+  }, {
+    key: "pushTagsChange",
+    value: function pushTagsChange() {
+      this.props.updatePostAttributes({
+        id: this.props.post.id,
+        tag_ids: Object.keys(this.state.tags)
+      });
+    }
+  }, {
+    key: "attemptNewTag",
+    value: function attemptNewTag(tagString) {
+      var _this4 = this;
+
+      console.log("attempting to create tag: ".concat(tagString));
+      this.props.findOrCreateTag(tagString).then(function (tag) {
+        return _this4.handleAddTag(tag);
+      });
+    }
+  }, {
     key: "publish",
     value: function publish(type) {
-      var _this4 = this;
+      var _this5 = this;
 
       var payload = {
         title: this.state.title,
@@ -1825,14 +1917,15 @@ function (_React$Component) {
       }
 
       this.props.updatePostAttributes(payload).then(function () {
-        _this4.props.history.push("/posts/".concat(_this4.props.post.id));
+        _this5.props.history.push("/posts/".concat(_this5.props.post.id));
       }.bind(this));
     }
   }, {
     key: "showAddTagDialogue",
     value: function showAddTagDialogue(e) {
-      console.log("opening");
-      console.log(document.activeElement);
+      console.log("opening"); // console.log(document.activeElement);
+
+      console.log(e.target);
       this.setState({
         addTagDialogue: true
       }, function () {
@@ -1842,20 +1935,18 @@ function (_React$Component) {
   }, {
     key: "hideAddTagDialogue",
     value: function hideAddTagDialogue(e) {
-      console.log("closing");
-      console.log(document.activeElement);
+      console.log("closing"); // console.log(document.activeElement);
 
-      if (document.getElementById("tagSearch") != document.activeElement) {
-        this.setState({
-          addTagDialogue: false
-        });
-      }
+      console.log(e.target);
+      this.setState({
+        addTagDialogue: false
+      });
     }
   }, {
     key: "render",
     value: function render() {
-      var _body$classList,
-          _this5 = this;
+      var _this6 = this,
+          _body$classList;
 
       var images = this.props.images.map(function (img, i) {
         return react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
@@ -1874,10 +1965,11 @@ function (_React$Component) {
         })));
       });
       var tags = Object.values(this.state.tags).map(function (tag) {
-        return react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
-          className: "pe-tags",
-          key: tag.id
-        }, tag.name);
+        return react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_post_edit_tag__WEBPACK_IMPORTED_MODULE_5__["default"], {
+          tag: tag,
+          key: tag.id,
+          removeTag: _this6.handleRemoveTag
+        });
       }); // TODO: is there better way change the class of the body depending on the page?
 
       var body = document.getElementsByTagName('body')[0]; // body.classList.forEach(c => body.classList.remove(c));
@@ -1907,7 +1999,7 @@ function (_React$Component) {
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("button", {
         className: "add-image-button",
         onClick: function onClick() {
-          return _this5.props.openModal('edit-upload');
+          return _this6.props.openModal('edit-upload');
         }
       }, "+ Add image")), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_utils_modal__WEBPACK_IMPORTED_MODULE_0__["default"], null)), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
         className: "pe-sidebar-container"
@@ -1920,12 +2012,12 @@ function (_React$Component) {
       }, "POST"), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("button", {
         className: "pe-sidebar-btn pe-community-post-btn",
         onClick: function onClick() {
-          return _this5.publish('public');
+          return _this6.publish('public');
         }
       }, "To Community"), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("button", {
         className: "pe-sidebar-btn pe-community-hidden-btn",
         onClick: function onClick() {
-          return _this5.publish('hidden');
+          return _this6.publish('hidden');
         }
       }, "Hidden")), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
         className: "pe-sidebar-section"
@@ -1943,9 +2035,18 @@ function (_React$Component) {
         type: "text",
         id: "tagSearch",
         placeholder: "+ Tag",
-        onChange: this.handleTagSearchInput
-      }), this.state.addTagDialogue && react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_add_tags__WEBPACK_IMPORTED_MODULE_4__["default"], {
-        tags: this.state.tagSearchResults
+        value: this.state.tagSearchString,
+        onChange: this.handleTagSearchInput,
+        onKeyUp: function onKeyUp(e) {
+          if (e.keyCode === 13) {
+            e.preventDefault();
+
+            _this6.attemptNewTag(_this6.state.tagSearchString);
+          }
+        }
+      }), this.state.addTagDialogue && react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_add_tags_dialogue__WEBPACK_IMPORTED_MODULE_4__["default"], {
+        tags: this.state.tagSearchResults,
+        addTag: this.handleAddTag
       })))), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
         className: "pe-sidebar-section"
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
@@ -2021,11 +2122,98 @@ var mdp = function mdp(dispatch, ownProps) {
     },
     findTags: function findTags(query) {
       return Object(_util_tag_api_util__WEBPACK_IMPORTED_MODULE_4__["findTags"])(query);
+    },
+    findOrCreateTag: function findOrCreateTag(query) {
+      return Object(_util_tag_api_util__WEBPACK_IMPORTED_MODULE_4__["findOrCreateTag"])(query);
     }
   };
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (Object(react_redux__WEBPACK_IMPORTED_MODULE_0__["connect"])(msp, mdp)(_post_edit__WEBPACK_IMPORTED_MODULE_2__["default"]));
+
+/***/ }),
+
+/***/ "./frontend/components/posts/post_edit/post_edit_tag.jsx":
+/*!***************************************************************!*\
+  !*** ./frontend/components/posts/post_edit/post_edit_tag.jsx ***!
+  \***************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+
+
+var PostEditTag =
+/*#__PURE__*/
+function (_React$Component) {
+  _inherits(PostEditTag, _React$Component);
+
+  function PostEditTag(props) {
+    var _this;
+
+    _classCallCheck(this, PostEditTag);
+
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(PostEditTag).call(this, props));
+    _this.state = {
+      display: 'none'
+    };
+    return _this;
+  }
+
+  _createClass(PostEditTag, [{
+    key: "render",
+    value: function render() {
+      var _this2 = this;
+
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "pe-tags",
+        onMouseOver: function onMouseOver() {
+          return _this2.setState({
+            display: 'flex'
+          });
+        },
+        onMouseOut: function onMouseOut() {
+          return _this2.setState({
+            display: 'none'
+          });
+        },
+        onClick: function onClick() {
+          return _this2.props.removeTag(_this2.props.tag.id);
+        }
+      }, this.props.tag.name, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "pe-remove-tag",
+        style: {
+          display: this.state.display
+        }
+      }, "X"));
+    }
+  }]);
+
+  return PostEditTag;
+}(react__WEBPACK_IMPORTED_MODULE_0___default.a.Component);
+
+/* harmony default export */ __webpack_exports__["default"] = (PostEditTag);
 
 /***/ }),
 
@@ -2128,7 +2316,7 @@ function (_React$Component) {
       (_body$classList = body.classList).remove.apply(_body$classList, _toConsumableArray(body.classList));
 
       body.classList.add("bg-show-pages");
-      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_navbar_navbar_container__WEBPACK_IMPORTED_MODULE_2__["default"], null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_navbar_navbar_container__WEBPACK_IMPORTED_MODULE_2__["default"], null)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "postShowBody"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "postShowMain"
@@ -3527,9 +3715,18 @@ var _default_state = {
       return Object(lodash__WEBPACK_IMPORTED_MODULE_2__["merge"])({}, state, _defineProperty({}, parent_id, new_comment));
 
     case _actions_comment_actions__WEBPACK_IMPORTED_MODULE_0__["REMOVE_COMMENT"]:
-      var newState = Object.assign({}, state);
-      delete newState[action.parentId || 'root'][action.commentId];
-      return newState;
+      // debugger
+      if (action.comment.deleted) {
+        var _parent_id = action.comment.parent_id || 'root';
+
+        var deleted_comment = _defineProperty({}, action.comment.id, action.comment);
+
+        return Object(lodash__WEBPACK_IMPORTED_MODULE_2__["merge"])({}, state, _defineProperty({}, _parent_id, deleted_comment));
+      } else {
+        var newState = Object.assign({}, state);
+        delete newState[action.comment.parent_id || 'root'][action.comment.id];
+        return newState;
+      }
 
     case _actions_comment_actions__WEBPACK_IMPORTED_MODULE_0__["CLEAR_COMMENTS"]:
       return {};
@@ -3949,14 +4146,21 @@ var configureStore = function configureStore() {
 /*!*******************************************!*\
   !*** ./frontend/util/comment_api_util.js ***!
   \*******************************************/
-/*! exports provided: getCommentChildren, createComment, deleteComment */
+/*! exports provided: getComment, getCommentChildren, createComment, deleteComment */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getComment", function() { return getComment; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getCommentChildren", function() { return getCommentChildren; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createComment", function() { return createComment; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deleteComment", function() { return deleteComment; });
+var getComment = function getComment(commentId) {
+  return $.ajax({
+    url: "/api/comments/".concat(commentId),
+    method: 'GET'
+  });
+};
 var getCommentChildren = function getCommentChildren(commentId) {
   return $.ajax({
     url: "/api/comments/".concat(commentId, "/children"),
@@ -4155,7 +4359,7 @@ var logout = function logout() {
 /*!***************************************!*\
   !*** ./frontend/util/tag_api_util.js ***!
   \***************************************/
-/*! exports provided: fetchTags, fetchTag, findTags */
+/*! exports provided: fetchTags, fetchTag, findTags, findOrCreateTag */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -4163,6 +4367,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fetchTags", function() { return fetchTags; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fetchTag", function() { return fetchTag; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "findTags", function() { return findTags; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "findOrCreateTag", function() { return findOrCreateTag; });
 var fetchTags = function fetchTags() {
   return $.ajax({
     url: '/api/tags',
@@ -4178,6 +4383,12 @@ var fetchTag = function fetchTag(tagId) {
 var findTags = function findTags(query) {
   return $.ajax({
     url: "/api/findTags?query=".concat(query),
+    method: 'GET'
+  });
+};
+var findOrCreateTag = function findOrCreateTag(query) {
+  return $.ajax({
+    url: "/api/findOrCreateTag?query=".concat(query),
     method: 'GET'
   });
 };

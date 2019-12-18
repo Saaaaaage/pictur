@@ -156,6 +156,29 @@
     display:flex;
     align-items:center;
     justify-content: center;
+    cursor: pointer;
+    position:relative;
+}
+
+.pe-tags:hover {
+    background-color: #6F737D;
+}
+
+.pe-remove-tag {
+    background-color: #fe6065;
+    color: #fff;
+    border-radius: 38px;
+    width: 12px;
+    height: 12px;
+    text-align: center;
+    position: absolute;
+    right: -11px;
+    top: -8px;
+    padding: 6px;
+    font-size: 17px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .pe-add-tags {
@@ -172,6 +195,10 @@
     letter-spacing: .02em;
     white-space: nowrap;
     position: relative;
+}
+
+.pe-add-tags input {
+    cursor: pointer;
 }
 
 .pe-add-tags:hover {

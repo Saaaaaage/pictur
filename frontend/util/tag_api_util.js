@@ -18,3 +18,10 @@ export const findTags = query => {
         method: 'GET'
     });
 };
+
+export const findOrCreateTag = query => {
+    return $.ajax({
+        url: `/api/findOrCreateTag?query=${query}`,
+        method: 'GET'
+    });
+};

@@ -1,6 +1,7 @@
 import React from 'react';
 import CommentContainer from './comment_container';
 import CommentForm from './comment_form';
+import { Link } from 'react-router-dom';
 
 
 class Comment extends React.Component {
@@ -13,32 +14,38 @@ class Comment extends React.Component {
             
             showChildren: false,
             fetchedChildren: false,
-        }
 
-        this.comment = this.props.comment;
-        this.fetchChildren = this.props.fetchChildren;
-        this.deleteComment = this.props.deleteComment;
+            body: ""
+        };
 
         this.hideForm = this.hideForm.bind(this);
         this.showChildrenClick = this.showChildrenClick.bind(this);
+        this.handleDelete = this.handleDelete.bind(this);
+    }
+
+    componentDidMount() {
+        this.props.fetchComment().then((comment => {this.setState(comment);}).bind(this));
     }
 
     // TODO: When a user submits a comment, the parent comment's children should be shown, and it should be told that it has a child to increment the counter
     hideForm () {
-        this.setState({ replyForm: false })
-        this.showChildrenClick()
+        this.setState({ replyForm: false });
+        this.showChildrenClick();
     }
 
     showChildrenClick() {
-        this.setState({showChildren: !this.state.showChildren})
+        this.setState({showChildren: !this.state.showChildren});
         if (!this.state.fetchedChildren) {
-            this.fetchChildren(this.comment.id);
-            this.setState({fetchedChildren: true})
+            this.props.fetchChildren(this.props.comment.id);
+            this.setState({fetchedChildren: true});
         }
     }
 
-    // TODO: Will clicking deleteMe propagate deletions up the chain of children?
-    // TODO: deleting a parent level comment should cascade? or just null out comment text
+    handleDelete(e) {
+        this.props.deleteComment(this.props.comment.id);
+    }
+
+    
     render() {
         let childComments 
         if (this.state.showChildren) {
@@ -53,11 +60,11 @@ class Comment extends React.Component {
         }
 
         let showChildrenButton;
-        if (this.comment.child_count > 0) {
+        if (this.props.comment.child_count > 0) {
             const text = this.state.showChildren ? (
                 '- collapse'
             ) : (
-                `+ ${this.comment.child_count} replies`
+                `+ ${this.props.comment.child_count} replies`
             );
             showChildrenButton = (
                 <span
@@ -72,7 +79,7 @@ class Comment extends React.Component {
                 <div className="comment">
                     <CommentForm
                         submitComment={this.props.submitComment}
-                        parentId={this.comment.id}
+                        parentId={this.props.comment.id}
                         submitCallback={this.hideForm}
                         />
                 </div>
@@ -90,7 +97,7 @@ class Comment extends React.Component {
             cssClass = "comment";
             indentationContainer = "indented-child";
         }
-
+        
         return (
             <div className={indentationContainer}>
                 <div
@@ -98,8 +105,13 @@ class Comment extends React.Component {
                     onMouseOver={() => this.setState({ replyDisplay: 'flex' })}
                     onMouseOut={() => this.setState({ replyDisplay: 'none' })}
                 >
-                    <div className="comment-body">{this.comment.body}</div>
-                    {/* <button onClick={() => this.deleteComment(this.comment.id)}>Delete Me</button> */}
+                    <div className="comment-header">
+                        <Link to={`/users/${this.props.comment.user_id}`}>{this.props.comment.username}</Link>
+                        {this.props.comment.user_id === this.props.currentUserId &&
+                            <button onClick={this.handleDelete}>delete</button>
+                        }
+                    </div>
+                    <div className="comment-body">{this.props.comment.body}</div>
                     <div
                         className="comment-reply-botton"
                         style={{ display: this.state.replyDisplay }}

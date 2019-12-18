@@ -41,6 +41,7 @@ ActiveRecord::Schema.define(version: 2019_12_13_143804) do
     t.integer "post_id", null: false
     t.integer "parent_id"
     t.text "body", null: false
+    t.boolean "deleted", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["parent_id"], name: "index_comments_on_parent_id"

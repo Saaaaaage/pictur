@@ -22,6 +22,7 @@ Rails.application.routes.draw do
       get 'posts', to: 'posts#by_tag'
     end
     get 'findTags', to: 'tags#find_tags'
+    get 'findOrCreateTag', to: 'tags#find_or_create'
 
   end
 end

@@ -6,8 +6,8 @@ class AddTags extends React.Component {
         this.returnSelected = this.returnSelected.bind(this);
     }
 
-    returnSelected(e) {
-        debugger
+    returnSelected(tag) {
+        this.props.addTag(tag);
     }
 
     render () {
@@ -16,10 +16,11 @@ class AddTags extends React.Component {
                 <li
                     key={tag.id}
                     className="addTagLi"
-                    onClick={this.returnSelected}
+                    onMouseDown={() => this.returnSelected(tag)}
                 >
                     <div>{tag.name}</div>
                     <div>{tag.post_count} posts</div>
+                    
                 </li>
             )
         });

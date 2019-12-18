@@ -27,7 +27,7 @@ class Api::CommentsController < ApplicationController
     def destroy
         @comment = Comment.find(params[:id])
         if current_user == @comment.user
-            if @comment.destroy
+            if @comment.safeDelete
                 render :show
             else
                 render json: @comment.errors.full_messages, status: 400

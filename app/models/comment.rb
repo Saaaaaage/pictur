@@ -28,6 +28,18 @@ class Comment < ApplicationRecord
         foreign_key: :parent_id,
         optional: true
     
+    def safeDelete
+        if self.children.size > 0
+            self.deleted = true;
+            self.body = '[deleted]'
+            self.save
+            return true
+        else
+            self.destroy
+            return true
+        end
+    end
+
     private
 
     def ensure_post_id!

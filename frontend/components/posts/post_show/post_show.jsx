@@ -6,7 +6,7 @@ import CommentForm from '../../comments/comment_form';
 
 class PostShow extends React.Component {
     constructor(props) {
-        super(props)
+        super(props);
     }
 
     componentDidMount(){
@@ -16,6 +16,7 @@ class PostShow extends React.Component {
     componentDidUpdate(prevProps) {
         if (this.props.match.params.postId != prevProps.match.params.postId) {
             this.props.loadPost();
+            
         }
     }
 
@@ -45,7 +46,9 @@ class PostShow extends React.Component {
         body.classList.add("bg-show-pages");
         return (
             <div>
-                <NavbarContainer />
+                <div>
+                    <NavbarContainer />
+                </div>
                 <div className="postShowBody">
                     <div className="postShowMain">
                         <div className="postShowMainHeader">

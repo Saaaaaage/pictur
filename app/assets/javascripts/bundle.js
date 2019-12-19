@@ -2164,9 +2164,10 @@ function (_React$Component) {
   }, {
     key: "pushTagsChange",
     value: function pushTagsChange() {
+      var tags = Object.keys(this.state.tags);
       this.props.updatePostAttributes({
         id: this.props.post.id,
-        tag_ids: Object.keys(this.state.tags)
+        tag_ids: tags.length > 0 ? tags : ""
       });
     }
   }, {

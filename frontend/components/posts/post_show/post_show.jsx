@@ -3,10 +3,21 @@ import PostShowImage from './post_show_image';
 import NavbarContainer from '../../navbar/navbar_container';
 import CommentContainer from '../../comments/comment_container';
 import CommentForm from '../../comments/comment_form';
+import {Link} from 'react-router-dom';
 
 class PostShow extends React.Component {
     constructor(props) {
         super(props);
+        this.randomBackgrounds = {
+            purple: 'linear-gradient(rgba(74, 88, 251, .9), rgba(46, 48, 53, 1))',
+            pink: 'linear-gradient(rgba(255, 81, 186, .9), rgba(46, 48, 53, 1))',
+            orange: 'linear-gradient(rgba(255, 125, 0, .9), rgba(46, 48, 53, 1))',
+            green: 'linear-gradient(rgba(1, 185, 107, .9), rgba(46, 48, 53, 1))',
+            teal: 'linear-gradient(rgba(32, 190, 232, .9), rgba(46, 48, 53, 1))',
+            blue: 'linear-gradient(rgba(34, 126, 250, .9), rgba(46, 48, 53, 1))',
+            lavender: 'linear-gradient(rgba(198, 193, 255, .9), rgba(46, 48, 53, 1))',
+            navy: 'linear-gradient(rgba(28, 44, 93, .9), rgba(46, 48, 53, 1))',
+        }
     }
 
     componentDidMount(){
@@ -35,6 +46,20 @@ class PostShow extends React.Component {
                     comment={comment}
                     root={true}
                 />
+            );
+        });
+        const bgKeys = Object.keys(this.randomBackgrounds);
+        const tags = Object.values(this.props.post.tags || {}).map((tag, i) => {
+            const background = this.randomBackgrounds[bgKeys[i % bgKeys.length]];
+            return (
+                <Link
+                    to={`/tags/${tag.id}`}
+                    style={{background:background}}
+                    key={i}
+                    className="postShowTags"
+                >
+                    {tag.name}
+                </Link>
             )
         });
 
@@ -56,6 +81,10 @@ class PostShow extends React.Component {
                             <h3>by <strong>{this.props.post.user.username}</strong></h3>
                         </div>
                         <ul>{images}</ul>
+
+                        <div className="postShowFooter">
+                            {tags}
+                        </div>
 
                         <div className="comment-container">
                             <CommentForm

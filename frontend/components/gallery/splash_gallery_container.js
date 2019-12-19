@@ -6,6 +6,7 @@ import IndexBannerContainer from './gallery_banner/index_banner_container';
 
 const msp = state => ({
     posts: Object.values(state.entities.posts || {}),
+    currentUserId: state.session.id,
     bannerObject: <IndexBannerContainer/>
 });
 

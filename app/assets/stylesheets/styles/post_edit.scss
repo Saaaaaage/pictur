@@ -124,10 +124,20 @@
     border-radius: 4px;
     font-family: Proxima Nova Bold,Helvetica Neue,Helvetica,Arial,sans-serif;
     transition: opacity 1s;
+    transition: color 1s;
 }
 
 .pe-community-post-btn {
     background: linear-gradient(345.02deg,#2fbe7c -1.87%,#3ad7c5 107.98%);
+    opacity: 1;
+}
+
+.pe-comm-post-btn-inactive {
+    background: linear-gradient(345.02deg,#2fbe7b93 -1.87%,#3ad7c585 107.98%);
+    // background: linear-gradient(345.02deg,#2fbe7c -1.87%,#3ad7c5 107.98%);
+    color: rgb(189, 188, 188);
+    opacity: .5;
+    cursor: not-allowed;
 }
 
 .pe-community-hidden-btn {

@@ -10,6 +10,7 @@ const msp = (state, ownProps) => {
     const tag = state.entities.tags[tagId] || {};
     return {
         posts: Object.values(state.entities.posts || {}),
+        currentUserId: state.session.id,
         bannerObject: <TagGalleryBanner tag={tag}/>
     };
 };

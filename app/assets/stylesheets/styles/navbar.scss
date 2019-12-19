@@ -151,6 +151,15 @@
 .avatar-menu-top {
     background-color: #53555D;
 }
+
+.avatar-menu-top a {
+    display: inline-block;
+    position: relative;
+    z-index: 1;
+    padding: 20px 60px 20px 32px;
+    margin: -2em;
+}
+
 .avatar-menu-top > li {
     padding: 20px 20px;
     letter-spacing: 1px;

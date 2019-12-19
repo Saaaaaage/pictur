@@ -1,4 +1,4 @@
-json.extract! post, :id, :title, :created_at, :user_id
+json.extract! post, :id, :title, :created_at, :user_id, :public
 json.thumbnail url_for(post.thumbnail)
 json.user do
     json.partial! "api/users/user", user: post.user

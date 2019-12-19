@@ -1,43 +1,30 @@
 import Modal from '../../utils/modal';
 import React from 'react';
 import NavbarContainer from '../../navbar/navbar_container';
-import AddTagsDialogue from './add_tags_dialogue';
+import AddTags from './add_tags';
 import PostEditTag from './post_edit_tag';
-import { findTags, findOrCreateTag } from '../../../util/tag_api_util';
+
 
 class PostEdit extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             title: "",
-            addTagDialogue: false,
-            tagSearchString: "",
-            tagSearchResults: [],
-            popularTags: [],
             tags: {},
-
         };
         this.handleTitleInput = this.handleTitleInput.bind(this);
-        this.handleTagSearchInput = this.handleTagSearchInput.bind(this);
-        this.publish = this.publish.bind(this);
         this.pushTitleChange = _.debounce(this.pushTitleChange, 1000).bind(this);
-        this.pushTagsChange = _.debounce(this.pushTagsChange, 1000).bind(this);
-        this.findTags = _.debounce(this.findTags, 500).bind(this);
-        this.showAddTagDialogue = this.showAddTagDialogue.bind(this);
-        this.hideAddTagDialogue = this.hideAddTagDialogue.bind(this);
-        this.handleRemoveTag = this.handleRemoveTag.bind(this);
+
         this.handleAddTag = this.handleAddTag.bind(this);
-        this.attemptNewTag = this.attemptNewTag.bind(this);
+        this.handleRemoveTag = this.handleRemoveTag.bind(this);
+        this.pushTagsChange = _.debounce(this.pushTagsChange, 1000).bind(this);
+        
+        this.publish = this.publish.bind(this);
     }
 
     componentDidMount() {
         this.props.fetchPost().then(
             () => {this.setState(this.props.post);}
-        );
-        findTags("").then(
-            tags => {
-                this.setState({ popularTags: Object.values(tags)});
-            }
         );
     }
 
@@ -53,25 +40,6 @@ class PostEdit extends React.Component {
         });
     }
 
-    handleTagSearchInput(e) {
-        const tagSearchResults = e.target.value.length < 2 ? [] : this.state.tagSearchResults;
-        this.setState({
-            tagSearchString: e.target.value,
-            tagSearchResults: tagSearchResults
-        });
-        this.findTags();
-    }
-
-    findTags() {
-        if (this.state.tagSearchString.length > 1) {
-            findTags(this.state.tagSearchString).then(
-                (tags => {
-                    this.setState({tagSearchResults: Object.values(tags)});
-                }).bind(this)
-            );
-        }
-    }
-
     handleRemoveTag(tagId) {
         let stateTags = this.state.tags;
         delete stateTags[tagId];
@@ -83,12 +51,9 @@ class PostEdit extends React.Component {
         let stateTags = this.state.tags;
         stateTags[tag.id] = tag;
         this.setState({
-            tags: stateTags,
-            tagSearchString: "",
-            addTagDialogue: false
+            tags: stateTags
         });
         this.pushTagsChange();
-
     }
 
     pushTagsChange() {
@@ -96,12 +61,6 @@ class PostEdit extends React.Component {
             id: this.props.post.id,
             tag_ids: Object.keys(this.state.tags)
         });
-    }
-
-    attemptNewTag(tagString) {
-        findOrCreateTag(tagString).then(
-            tag => this.handleAddTag(tag)
-        );
     }
 
     publishable() {
@@ -131,20 +90,6 @@ class PostEdit extends React.Component {
                 }
             ).bind(this)
         );
-    }
-
-    showAddTagDialogue(e) {
-        this.setState(
-            { addTagDialogue: true },
-            () => document.getElementById("tagSearch").focus()
-        );
-    }
-    hideAddTagDialogue(e) {
-        this.setState({
-            addTagDialogue: false,
-            tagSearchString: "",
-            tagSearchResults: []
-        });
     }
 
     render () {
@@ -179,8 +124,6 @@ class PostEdit extends React.Component {
             bgIndicator = "pe-banner-titled";
             peSidebarBtnActive = 'pe-community-post-btn';
         }
-
-        const dialogueTags = this.state.tagSearchResults.length > 0 ? this.state.tagSearchResults : this.state.popularTags;
         
         return (
             <div>
@@ -228,52 +171,17 @@ class PostEdit extends React.Component {
                                     Hidden
                                 </button>
                             </div>
+
                             <div className='pe-sidebar-section'>
                                 <div className="pe-sidebar-section-header">
                                     ADD TAGS
                                 </div>
-                                
-                                
                                 <div className="pe-tag-container">
                                     {tags}
-
-                                    <div
-                                        className="pe-add-tags"
-                                        onClick={this.showAddTagDialogue}
-                                        onBlur={this.hideAddTagDialogue}
-                                        tabIndex="0"
-                                        id="addTagButton"
-                                    >
-                                        <input
-                                            type="text"
-                                            id="tagSearch"
-                                            placeholder="+ Tag"
-                                            value={this.state.tagSearchString}
-                                            onChange={this.handleTagSearchInput}
-                                            tabIndex="-1"
-                                            onKeyDown={e => {
-                                                if (e.keyCode === 13 || e.keyCode === 9) {
-                                                    e.preventDefault();
-                                                    this.attemptNewTag(this.state.tagSearchString);
-                                                }
-                                            }}
-                                        />
-                                        {this.state.addTagDialogue &&
-                                            <AddTagsDialogue
-                                                tags={dialogueTags}
-                                                addTag={this.handleAddTag}
-                                            />
-                                        }
-                                    </div>
+                                    <AddTags handleAddTag={this.handleAddTag} />
                                 </div>
-
-
-
-
-
-
-
                             </div>
+
                             <div className='pe-sidebar-section'>
                                 <div className="pe-sidebar-section-header">
                                     IMG TOOLS

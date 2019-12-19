@@ -1729,10 +1729,10 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch, ownProps) {
 
 /***/ }),
 
-/***/ "./frontend/components/posts/post_edit/add_tags_dialogue.jsx":
-/*!*******************************************************************!*\
-  !*** ./frontend/components/posts/post_edit/add_tags_dialogue.jsx ***!
-  \*******************************************************************/
+/***/ "./frontend/components/posts/post_edit/add_tags.jsx":
+/*!**********************************************************!*\
+  !*** ./frontend/components/posts/post_edit/add_tags.jsx ***!
+  \**********************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -1740,6 +1740,7 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch, ownProps) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _util_tag_api_util__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../util/tag_api_util */ "./frontend/util/tag_api_util.js");
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -1760,6 +1761,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 
 
+
 var AddTags =
 /*#__PURE__*/
 function (_React$Component) {
@@ -1771,34 +1773,136 @@ function (_React$Component) {
     _classCallCheck(this, AddTags);
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(AddTags).call(this, props));
+    _this.state = {
+      addTagDialogue: false,
+      tagSearchString: "",
+      tagSearchResults: [],
+      popularTags: []
+    };
     _this.returnSelected = _this.returnSelected.bind(_assertThisInitialized(_this));
+    _this.handleTagSearchInput = _this.handleTagSearchInput.bind(_assertThisInitialized(_this));
+    _this.findTags = _.debounce(_this.findTags, 500).bind(_assertThisInitialized(_this));
+    _this.showAddTagDialogue = _this.showAddTagDialogue.bind(_assertThisInitialized(_this));
+    _this.hideAddTagDialogue = _this.hideAddTagDialogue.bind(_assertThisInitialized(_this));
+    _this.attemptNewTag = _this.attemptNewTag.bind(_assertThisInitialized(_this));
     return _this;
   }
 
   _createClass(AddTags, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      var _this2 = this;
+
+      Object(_util_tag_api_util__WEBPACK_IMPORTED_MODULE_1__["findTags"])("").then(function (tags) {
+        _this2.setState({
+          popularTags: Object.values(tags)
+        });
+      });
+    }
+  }, {
+    key: "handleTagSearchInput",
+    value: function handleTagSearchInput(e) {
+      var tagSearchResults = e.target.value.length < 2 ? [] : this.state.tagSearchResults;
+      this.setState({
+        tagSearchString: e.target.value,
+        tagSearchResults: tagSearchResults
+      });
+      this.findTags();
+    }
+  }, {
+    key: "findTags",
+    value: function findTags() {
+      var _this3 = this;
+
+      if (this.state.tagSearchString.length > 1) {
+        Object(_util_tag_api_util__WEBPACK_IMPORTED_MODULE_1__["findTags"])(this.state.tagSearchString).then(function (tags) {
+          _this3.setState({
+            tagSearchResults: Object.values(tags)
+          });
+        }.bind(this));
+      }
+    }
+  }, {
+    key: "attemptNewTag",
+    value: function attemptNewTag(tagString) {
+      var _this4 = this;
+
+      Object(_util_tag_api_util__WEBPACK_IMPORTED_MODULE_1__["findOrCreateTag"])(tagString).then(function (tag) {
+        _this4.props.handleAddTag(tag);
+
+        _this4.setState({
+          tagSearchString: "",
+          addTagDialogue: false
+        });
+      });
+    }
+  }, {
     key: "returnSelected",
     value: function returnSelected(tag) {
-      this.props.addTag(tag);
+      this.props.handleAddTag(tag);
+    }
+  }, {
+    key: "showAddTagDialogue",
+    value: function showAddTagDialogue(e) {
+      this.setState({
+        addTagDialogue: true
+      }, function () {
+        return document.getElementById("tagSearch").focus();
+      });
+    }
+  }, {
+    key: "hideAddTagDialogue",
+    value: function hideAddTagDialogue(e) {
+      this.setState({
+        addTagDialogue: false,
+        tagSearchString: "",
+        tagSearchResults: []
+      });
     }
   }, {
     key: "render",
     value: function render() {
-      var _this2 = this;
+      var _this5 = this;
 
-      var tagList = this.props.tags.map(function (tag) {
+      var dialogueTags = this.state.tagSearchResults.length > 0 ? this.state.tagSearchResults : this.state.popularTags;
+      var tagList = dialogueTags.map(function (tag) {
         return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
           key: tag.id,
           className: "addTagLi",
           onMouseDown: function onMouseDown() {
-            return _this2.returnSelected(tag);
+            return _this5.returnSelected(tag);
           }
         }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, tag.name), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, tag.post_count, " posts"));
       });
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "pe-add-tags",
+        onClick: this.showAddTagDialogue,
+        onBlur: this.hideAddTagDialogue,
+        tabIndex: "0",
+        id: "addTagButton"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        type: "text",
+        id: "tagSearch",
+        placeholder: "+ Tag",
+        value: this.state.tagSearchString,
+        onChange: this.handleTagSearchInput,
+        tabIndex: "-1",
+        onKeyDown: function onKeyDown(e) {
+          if (e.keyCode === 13 || e.keyCode === 9) {
+            e.preventDefault();
+
+            _this5.attemptNewTag(_this5.state.tagSearchString);
+          }
+        }
+      }), this.state.addTagDialogue && // <AddTagsDialogue
+      //     tags={dialogueTags}
+      //     addTag={this.handleAddTag}
+      // />
+      react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "addTagPositioning"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "addTagContainer"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", null, tagList)));
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", null, tagList))));
     }
   }]);
 
@@ -1935,9 +2039,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _navbar_navbar_container__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../navbar/navbar_container */ "./frontend/components/navbar/navbar_container.js");
-/* harmony import */ var _add_tags_dialogue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./add_tags_dialogue */ "./frontend/components/posts/post_edit/add_tags_dialogue.jsx");
+/* harmony import */ var _add_tags__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./add_tags */ "./frontend/components/posts/post_edit/add_tags.jsx");
 /* harmony import */ var _post_edit_tag__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./post_edit_tag */ "./frontend/components/posts/post_edit/post_edit_tag.jsx");
-/* harmony import */ var _util_tag_api_util__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../util/tag_api_util */ "./frontend/util/tag_api_util.js");
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
@@ -1970,7 +2073,6 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 
 
-
 var PostEdit =
 /*#__PURE__*/
 function (_React$Component) {
@@ -1984,23 +2086,14 @@ function (_React$Component) {
     _this = _possibleConstructorReturn(this, _getPrototypeOf(PostEdit).call(this, props));
     _this.state = {
       title: "",
-      addTagDialogue: false,
-      tagSearchString: "",
-      tagSearchResults: [],
-      popularTags: [],
       tags: {}
     };
     _this.handleTitleInput = _this.handleTitleInput.bind(_assertThisInitialized(_this));
-    _this.handleTagSearchInput = _this.handleTagSearchInput.bind(_assertThisInitialized(_this));
-    _this.publish = _this.publish.bind(_assertThisInitialized(_this));
     _this.pushTitleChange = _.debounce(_this.pushTitleChange, 1000).bind(_assertThisInitialized(_this));
-    _this.pushTagsChange = _.debounce(_this.pushTagsChange, 1000).bind(_assertThisInitialized(_this));
-    _this.findTags = _.debounce(_this.findTags, 500).bind(_assertThisInitialized(_this));
-    _this.showAddTagDialogue = _this.showAddTagDialogue.bind(_assertThisInitialized(_this));
-    _this.hideAddTagDialogue = _this.hideAddTagDialogue.bind(_assertThisInitialized(_this));
-    _this.handleRemoveTag = _this.handleRemoveTag.bind(_assertThisInitialized(_this));
     _this.handleAddTag = _this.handleAddTag.bind(_assertThisInitialized(_this));
-    _this.attemptNewTag = _this.attemptNewTag.bind(_assertThisInitialized(_this));
+    _this.handleRemoveTag = _this.handleRemoveTag.bind(_assertThisInitialized(_this));
+    _this.pushTagsChange = _.debounce(_this.pushTagsChange, 1000).bind(_assertThisInitialized(_this));
+    _this.publish = _this.publish.bind(_assertThisInitialized(_this));
     return _this;
   }
 
@@ -2011,12 +2104,6 @@ function (_React$Component) {
 
       this.props.fetchPost().then(function () {
         _this2.setState(_this2.props.post);
-      });
-
-      Object(_util_tag_api_util__WEBPACK_IMPORTED_MODULE_5__["findTags"])("").then(function (tags) {
-        _this2.setState({
-          popularTags: Object.values(tags)
-        });
       });
     }
   }, {
@@ -2036,29 +2123,6 @@ function (_React$Component) {
       });
     }
   }, {
-    key: "handleTagSearchInput",
-    value: function handleTagSearchInput(e) {
-      var tagSearchResults = e.target.value.length < 2 ? [] : this.state.tagSearchResults;
-      this.setState({
-        tagSearchString: e.target.value,
-        tagSearchResults: tagSearchResults
-      });
-      this.findTags();
-    }
-  }, {
-    key: "findTags",
-    value: function findTags() {
-      var _this3 = this;
-
-      if (this.state.tagSearchString.length > 1) {
-        Object(_util_tag_api_util__WEBPACK_IMPORTED_MODULE_5__["findTags"])(this.state.tagSearchString).then(function (tags) {
-          _this3.setState({
-            tagSearchResults: Object.values(tags)
-          });
-        }.bind(this));
-      }
-    }
-  }, {
     key: "handleRemoveTag",
     value: function handleRemoveTag(tagId) {
       var stateTags = this.state.tags;
@@ -2074,9 +2138,7 @@ function (_React$Component) {
       var stateTags = this.state.tags;
       stateTags[tag.id] = tag;
       this.setState({
-        tags: stateTags,
-        tagSearchString: "",
-        addTagDialogue: false
+        tags: stateTags
       });
       this.pushTagsChange();
     }
@@ -2089,15 +2151,6 @@ function (_React$Component) {
       });
     }
   }, {
-    key: "attemptNewTag",
-    value: function attemptNewTag(tagString) {
-      var _this4 = this;
-
-      Object(_util_tag_api_util__WEBPACK_IMPORTED_MODULE_5__["findOrCreateTag"])(tagString).then(function (tag) {
-        return _this4.handleAddTag(tag);
-      });
-    }
-  }, {
     key: "publishable",
     value: function publishable() {
       return this.state.title && this.state.title.length > 0;
@@ -2105,7 +2158,7 @@ function (_React$Component) {
   }, {
     key: "publish",
     value: function publish(type) {
-      var _this5 = this;
+      var _this3 = this;
 
       var payload = {
         title: this.state.title,
@@ -2126,31 +2179,13 @@ function (_React$Component) {
       }
 
       this.props.updatePostAttributes(payload).then(function () {
-        _this5.props.history.push("/posts/".concat(_this5.props.post.id));
+        _this3.props.history.push("/posts/".concat(_this3.props.post.id));
       }.bind(this));
-    }
-  }, {
-    key: "showAddTagDialogue",
-    value: function showAddTagDialogue(e) {
-      this.setState({
-        addTagDialogue: true
-      }, function () {
-        return document.getElementById("tagSearch").focus();
-      });
-    }
-  }, {
-    key: "hideAddTagDialogue",
-    value: function hideAddTagDialogue(e) {
-      this.setState({
-        addTagDialogue: false,
-        tagSearchString: "",
-        tagSearchResults: []
-      });
     }
   }, {
     key: "render",
     value: function render() {
-      var _this6 = this,
+      var _this4 = this,
           _body$classList;
 
       var images = this.props.images.map(function (img, i) {
@@ -2173,7 +2208,7 @@ function (_React$Component) {
         return react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_post_edit_tag__WEBPACK_IMPORTED_MODULE_4__["default"], {
           tag: tag,
           key: tag.id,
-          removeTag: _this6.handleRemoveTag
+          removeTag: _this4.handleRemoveTag
         });
       }); // TODO: is there better way change the class of the body depending on the page?
 
@@ -2190,7 +2225,6 @@ function (_React$Component) {
         peSidebarBtnActive = 'pe-community-post-btn';
       }
 
-      var dialogueTags = this.state.tagSearchResults.length > 0 ? this.state.tagSearchResults : this.state.popularTags;
       return react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_utils_modal__WEBPACK_IMPORTED_MODULE_0__["default"], {
         postId: this.props.post.id
       }), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
@@ -2214,7 +2248,7 @@ function (_React$Component) {
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("button", {
         className: "add-image-button",
         onClick: function onClick() {
-          return _this6.props.openModal('edit-upload');
+          return _this4.props.openModal('edit-upload');
         }
       }, "+ Add image"))), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
         className: "pe-sidebar-container"
@@ -2228,12 +2262,12 @@ function (_React$Component) {
         className: "pe-sidebar-btn ".concat(peSidebarBtnActive),
         disabled: !this.publishable(),
         onClick: function onClick() {
-          return _this6.publish('public');
+          return _this4.publish('public');
         }
       }, "To Community"), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("button", {
         className: "pe-sidebar-btn pe-community-hidden-btn",
         onClick: function onClick() {
-          return _this6.publish('hidden');
+          return _this4.publish('hidden');
         }
       }, "Hidden")), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
         className: "pe-sidebar-section"
@@ -2241,30 +2275,9 @@ function (_React$Component) {
         className: "pe-sidebar-section-header"
       }, "ADD TAGS"), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
         className: "pe-tag-container"
-      }, tags, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
-        className: "pe-add-tags",
-        onClick: this.showAddTagDialogue,
-        onBlur: this.hideAddTagDialogue,
-        tabIndex: "0",
-        id: "addTagButton"
-      }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("input", {
-        type: "text",
-        id: "tagSearch",
-        placeholder: "+ Tag",
-        value: this.state.tagSearchString,
-        onChange: this.handleTagSearchInput,
-        tabIndex: "-1",
-        onKeyDown: function onKeyDown(e) {
-          if (e.keyCode === 13 || e.keyCode === 9) {
-            e.preventDefault();
-
-            _this6.attemptNewTag(_this6.state.tagSearchString);
-          }
-        }
-      }), this.state.addTagDialogue && react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_add_tags_dialogue__WEBPACK_IMPORTED_MODULE_3__["default"], {
-        tags: dialogueTags,
-        addTag: this.handleAddTag
-      })))), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
+      }, tags, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_add_tags__WEBPACK_IMPORTED_MODULE_3__["default"], {
+        handleAddTag: this.handleAddTag
+      }))), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
         className: "pe-sidebar-section"
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
         className: "pe-sidebar-section-header"
@@ -2272,7 +2285,7 @@ function (_React$Component) {
         className: "pe-sidebar-tools"
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("li", {
         onClick: function onClick() {
-          return _this6.props.openModal('edit-upload');
+          return _this4.props.openModal('edit-upload');
         }
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("i", {
         className: "fas fa-plus"
@@ -2282,7 +2295,7 @@ function (_React$Component) {
         className: "fas fa-download"
       }), "Download post"), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("li", {
         onClick: function onClick() {
-          return _this6.props.openModal('delete-post-confirmation');
+          return _this4.props.openModal('delete-post-confirmation');
         }
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("i", {
         className: "fas fa-trash"
@@ -4441,13 +4454,13 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var redux__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! redux */ "./node_modules/redux/es/redux.js");
 /* harmony import */ var _modal_reducer__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./modal_reducer */ "./frontend/reducers/ui/modal_reducer.js");
-/* harmony import */ var _loading_reducer__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./loading_reducer */ "./frontend/reducers/ui/loading_reducer.js");
+/* harmony import */ var _loading_reducer__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./loading_reducer */ "./frontend/reducers/ui/loading_reducer.js");
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = (Object(redux__WEBPACK_IMPORTED_MODULE_0__["combineReducers"])({
   modal: _modal_reducer__WEBPACK_IMPORTED_MODULE_1__["default"],
-  loading: _loading_reducer__WEBPACK_IMPORTED_MODULE_3__["default"]
+  loading: _loading_reducer__WEBPACK_IMPORTED_MODULE_2__["default"]
 }));
 
 /***/ }),

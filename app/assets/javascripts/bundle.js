@@ -470,17 +470,20 @@ var fetchTag = function fetchTag(tagId) {
 /*!****************************************!*\
   !*** ./frontend/actions/ui_actions.js ***!
   \****************************************/
-/*! exports provided: OPEN_MODAL, CLOSE_MODAL, openModal, closeModal */
+/*! exports provided: OPEN_MODAL, CLOSE_MODAL, SET_LOADING, openModal, closeModal, setLoading */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "OPEN_MODAL", function() { return OPEN_MODAL; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CLOSE_MODAL", function() { return CLOSE_MODAL; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SET_LOADING", function() { return SET_LOADING; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "openModal", function() { return openModal; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "closeModal", function() { return closeModal; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setLoading", function() { return setLoading; });
 var OPEN_MODAL = 'OPEN_MODAL';
 var CLOSE_MODAL = 'CLOSE_MODAL';
+var SET_LOADING = 'SET_LOADING';
 var openModal = function openModal(modal) {
   return {
     type: OPEN_MODAL,
@@ -490,6 +493,12 @@ var openModal = function openModal(modal) {
 var closeModal = function closeModal() {
   return {
     type: CLOSE_MODAL
+  };
+};
+var setLoading = function setLoading(value) {
+  return {
+    type: SET_LOADING,
+    value: value
   };
 };
 
@@ -1028,13 +1037,18 @@ function (_React$Component) {
   _createClass(Gallery, [{
     key: "componentDidMount",
     value: function componentDidMount() {
-      // Watch for window size changes
+      var _this2 = this;
+
+      // Set loading so we can get a spinner
+      this.props.setLoading(true); // Watch for window size changes
+
       this.updateWindowDimensions();
-      window.addEventListener('resize', this.updateWindowDimensions); // Add posts to state
+      window.addEventListener('resize', this.updateWindowDimensions); // Add posts to state, and stop the spinner when we're done
 
-      this.props.clearPosts(); // TODO: is this the best way to make sure we only display the appropriate images??
-
-      this.props.fetchPosts();
+      this.props.clearPosts();
+      this.props.fetchPosts().then(function () {
+        return _this2.props.setLoading(false);
+      });
       this.props.fetchOwner();
       this.listenToScroll();
       window.addEventListener('scroll', this.listenToScroll);
@@ -1076,7 +1090,7 @@ function (_React$Component) {
     key: "render",
     value: function render() {
       var _body$classList,
-          _this2 = this;
+          _this3 = this;
 
       // TODO: is there better way change the class of the body depending on the page?
       var body = document.getElementsByTagName('body')[0]; // body.classList.forEach(c => body.classList.remove(c));
@@ -1094,10 +1108,10 @@ function (_React$Component) {
           return new Array();
         });
         this.props.posts.forEach(function (post, i) {
-          gridColumns[i % _this2.state.columns].push(react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_post_preview__WEBPACK_IMPORTED_MODULE_2__["default"], {
+          gridColumns[i % _this3.state.columns].push(react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_post_preview__WEBPACK_IMPORTED_MODULE_2__["default"], {
             post: post,
             key: i,
-            currentUserId: _this2.props.currentUserId
+            currentUserId: _this3.props.currentUserId
           }));
         });
       }
@@ -1119,7 +1133,7 @@ function (_React$Component) {
         style: {
           margin: '380px 0 0 0'
         }
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      }, this.props.uiLoading && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "loading-spinner"
       })));
     }
@@ -1186,7 +1200,7 @@ function (_React$Component) {
       lavender: 'linear-gradient(rgb(198, 193, 255), rgb(46, 48, 53))',
       navy: 'linear-gradient(rgb(28, 44, 93), rgb(46, 48, 53))'
     };
-    _this.greetings = ['"I don\'t have an ego. My Facebook photo is a landscape."', '"Some flies are too awesome for the wall."', '"We\'re the only species on earth that observes shark week."', '"Hey, did you hear about the turtle in China? Two packs a day!"', '"Well, it\'s been real, but I have a date to catch. Or should I say.. A catch to date."', '"Cool cool cool."', '"Six seasons and a movie!"', '"I painted a tunnel on the side of the library. When it dries, I\'m going for it."', '"Oh my god! I\'m finally popular enough to be in the yearbook!"', '"Everybody loves pelicans, they bring babies!"', '"A passing grade? Like a C? Why don\'t I just get pregnant at a bus station?"', '"Who the hell are you always texting? Everyone you know is here!"', '"It\'s not a pen, it\'s a principle!"', '"Accidents don\'t just happen over and over and over again, okay? This isn\'t budget daycare."', '"Never change, or do. I\'m not your boss."', '"There is a time and place for subtlety, and that time was before Scary Movie."', '"Sometimes I think I lost something really important to me, and then it turns out I already ate it."', '"First time I was punched in the face, I was like \'Oh no!\', but then I was like \'this is a story..\'"', '"Streets ahead."', '"I was never one to hold a grudge. My father held grudges, I\'ll always hate him for that."', '"We\'re all kind of crazytown bananapants."', '"Blaming a bridge collapse on a school is like blaming owls for why I suck at analogies."', '"I know what a metaphor is! It\'s like a thought with another thought\'s hat on."', '"Fire can\'t go through doors, stupid. It\'s not a ghost."', '"Shut your pompous vortex of overlapping fangs!"', '"Augh! Ghost pirate!!"', '"Ya live by the ghost...ya die by the ghost."', '"The guy from Labyrinth just turned into a bird!"', '"Ow! My arm came off! I can\'t belive that happened"', '"Was something supposed to happen? Are we invisible now, or something?"', '"It\'s like he channels dead crazy people!"', '"Are these they?"', '"Jock rock my ass! Listen to those lyrics, man! It’s all about love, and longing!"', '"You were a daydreamer. A sassmouth! And, not infrequently, a bit of a gigglepuss!"', '"I gotta admit I always wanted to get Edgar Allan Poe in a headlock. That thing is like a pumpkin!"'];
+    _this.greetings = ['"I don\'t have an ego. My Facebook photo is a landscape."', '"Some flies are too awesome for the wall."', '"We\'re the only species on earth that observes shark week."', '"Hey, did you hear about the turtle in China? Two packs a day!"', '"Well, it\'s been real, but I have a date to catch. Or should I say.. A catch to date."', '"Cool cool cool."', '"Six seasons and a movie!"', '"I painted a tunnel on the side of the library. When it dries, I\'m going for it."', '"Oh my god! I\'m finally popular enough to be in the yearbook!"', '"Everybody loves pelicans, they bring babies!"', '"A passing grade? Like a C? Why don\'t I just get pregnant at a bus station?"', '"Who the hell are you always texting? Everyone you know is here!"', '"It\'s not a pen, it\'s a principle!"', '"Accidents don\'t just happen over and over and over again, okay? This isn\'t budget daycare."', '"Never change, or do. I\'m not your boss."', '"There is a time and place for subtlety, and that time was before Scary Movie."', '"Sometimes I think I lost something really important to me, and then it turns out I already ate it."', '"First time I was punched in the face, I was like \'Oh no!\', but then I was like \'this is a story...\'"', '"Streets ahead."', '"I was never one to hold a grudge. My father held grudges, I\'ll always hate him for that."', '"We\'re all kind of crazytown bananapants."', '"Blaming a bridge collapse on a school is like blaming owls for why I suck at analogies."', '"I know what a metaphor is! It\'s like a thought with another thought\'s hat on."', '"Fire can\'t go through doors, stupid. It\'s not a ghost."', '"Shut your pompous vortex of overlapping fangs!"', '"Augh! Ghost pirate!!"', '"Ya live by the ghost...ya die by the ghost."', '"The guy from Labyrinth just turned into a bird!"', '"Ow! My arm came off! I can\'t belive that happened"', '"Was something supposed to happen? Are we invisible now, or something?"', '"It\'s like he channels dead crazy people!"', '"Are these they?"', '"Jock rock my ass! Listen to those lyrics, man! It’s all about love, and longing!"', '"You were a daydreamer. A sassmouth! And, not infrequently, a bit of a gigglepuss!"', '"I gotta admit I always wanted to get Edgar Allan Poe in a headlock. That thing is like a pumpkin!"'];
     _this.chosenGreeting = _this.greetings[Math.floor(Math.random() * _this.greetings.length)];
     return _this;
   }
@@ -1432,6 +1446,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _actions_post_actions__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../actions/post_actions */ "./frontend/actions/post_actions.js");
 /* harmony import */ var _gallery_banner_index_banner_container__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./gallery_banner/index_banner_container */ "./frontend/components/gallery/gallery_banner/index_banner_container.js");
+/* harmony import */ var _actions_ui_actions__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../actions/ui_actions */ "./frontend/actions/ui_actions.js");
+
 
 
 
@@ -1442,6 +1458,7 @@ var msp = function msp(state) {
   return {
     posts: Object.values(state.entities.posts || {}),
     currentUserId: state.session.id,
+    uiLoading: state.ui.loading,
     bannerObject: react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_gallery_banner_index_banner_container__WEBPACK_IMPORTED_MODULE_4__["default"], null)
   };
 };
@@ -1456,6 +1473,9 @@ var mdp = function mdp(dispatch) {
     },
     fetchOwner: function fetchOwner() {
       return true;
+    },
+    setLoading: function setLoading(value) {
+      return dispatch(Object(_actions_ui_actions__WEBPACK_IMPORTED_MODULE_5__["setLoading"])(value));
     }
   };
 };
@@ -1480,6 +1500,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _actions_post_actions__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../actions/post_actions */ "./frontend/actions/post_actions.js");
 /* harmony import */ var _actions_tag_actions__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../actions/tag_actions */ "./frontend/actions/tag_actions.js");
 /* harmony import */ var _gallery_banner_tag_gallery_banner__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./gallery_banner/tag_gallery_banner */ "./frontend/components/gallery/gallery_banner/tag_gallery_banner.jsx");
+/* harmony import */ var _actions_ui_actions__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../actions/ui_actions */ "./frontend/actions/ui_actions.js");
+
 
 
 
@@ -1493,6 +1515,7 @@ var msp = function msp(state, ownProps) {
   return {
     posts: Object.values(state.entities.posts || {}),
     currentUserId: state.session.id,
+    uiLoading: state.ui.loading,
     bannerObject: react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_gallery_banner_tag_gallery_banner__WEBPACK_IMPORTED_MODULE_5__["default"], {
       tag: tag
     })
@@ -1510,6 +1533,9 @@ var mdp = function mdp(dispatch, ownProps) {
     },
     fetchPosts: function fetchPosts() {
       return dispatch(Object(_actions_post_actions__WEBPACK_IMPORTED_MODULE_3__["fetchPostsByTag"])(tagId));
+    },
+    setLoading: function setLoading(value) {
+      return dispatch(Object(_actions_ui_actions__WEBPACK_IMPORTED_MODULE_6__["setLoading"])(value));
     }
   };
 };
@@ -1534,6 +1560,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _actions_post_actions__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../actions/post_actions */ "./frontend/actions/post_actions.js");
 /* harmony import */ var _actions_user_actions__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../actions/user_actions */ "./frontend/actions/user_actions.js");
 /* harmony import */ var _gallery_banner_user_gallery_banner__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./gallery_banner/user_gallery_banner */ "./frontend/components/gallery/gallery_banner/user_gallery_banner.jsx");
+/* harmony import */ var _actions_ui_actions__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../actions/ui_actions */ "./frontend/actions/ui_actions.js");
+
 
 
 
@@ -1549,6 +1577,7 @@ var msp = function msp(state, ownProps) {
   return {
     posts: Object.values(state.entities.posts || {}),
     currentUserId: state.session.id,
+    uiLoading: state.ui.loading,
     bannerObject: react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_gallery_banner_user_gallery_banner__WEBPACK_IMPORTED_MODULE_5__["default"], {
       user: user
     })
@@ -1566,6 +1595,9 @@ var mdp = function mdp(dispatch, ownProps) {
     },
     fetchPosts: function fetchPosts() {
       return dispatch(Object(_actions_post_actions__WEBPACK_IMPORTED_MODULE_3__["fetchPostsByUser"])(userId));
+    },
+    setLoading: function setLoading(value) {
+      return dispatch(Object(_actions_ui_actions__WEBPACK_IMPORTED_MODULE_6__["setLoading"])(value));
     }
   };
 };
@@ -1669,6 +1701,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _navbar__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./navbar */ "./frontend/components/navbar/navbar.jsx");
 /* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
 /* harmony import */ var _actions_session_actions__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../actions/session_actions */ "./frontend/actions/session_actions.js");
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
+
 
 
 
@@ -1682,15 +1716,16 @@ var mapStateToProps = function mapStateToProps(_ref, ownProps) {
   };
 };
 
-var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+var mapDispatchToProps = function mapDispatchToProps(dispatch, ownProps) {
   return {
     logout: function logout() {
-      return dispatch(Object(_actions_session_actions__WEBPACK_IMPORTED_MODULE_2__["logout"])());
+      dispatch(Object(_actions_session_actions__WEBPACK_IMPORTED_MODULE_2__["logout"])());
+      ownProps.history.push("/");
     }
   };
 };
 
-/* harmony default export */ __webpack_exports__["default"] = (Object(react_redux__WEBPACK_IMPORTED_MODULE_1__["connect"])(mapStateToProps, mapDispatchToProps)(_navbar__WEBPACK_IMPORTED_MODULE_0__["default"]));
+/* harmony default export */ __webpack_exports__["default"] = (Object(react_router_dom__WEBPACK_IMPORTED_MODULE_3__["withRouter"])(Object(react_redux__WEBPACK_IMPORTED_MODULE_1__["connect"])(mapStateToProps, mapDispatchToProps)(_navbar__WEBPACK_IMPORTED_MODULE_0__["default"])));
 
 /***/ }),
 
@@ -1900,10 +1935,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _navbar_navbar_container__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../navbar/navbar_container */ "./frontend/components/navbar/navbar_container.js");
-/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
-/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _add_tags_dialogue__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./add_tags_dialogue */ "./frontend/components/posts/post_edit/add_tags_dialogue.jsx");
-/* harmony import */ var _post_edit_tag__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./post_edit_tag */ "./frontend/components/posts/post_edit/post_edit_tag.jsx");
+/* harmony import */ var _add_tags_dialogue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./add_tags_dialogue */ "./frontend/components/posts/post_edit/add_tags_dialogue.jsx");
+/* harmony import */ var _post_edit_tag__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./post_edit_tag */ "./frontend/components/posts/post_edit/post_edit_tag.jsx");
+/* harmony import */ var _util_tag_api_util__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../util/tag_api_util */ "./frontend/util/tag_api_util.js");
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
@@ -1953,6 +1987,7 @@ function (_React$Component) {
       addTagDialogue: false,
       tagSearchString: "",
       tagSearchResults: [],
+      popularTags: [],
       tags: {}
     };
     _this.handleTitleInput = _this.handleTitleInput.bind(_assertThisInitialized(_this));
@@ -1977,9 +2012,10 @@ function (_React$Component) {
       this.props.fetchPost().then(function () {
         _this2.setState(_this2.props.post);
       });
-      this.props.findTags("").then(function (tags) {
+
+      Object(_util_tag_api_util__WEBPACK_IMPORTED_MODULE_5__["findTags"])("").then(function (tags) {
         _this2.setState({
-          tagSearchResults: Object.values(tags)
+          popularTags: Object.values(tags)
         });
       });
     }
@@ -2002,8 +2038,10 @@ function (_React$Component) {
   }, {
     key: "handleTagSearchInput",
     value: function handleTagSearchInput(e) {
+      var tagSearchResults = e.target.value.length < 2 ? [] : this.state.tagSearchResults;
       this.setState({
-        tagSearchString: e.target.value
+        tagSearchString: e.target.value,
+        tagSearchResults: tagSearchResults
       });
       this.findTags();
     }
@@ -2013,7 +2051,7 @@ function (_React$Component) {
       var _this3 = this;
 
       if (this.state.tagSearchString.length > 1) {
-        this.props.findTags(this.state.tagSearchString).then(function (tags) {
+        Object(_util_tag_api_util__WEBPACK_IMPORTED_MODULE_5__["findTags"])(this.state.tagSearchString).then(function (tags) {
           _this3.setState({
             tagSearchResults: Object.values(tags)
           });
@@ -2055,8 +2093,7 @@ function (_React$Component) {
     value: function attemptNewTag(tagString) {
       var _this4 = this;
 
-      console.log("attempting to create tag: ".concat(tagString));
-      this.props.findOrCreateTag(tagString).then(function (tag) {
+      Object(_util_tag_api_util__WEBPACK_IMPORTED_MODULE_5__["findOrCreateTag"])(tagString).then(function (tag) {
         return _this4.handleAddTag(tag);
       });
     }
@@ -2095,9 +2132,6 @@ function (_React$Component) {
   }, {
     key: "showAddTagDialogue",
     value: function showAddTagDialogue(e) {
-      console.log("opening"); // console.log(document.activeElement);
-
-      console.log(e.target);
       this.setState({
         addTagDialogue: true
       }, function () {
@@ -2107,11 +2141,10 @@ function (_React$Component) {
   }, {
     key: "hideAddTagDialogue",
     value: function hideAddTagDialogue(e) {
-      console.log("closing"); // console.log(document.activeElement);
-
-      console.log(e.target);
       this.setState({
-        addTagDialogue: false
+        addTagDialogue: false,
+        tagSearchString: "",
+        tagSearchResults: []
       });
     }
   }, {
@@ -2137,7 +2170,7 @@ function (_React$Component) {
         })));
       });
       var tags = Object.values(this.state.tags).map(function (tag) {
-        return react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_post_edit_tag__WEBPACK_IMPORTED_MODULE_5__["default"], {
+        return react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_post_edit_tag__WEBPACK_IMPORTED_MODULE_4__["default"], {
           tag: tag,
           key: tag.id,
           removeTag: _this6.handleRemoveTag
@@ -2157,6 +2190,7 @@ function (_React$Component) {
         peSidebarBtnActive = 'pe-community-post-btn';
       }
 
+      var dialogueTags = this.state.tagSearchResults.length > 0 ? this.state.tagSearchResults : this.state.popularTags;
       return react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_utils_modal__WEBPACK_IMPORTED_MODULE_0__["default"], {
         postId: this.props.post.id
       }), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
@@ -2219,15 +2253,16 @@ function (_React$Component) {
         placeholder: "+ Tag",
         value: this.state.tagSearchString,
         onChange: this.handleTagSearchInput,
-        onKeyUp: function onKeyUp(e) {
-          if (e.keyCode === 13) {
+        tabIndex: "-1",
+        onKeyDown: function onKeyDown(e) {
+          if (e.keyCode === 13 || e.keyCode === 9) {
             e.preventDefault();
 
             _this6.attemptNewTag(_this6.state.tagSearchString);
           }
         }
-      }), this.state.addTagDialogue && react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_add_tags_dialogue__WEBPACK_IMPORTED_MODULE_4__["default"], {
-        tags: this.state.tagSearchResults,
+      }), this.state.addTagDialogue && react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_add_tags_dialogue__WEBPACK_IMPORTED_MODULE_3__["default"], {
+        tags: dialogueTags,
         addTag: this.handleAddTag
       })))), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
         className: "pe-sidebar-section"
@@ -2275,8 +2310,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _actions_post_actions__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../actions/post_actions */ "./frontend/actions/post_actions.js");
 /* harmony import */ var _post_edit__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./post_edit */ "./frontend/components/posts/post_edit/post_edit.jsx");
 /* harmony import */ var _actions_ui_actions__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../actions/ui_actions */ "./frontend/actions/ui_actions.js");
-/* harmony import */ var _util_tag_api_util__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../util/tag_api_util */ "./frontend/util/tag_api_util.js");
-
 
 
 
@@ -2310,12 +2343,6 @@ var mdp = function mdp(dispatch, ownProps) {
     },
     openModal: function openModal(modal) {
       return dispatch(Object(_actions_ui_actions__WEBPACK_IMPORTED_MODULE_3__["openModal"])(modal));
-    },
-    findTags: function findTags(query) {
-      return Object(_util_tag_api_util__WEBPACK_IMPORTED_MODULE_4__["findTags"])(query);
-    },
-    findOrCreateTag: function findOrCreateTag(query) {
-      return Object(_util_tag_api_util__WEBPACK_IMPORTED_MODULE_4__["findOrCreateTag"])(query);
     }
   };
 };
@@ -4347,6 +4374,33 @@ var _nullSession = {
 
 /***/ }),
 
+/***/ "./frontend/reducers/ui/loading_reducer.js":
+/*!*************************************************!*\
+  !*** ./frontend/reducers/ui/loading_reducer.js ***!
+  \*************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _actions_ui_actions__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../actions/ui_actions */ "./frontend/actions/ui_actions.js");
+
+var _default_state = false;
+/* harmony default export */ __webpack_exports__["default"] = (function () {
+  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : _default_state;
+  var action = arguments.length > 1 ? arguments[1] : undefined;
+
+  switch (action.type) {
+    case _actions_ui_actions__WEBPACK_IMPORTED_MODULE_0__["SET_LOADING"]:
+      return action.value;
+
+    default:
+      return state;
+  }
+});
+
+/***/ }),
+
 /***/ "./frontend/reducers/ui/modal_reducer.js":
 /*!***********************************************!*\
   !*** ./frontend/reducers/ui/modal_reducer.js ***!
@@ -4387,10 +4441,13 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var redux__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! redux */ "./node_modules/redux/es/redux.js");
 /* harmony import */ var _modal_reducer__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./modal_reducer */ "./frontend/reducers/ui/modal_reducer.js");
+/* harmony import */ var _loading_reducer__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./loading_reducer */ "./frontend/reducers/ui/loading_reducer.js");
+
 
 
 /* harmony default export */ __webpack_exports__["default"] = (Object(redux__WEBPACK_IMPORTED_MODULE_0__["combineReducers"])({
-  modal: _modal_reducer__WEBPACK_IMPORTED_MODULE_1__["default"]
+  modal: _modal_reducer__WEBPACK_IMPORTED_MODULE_1__["default"],
+  loading: _loading_reducer__WEBPACK_IMPORTED_MODULE_3__["default"]
 }));
 
 /***/ }),

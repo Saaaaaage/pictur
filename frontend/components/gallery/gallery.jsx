@@ -21,13 +21,16 @@ class Gallery extends React.Component {
     }
 
     componentDidMount(){
+        // Set loading so we can get a spinner
+        this.props.setLoading(true);
+
         // Watch for window size changes
         this.updateWindowDimensions();
         window.addEventListener('resize', this.updateWindowDimensions);
 
-        // Add posts to state
-        this.props.clearPosts(); // TODO: is this the best way to make sure we only display the appropriate images??
-        this.props.fetchPosts();
+        // Add posts to state, and stop the spinner when we're done
+        this.props.clearPosts();
+        this.props.fetchPosts().then(() => this.props.setLoading(false));
         this.props.fetchOwner();
 
         this.listenToScroll();
@@ -107,8 +110,10 @@ class Gallery extends React.Component {
                         {gridColumns.map((col, i) => (<div className="grid-column" key={i}>{col}</div>))}
                     </div>
                 ) : (
-                        <div className="grid-column-container" style={{ margin: '380px 0 0 0'}}>
-                        <div className="loading-spinner"></div>
+                    <div className="grid-column-container" style={{ margin: '380px 0 0 0'}}>
+                        {this.props.uiLoading &&
+                            <div className="loading-spinner"></div>
+                        }
                     </div>
                 )
                 }

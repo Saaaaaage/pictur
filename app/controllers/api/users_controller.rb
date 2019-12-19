@@ -16,7 +16,13 @@ class Api::UsersController < ApplicationController
     end
 
     def show
-        @user = User.all.joins(:posts).where(posts: {public: true}).select('users.*, count(*) as post_count').group('users.id').find(params[:id])
+        # .where(posts: {public: true})
+        @user = User.all
+                    .left_outer_joins(:posts)
+                    .where('posts.public = true or posts.public is null')
+                    .select('users.*, count(*) as post_count')
+                    .group('users.id')
+                    .find(params[:id])
     end
 
     def update

@@ -1,9 +1,9 @@
 import Modal from '../../utils/modal';
 import React from 'react';
 import NavbarContainer from '../../navbar/navbar_container';
-import { debounce } from 'lodash';
 import AddTagsDialogue from './add_tags_dialogue';
 import PostEditTag from './post_edit_tag';
+import { findTags, findOrCreateTag } from '../../../util/tag_api_util';
 
 class PostEdit extends React.Component {
     constructor(props) {
@@ -13,6 +13,7 @@ class PostEdit extends React.Component {
             addTagDialogue: false,
             tagSearchString: "",
             tagSearchResults: [],
+            popularTags: [],
             tags: {},
 
         };
@@ -33,9 +34,9 @@ class PostEdit extends React.Component {
         this.props.fetchPost().then(
             () => {this.setState(this.props.post);}
         );
-        this.props.findTags("").then(
+        findTags("").then(
             tags => {
-                this.setState({ tagSearchResults: Object.values(tags)});
+                this.setState({ popularTags: Object.values(tags)});
             }
         );
     }
@@ -53,13 +54,17 @@ class PostEdit extends React.Component {
     }
 
     handleTagSearchInput(e) {
-        this.setState({ tagSearchString: e.target.value });
+        const tagSearchResults = e.target.value.length < 2 ? [] : this.state.tagSearchResults;
+        this.setState({
+            tagSearchString: e.target.value,
+            tagSearchResults: tagSearchResults
+        });
         this.findTags();
     }
 
     findTags() {
         if (this.state.tagSearchString.length > 1) {
-            this.props.findTags(this.state.tagSearchString).then(
+            findTags(this.state.tagSearchString).then(
                 (tags => {
                     this.setState({tagSearchResults: Object.values(tags)});
                 }).bind(this)
@@ -94,8 +99,7 @@ class PostEdit extends React.Component {
     }
 
     attemptNewTag(tagString) {
-        console.log(`attempting to create tag: ${tagString}`);
-        this.props.findOrCreateTag(tagString).then(
+        findOrCreateTag(tagString).then(
             tag => this.handleAddTag(tag)
         );
     }
@@ -130,19 +134,17 @@ class PostEdit extends React.Component {
     }
 
     showAddTagDialogue(e) {
-        console.log("opening");
-        // console.log(document.activeElement);
-        console.log(e.target);
         this.setState(
             { addTagDialogue: true },
             () => document.getElementById("tagSearch").focus()
         );
     }
     hideAddTagDialogue(e) {
-        console.log("closing");
-        // console.log(document.activeElement);
-        console.log(e.target);
-        this.setState({ addTagDialogue: false });
+        this.setState({
+            addTagDialogue: false,
+            tagSearchString: "",
+            tagSearchResults: []
+        });
     }
 
     render () {
@@ -177,6 +179,8 @@ class PostEdit extends React.Component {
             bgIndicator = "pe-banner-titled";
             peSidebarBtnActive = 'pe-community-post-btn';
         }
+
+        const dialogueTags = this.state.tagSearchResults.length > 0 ? this.state.tagSearchResults : this.state.popularTags;
         
         return (
             <div>
@@ -246,8 +250,9 @@ class PostEdit extends React.Component {
                                             placeholder="+ Tag"
                                             value={this.state.tagSearchString}
                                             onChange={this.handleTagSearchInput}
-                                            onKeyUp={e => {
-                                                if (e.keyCode === 13) {
+                                            tabIndex="-1"
+                                            onKeyDown={e => {
+                                                if (e.keyCode === 13 || e.keyCode === 9) {
                                                     e.preventDefault();
                                                     this.attemptNewTag(this.state.tagSearchString);
                                                 }
@@ -255,7 +260,7 @@ class PostEdit extends React.Component {
                                         />
                                         {this.state.addTagDialogue &&
                                             <AddTagsDialogue
-                                                tags={this.state.tagSearchResults}
+                                                tags={dialogueTags}
                                                 addTag={this.handleAddTag}
                                             />
                                         }

@@ -34,7 +34,7 @@ class TagBanner extends React.Component {
             '"Never change, or do. I\'m not your boss."',
             '"There is a time and place for subtlety, and that time was before Scary Movie."',
             '"Sometimes I think I lost something really important to me, and then it turns out I already ate it."',
-            '"First time I was punched in the face, I was like \'Oh no!\', but then I was like \'this is a story..\'"',
+            '"First time I was punched in the face, I was like \'Oh no!\', but then I was like \'this is a story...\'"',
             '"Streets ahead."',
             '"I was never one to hold a grudge. My father held grudges, I\'ll always hate him for that."',
             '"We\'re all kind of crazytown bananapants."',

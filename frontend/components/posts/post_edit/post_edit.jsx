@@ -180,6 +180,7 @@ class PostEdit extends React.Component {
         
         return (
             <div>
+                <Modal postId={this.props.post.id} />
                 <div className={`pe-banner ${bgIndicator}`}></div>
                 <div style={{position: "static"}}>
                     <NavbarContainer/>
@@ -202,7 +203,6 @@ class PostEdit extends React.Component {
                                 + Add image
                             </button>
                         </div>
-                        <Modal />
                     </div>
                     <div className="pe-sidebar-container">
                         <div className='pe-sidebar-content'>
@@ -281,7 +281,11 @@ class PostEdit extends React.Component {
                                     </li>
                                     <li><i className="fas fa-code"></i>Embed post</li>
                                     <li><i className="fas fa-download"></i>Download post</li>
-                                    <li><i className="fas fa-trash"></i>Delete post</li>
+                                    <li
+                                        onClick={() => this.props.openModal('delete-post-confirmation')}
+                                    >
+                                        <i className="fas fa-trash"></i>Delete post
+                                    </li>
                                 </ul>
                             </div>
                         </div>

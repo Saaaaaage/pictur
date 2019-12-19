@@ -15,6 +15,7 @@ const msp = (state, ownProps) => {
     return {
         post: post,
         images: Object.values( post.uploads || {} ),
+        currentUserId: state.session.id,
         rootComments: Object.values( state.entities.comments.root || {} )
     };
 };

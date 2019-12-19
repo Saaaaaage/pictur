@@ -8,6 +8,11 @@ import {Link} from 'react-router-dom';
 class PostShow extends React.Component {
     constructor(props) {
         super(props);
+
+        this.state = {
+            showEdit: false
+        };
+
         this.randomBackgrounds = {
             purple: 'linear-gradient(rgba(74, 88, 251, .9), rgba(46, 48, 53, 1))',
             pink: 'linear-gradient(rgba(255, 81, 186, .9), rgba(46, 48, 53, 1))',
@@ -17,7 +22,8 @@ class PostShow extends React.Component {
             blue: 'linear-gradient(rgba(34, 126, 250, .9), rgba(46, 48, 53, 1))',
             lavender: 'linear-gradient(rgba(198, 193, 255, .9), rgba(46, 48, 53, 1))',
             navy: 'linear-gradient(rgba(28, 44, 93, .9), rgba(46, 48, 53, 1))',
-        }
+        };
+        this.setShowEdit = this.setShowEdit.bind(this);
     }
 
     componentDidMount(){
@@ -26,19 +32,26 @@ class PostShow extends React.Component {
 
     componentDidUpdate(prevProps) {
         if (this.props.match.params.postId != prevProps.match.params.postId) {
+            console.log('Updating component');
+            // this.props.clearComments();
             this.props.loadPost();
-            
         }
     }
 
     componentWillUnmount() {
+        console.log('Unmounting');
         this.props.clearComments();
+    }
+
+    setShowEdit(value) {
+        this.setState({showEdit: value});
     }
 
     render() {
         const images = this.props.images.map((image, i) => {
             return <PostShowImage image={image} key={i}/>
         });
+        
         const rootComments = this.props.rootComments.map((comment, i) => {
             return (
                 <CommentContainer
@@ -48,7 +61,9 @@ class PostShow extends React.Component {
                 />
             );
         });
+        
         const bgKeys = Object.keys(this.randomBackgrounds);
+        
         const tags = Object.values(this.props.post.tags || {}).map((tag, i) => {
             const background = this.randomBackgrounds[bgKeys[i % bgKeys.length]];
             return (
@@ -63,6 +78,8 @@ class PostShow extends React.Component {
             )
         });
 
+        const showEdit = this.props.currentUserId === this.props.post.user_id && this.state.showEdit ? "block" : "none";
+
 
         // TODO: is there better way change the class of the body depending on the page?
         const body = document.getElementsByTagName('body')[0];
@@ -76,9 +93,18 @@ class PostShow extends React.Component {
                 </div>
                 <div className="postShowBody">
                     <div className="postShowMain">
-                        <div className="postShowMainHeader">
+                        <div
+                            className="postShowMainHeader"
+                            onMouseOver={() => this.setShowEdit(true)}
+                            onMouseOut={() => this.setShowEdit(false)}
+                        >
                             <h1>{this.props.post.title}</h1>
                             <h3>by <strong>{this.props.post.user.username}</strong></h3>
+                            <div className="post-edit" style={{ display: showEdit }}>
+                                <Link to={`/posts/${this.props.post.id}/edit`}>
+                                    <i className="fas fa-pen-square"></i>
+                                </Link>
+                            </div>
                         </div>
                         <ul>{images}</ul>
 
@@ -89,6 +115,7 @@ class PostShow extends React.Component {
                         <div className="comment-container">
                             <CommentForm
                                 submitComment={this.props.submitComment}
+                                currentUserId={this.props.currentUserId}
                             />
                             <ul>{rootComments}</ul>
                         </div>

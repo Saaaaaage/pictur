@@ -740,7 +740,8 @@ function (_React$Component) {
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_comment_form__WEBPACK_IMPORTED_MODULE_2__["default"], {
         submitComment: this.props.submitComment,
         parentId: this.props.comment.id,
-        submitCallback: this.hideForm
+        submitCallback: this.hideForm,
+        currentUserId: this.props.currentUserId
       }))) : null;
       var cssClass;
       var indentationContainer;
@@ -915,13 +916,18 @@ function (_React$Component) {
     key: "handleSubmit",
     value: function handleSubmit(e) {
       e.preventDefault();
-      this.props.submitComment(this.state);
-      this.setState({
-        body: ""
-      });
 
-      if (this.props.submitCallback) {
-        this.props.submitCallback();
+      if (this.props.currentUserId) {
+        this.props.submitComment(this.state);
+        this.setState({
+          body: ""
+        });
+
+        if (this.props.submitCallback) {
+          this.props.submitCallback();
+        }
+      } else {
+        this.props.history.push('/register');
       }
     }
   }, {
@@ -1768,6 +1774,119 @@ function (_React$Component) {
 
 /***/ }),
 
+/***/ "./frontend/components/posts/post_edit/delete_post_confirm_container.jsx":
+/*!*******************************************************************************!*\
+  !*** ./frontend/components/posts/post_edit/delete_post_confirm_container.jsx ***!
+  \*******************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
+/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+/* harmony import */ var _actions_post_actions__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../actions/post_actions */ "./frontend/actions/post_actions.js");
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+
+
+
+
+
+var msp = function msp(state) {
+  return {};
+};
+
+var mdp = function mdp(dispatch) {
+  return {
+    deletePost: function deletePost(postId) {
+      return dispatch(Object(_actions_post_actions__WEBPACK_IMPORTED_MODULE_3__["deletePost"])(postId));
+    }
+  };
+};
+
+var DeletePostConfirmation =
+/*#__PURE__*/
+function (_React$Component) {
+  _inherits(DeletePostConfirmation, _React$Component);
+
+  function DeletePostConfirmation(props) {
+    var _this;
+
+    _classCallCheck(this, DeletePostConfirmation);
+
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(DeletePostConfirmation).call(this, props));
+    _this.confirm = _this.confirm.bind(_assertThisInitialized(_this));
+    _this.cancel = _this.cancel.bind(_assertThisInitialized(_this));
+    return _this;
+  }
+
+  _createClass(DeletePostConfirmation, [{
+    key: "cancel",
+    value: function cancel() {
+      this.props.closeModal();
+    }
+  }, {
+    key: "confirm",
+    value: function confirm() {
+      var _this2 = this;
+
+      console.log("Attempting to delete ".concat(this.props.modalProps.postId));
+      this.props.deletePost(this.props.modalProps.postId).then(function () {
+        _this2.props.closeModal();
+
+        _this2.props.history.push('/');
+      });
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "delete-confirmation-modal"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "delete-confirmation-header"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, "Delete Post?"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+        onClick: this.cancel,
+        className: "delete-confirmation-x"
+      }, "X")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "delete-confirmation-message"
+      }, "Are you sure you want to delete this post?  This action is permanent and cannot be undone."), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "delete-confirmation-buttons"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+        onClick: this.cancel,
+        className: "delete-confirmation-cancel"
+      }, "Cancel"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        onClick: this.confirm,
+        className: "delete-confirmation-confirm"
+      }, "Delete Post")));
+    }
+  }]);
+
+  return DeletePostConfirmation;
+}(react__WEBPACK_IMPORTED_MODULE_0___default.a.Component);
+
+/* harmony default export */ __webpack_exports__["default"] = (Object(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["withRouter"])(Object(react_redux__WEBPACK_IMPORTED_MODULE_2__["connect"])(msp, mdp)(DeletePostConfirmation)));
+
+/***/ }),
+
 /***/ "./frontend/components/posts/post_edit/post_edit.jsx":
 /*!***********************************************************!*\
   !*** ./frontend/components/posts/post_edit/post_edit.jsx ***!
@@ -2038,7 +2157,9 @@ function (_React$Component) {
         peSidebarBtnActive = 'pe-community-post-btn';
       }
 
-      return react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
+      return react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_utils_modal__WEBPACK_IMPORTED_MODULE_0__["default"], {
+        postId: this.props.post.id
+      }), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
         className: "pe-banner ".concat(bgIndicator)
       }), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
         style: {
@@ -2061,7 +2182,7 @@ function (_React$Component) {
         onClick: function onClick() {
           return _this6.props.openModal('edit-upload');
         }
-      }, "+ Add image")), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_utils_modal__WEBPACK_IMPORTED_MODULE_0__["default"], null)), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
+      }, "+ Add image"))), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
         className: "pe-sidebar-container"
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
         className: "pe-sidebar-content"
@@ -2124,7 +2245,11 @@ function (_React$Component) {
         className: "fas fa-code"
       }), "Embed post"), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("li", null, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("i", {
         className: "fas fa-download"
-      }), "Download post"), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("li", null, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("i", {
+      }), "Download post"), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("li", {
+        onClick: function onClick() {
+          return _this6.props.openModal('delete-post-confirmation');
+        }
+      }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("i", {
         className: "fas fa-trash"
       }), "Delete post")))))));
     }
@@ -2317,9 +2442,9 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
@@ -2343,6 +2468,9 @@ function (_React$Component) {
     _classCallCheck(this, PostShow);
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(PostShow).call(this, props));
+    _this.state = {
+      showEdit: false
+    };
     _this.randomBackgrounds = {
       purple: 'linear-gradient(rgba(74, 88, 251, .9), rgba(46, 48, 53, 1))',
       pink: 'linear-gradient(rgba(255, 81, 186, .9), rgba(46, 48, 53, 1))',
@@ -2353,6 +2481,7 @@ function (_React$Component) {
       lavender: 'linear-gradient(rgba(198, 193, 255, .9), rgba(46, 48, 53, 1))',
       navy: 'linear-gradient(rgba(28, 44, 93, .9), rgba(46, 48, 53, 1))'
     };
+    _this.setShowEdit = _this.setShowEdit.bind(_assertThisInitialized(_this));
     return _this;
   }
 
@@ -2365,13 +2494,23 @@ function (_React$Component) {
     key: "componentDidUpdate",
     value: function componentDidUpdate(prevProps) {
       if (this.props.match.params.postId != prevProps.match.params.postId) {
+        console.log('Updating component'); // this.props.clearComments();
+
         this.props.loadPost();
       }
     }
   }, {
     key: "componentWillUnmount",
     value: function componentWillUnmount() {
+      console.log('Unmounting');
       this.props.clearComments();
+    }
+  }, {
+    key: "setShowEdit",
+    value: function setShowEdit(value) {
+      this.setState({
+        showEdit: value
+      });
     }
   }, {
     key: "render",
@@ -2403,7 +2542,8 @@ function (_React$Component) {
           key: i,
           className: "postShowTags"
         }, tag.name);
-      }); // TODO: is there better way change the class of the body depending on the page?
+      });
+      var showEdit = this.props.currentUserId === this.props.post.user_id && this.state.showEdit ? "block" : "none"; // TODO: is there better way change the class of the body depending on the page?
 
       var body = document.getElementsByTagName('body')[0]; // body.classList.forEach(c => body.classList.remove(c));
 
@@ -2415,13 +2555,29 @@ function (_React$Component) {
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "postShowMain"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "postShowMainHeader"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, this.props.post.title), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h3", null, "by ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("strong", null, this.props.post.user.username))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", null, images), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "postShowMainHeader",
+        onMouseOver: function onMouseOver() {
+          return _this2.setShowEdit(true);
+        },
+        onMouseOut: function onMouseOut() {
+          return _this2.setShowEdit(false);
+        }
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, this.props.post.title), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h3", null, "by ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("strong", null, this.props.post.user.username)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "post-edit",
+        style: {
+          display: showEdit
+        }
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_5__["Link"], {
+        to: "/posts/".concat(this.props.post.id, "/edit")
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+        className: "fas fa-pen-square"
+      })))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", null, images), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "postShowFooter"
       }, tags), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "comment-container"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_comments_comment_form__WEBPACK_IMPORTED_MODULE_4__["default"], {
-        submitComment: this.props.submitComment
+        submitComment: this.props.submitComment,
+        currentUserId: this.props.currentUserId
       }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", null, rootComments))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "postShowSidebar"
       })));
@@ -2477,6 +2633,7 @@ var msp = function msp(state, ownProps) {
   return {
     post: post,
     images: Object.values(post.uploads || {}),
+    currentUserId: state.session.id,
     rootComments: Object.values(state.entities.comments.root || {})
   };
 };
@@ -3186,7 +3343,11 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 
 
- // const msp = state => ({});
+ // const msp = state => {
+//     return {
+//         modalState: state.ui.modal
+//     };
+// };
 
 var mdp = function mdp(dispatch) {
   return {
@@ -3223,7 +3384,9 @@ function (_React$Component) {
       (_body$classList = body.classList).remove.apply(_body$classList, _toConsumableArray(body.classList));
 
       body.classList.add("bg-new-upload-page");
-      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_navbar_navbar_container__WEBPACK_IMPORTED_MODULE_4__["default"], null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_utils_modal__WEBPACK_IMPORTED_MODULE_1__["default"], null));
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_navbar_navbar_container__WEBPACK_IMPORTED_MODULE_4__["default"], null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_utils_modal__WEBPACK_IMPORTED_MODULE_1__["default"], {
+        redirectOnClose: '/'
+      }));
     }
   }]);
 
@@ -3623,6 +3786,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _upload_new_post_upload_container__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../upload/new_post_upload_container */ "./frontend/components/upload/new_post_upload_container.js");
 /* harmony import */ var _upload_edit_post_upload_container__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../upload/edit_post_upload_container */ "./frontend/components/upload/edit_post_upload_container.js");
 /* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
+/* harmony import */ var _posts_post_edit_delete_post_confirm_container__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../posts/post_edit/delete_post_confirm_container */ "./frontend/components/posts/post_edit/delete_post_confirm_container.jsx");
+
 
 
 
@@ -3632,7 +3797,8 @@ __webpack_require__.r(__webpack_exports__);
 
 function Modal(_ref) {
   var modal = _ref.modal,
-      closeModal = _ref.closeModal;
+      closeModal = _ref.closeModal,
+      modalProps = _ref.modalProps;
 
   if (!modal) {
     return null;
@@ -3642,11 +3808,22 @@ function Modal(_ref) {
 
   switch (modal) {
     case 'new-upload':
-      component = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_upload_new_post_upload_container__WEBPACK_IMPORTED_MODULE_3__["default"], null);
+      component = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_upload_new_post_upload_container__WEBPACK_IMPORTED_MODULE_3__["default"], {
+        modalProps: modalProps
+      });
       break;
 
     case 'edit-upload':
-      component = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_upload_edit_post_upload_container__WEBPACK_IMPORTED_MODULE_4__["default"], null);
+      component = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_upload_edit_post_upload_container__WEBPACK_IMPORTED_MODULE_4__["default"], {
+        modalProps: modalProps
+      });
+      break;
+
+    case 'delete-post-confirmation':
+      component = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_posts_post_edit_delete_post_confirm_container__WEBPACK_IMPORTED_MODULE_6__["default"], {
+        modalProps: modalProps,
+        closeModal: closeModal
+      });
       break;
 
     default:
@@ -3664,16 +3841,21 @@ function Modal(_ref) {
   }, component));
 }
 
-var mapStateToProps = function mapStateToProps(state) {
+var mapStateToProps = function mapStateToProps(state, ownProps) {
   return {
-    modal: state.ui.modal
+    modal: state.ui.modal,
+    modalProps: ownProps
   };
 };
 
 var mapDispatchToProps = function mapDispatchToProps(dispatch, ownProps) {
   return {
     closeModal: function closeModal() {
-      dispatch(Object(_actions_ui_actions__WEBPACK_IMPORTED_MODULE_1__["closeModal"])()); // ownProps.history.goBack();
+      dispatch(Object(_actions_ui_actions__WEBPACK_IMPORTED_MODULE_1__["closeModal"])());
+
+      if (ownProps.redirectOnClose) {
+        ownProps.history.push(ownProps.redirectOnClose);
+      }
     }
   };
 };
@@ -3799,7 +3981,9 @@ var _default_state = {
 
   switch (action.type) {
     case _actions_post_actions__WEBPACK_IMPORTED_MODULE_1__["RECEIVE_POST"]:
-      return Object(lodash__WEBPACK_IMPORTED_MODULE_2__["merge"])({}, state, action.post.comments);
+      // If we're looking at comments, we're only interested in one Post's comments
+      // so we do not include prev state in merge when receiving comments from a Post
+      return Object(lodash__WEBPACK_IMPORTED_MODULE_2__["merge"])({}, action.post.comments);
 
     case _actions_comment_actions__WEBPACK_IMPORTED_MODULE_0__["RECEIVE_COMMENTS"]:
       return Object(lodash__WEBPACK_IMPORTED_MODULE_2__["merge"])({}, state, action.comments);
@@ -3826,7 +4010,7 @@ var _default_state = {
       }
 
     case _actions_comment_actions__WEBPACK_IMPORTED_MODULE_0__["CLEAR_COMMENTS"]:
-      return {};
+      return _default_state;
 
     default:
       return state;
@@ -54111,7 +54295,7 @@ function warning(message) {
 /*!***************************************************************!*\
   !*** ./node_modules/react-router-dom/esm/react-router-dom.js ***!
   \***************************************************************/
-/*! exports provided: BrowserRouter, HashRouter, Link, NavLink, MemoryRouter, Prompt, Redirect, Route, Router, StaticRouter, Switch, __RouterContext, generatePath, matchPath, useHistory, useLocation, useParams, useRouteMatch, withRouter */
+/*! exports provided: MemoryRouter, Prompt, Redirect, Route, Router, StaticRouter, Switch, __RouterContext, generatePath, matchPath, useHistory, useLocation, useParams, useRouteMatch, withRouter, BrowserRouter, HashRouter, Link, NavLink */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";

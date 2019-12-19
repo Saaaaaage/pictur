@@ -7,11 +7,11 @@ import { withRouter } from 'react-router-dom'
 
 class Upload extends React.Component{
     constructor(props) {
-        super(props)
+        super(props);
         this.state = {
             files: [],
             redirect: null
-        }
+        };
 
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleManualUpload = this.handleManualUpload.bind(this);

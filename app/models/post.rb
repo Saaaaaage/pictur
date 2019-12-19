@@ -36,7 +36,7 @@ class Post < ApplicationRecord
     end
 
     def thumbnail
-        self.uploads.first.variant(resize: "240x").processed if self.uploads.first.variable?
+        self.uploads.first.variant(resize: "240x").processed if (self.uploads.first and self.uploads.first.variable?)
     end
 
     def root_comments

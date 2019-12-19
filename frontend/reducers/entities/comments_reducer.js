@@ -15,9 +15,12 @@ const _default_state = {root:{}};
 // TODO: Should remove post remove the associated comment data?
 export default (state = _default_state, action) => {
     Object.freeze(state);
+
     switch (action.type) {
         case RECEIVE_POST:
-            return merge({}, state, action.post.comments);
+            // If we're looking at comments, we're only interested in one Post's comments
+            // so we do not include prev state in merge when receiving comments from a Post
+            return merge({}, action.post.comments);
         case RECEIVE_COMMENTS:
             return merge({}, state, action.comments);
         case RECEIVE_COMMENT:
@@ -36,7 +39,7 @@ export default (state = _default_state, action) => {
                 return newState;
             }
         case CLEAR_COMMENTS:
-            return {};
+            return _default_state;
         default:
             return state;
     }

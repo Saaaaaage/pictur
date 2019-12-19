@@ -31,6 +31,24 @@
     padding-top: 5px;
 }
 
+.post-edit {
+    position: absolute;
+    top: 5px;
+    right: 7px;
+    font-size: 20px;
+    text-shadow: 2px 2px 3px black;
+    cursor: pointer;
+}
+.post-edit a {
+    padding: 1em;
+    margin: -2em;
+}
+
+.post-edit a:hover {
+    // color: #1bb76e;
+    text-shadow: 2px 2px 3px #1bb76e94;
+}
+
 .postImage {
     display: block;
     max-width: 728px;

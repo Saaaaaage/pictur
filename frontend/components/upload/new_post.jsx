@@ -4,7 +4,12 @@ import {connect} from 'react-redux';
 import { openModal } from '../../actions/ui_actions';
 import NavbarContainer from '../navbar/navbar_container';
 
-// const msp = state => ({});
+// const msp = state => {
+//     return {
+//         modalState: state.ui.modal
+//     };
+// };
+
 const mdp = dispatch => ({
     openModal: (modal) => dispatch(openModal(modal))
 });
@@ -26,7 +31,7 @@ class NewPost extends React.Component {
         return (
             <div>
                 <NavbarContainer />
-                <Modal />
+                <Modal redirectOnClose={'/'} />
             </div>
         )
     }

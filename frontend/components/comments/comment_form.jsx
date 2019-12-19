@@ -1,13 +1,13 @@
 import React from 'react';
-import { withRouter } from 'react-router-dom'
+import { withRouter } from 'react-router-dom';
 
 class CommentForm extends React.Component {
     constructor(props) {
-        super(props)
+        super(props);
         this.state = {
             body: "",
             parent_id: this.props.parentId
-        }
+        };
         this.handleCommentInput = this.handleCommentInput.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
@@ -22,11 +22,15 @@ class CommentForm extends React.Component {
     handleSubmit(e) {
         e.preventDefault();
         
-        this.props.submitComment(this.state);
-        this.setState({ body: "" })
-
-        if (this.props.submitCallback) {
-            this.props.submitCallback();
+        if (this.props.currentUserId) {
+            this.props.submitComment(this.state);
+            this.setState({ body: "" });
+    
+            if (this.props.submitCallback) {
+                this.props.submitCallback();
+            }
+        } else {
+            this.props.history.push('/register');
         }
     }
 

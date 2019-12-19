@@ -81,7 +81,8 @@ class Comment extends React.Component {
                         submitComment={this.props.submitComment}
                         parentId={this.props.comment.id}
                         submitCallback={this.hideForm}
-                        />
+                        currentUserId={this.props.currentUserId}
+                    />
                 </div>
             </div>
         ) : (

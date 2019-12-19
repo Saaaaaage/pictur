@@ -46,7 +46,7 @@ class Upload extends React.Component{
                     }
                 );
         } else {
-            alert('One or more of your files exceeds 5MB');
+            alert('Slow down there buddy, one or more of your files exceeds 5MB');
             this.setState({files: []});
         }
         

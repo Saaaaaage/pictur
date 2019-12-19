@@ -99,7 +99,7 @@ class PostShow extends React.Component {
                             onMouseOut={() => this.setShowEdit(false)}
                         >
                             <h1>{this.props.post.title}</h1>
-                            <h3>by <strong>{this.props.post.user.username}</strong></h3>
+                            <h3>by <Link to={`/users/${this.props.post.user.id}`}><strong>{this.props.post.user.username}</strong></Link></h3>
                             <div className="post-edit" style={{ display: showEdit }}>
                                 <Link to={`/posts/${this.props.post.id}/edit`}>
                                     <i className="fas fa-pen-square"></i>

@@ -2622,7 +2622,9 @@ function (_React$Component) {
         onMouseOut: function onMouseOut() {
           return _this2.setShowEdit(false);
         }
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, this.props.post.title), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h3", null, "by ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("strong", null, this.props.post.user.username)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, this.props.post.title), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h3", null, "by ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_5__["Link"], {
+        to: "/users/".concat(this.props.post.user.id)
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("strong", null, this.props.post.user.username))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "post-edit",
         style: {
           display: showEdit
@@ -3589,7 +3591,7 @@ function (_React$Component) {
           that.props.closeModal();
         });
       } else {
-        alert('One or more of your files exceeds 5MB');
+        alert('Slow down there buddy, one or more of your files exceeds 5MB');
         this.setState({
           files: []
         });

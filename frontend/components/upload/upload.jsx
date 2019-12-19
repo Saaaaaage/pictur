@@ -29,32 +29,41 @@ class Upload extends React.Component{
         formData.append('post[id]', this.props.match.params.postId);
         // formData.append('post[title]', "this is going to be the title of the post");
 
-        this.state.files.forEach(file => {
-            formData.append('post[uploads][]', file);
-        })
+        if (this.state.files.every(file => {
+            let size = file.size / 1024 / 1024;
+            return size <= 5;
+        })) {
+            this.state.files.forEach(file => {
+                formData.append('post[uploads][]', file);
+            });
 
-        const that = this;
-        this.props.formAction(formData)
-            .then(
-                action => {
-                    that.setState({ redirect: `/posts/${action.post.id}/edit`})
-                    that.props.closeModal();
-                }
-            );
+            const that = this;
+            this.props.formAction(formData)
+                .then(
+                    action => {
+                        that.setState({ redirect: `/posts/${action.post.id}/edit` });
+                        that.props.closeModal();
+                    }
+                );
+        } else {
+            alert('One or more of your files exceeds 5MB');
+            this.setState({files: []});
+        }
+        
     }
 
     handleManualUpload(e) {
         e.preventDefault();
-        this.setState({ files: Array.from(e.currentTarget.files) }, this.handleSubmit)
+        this.setState({ files: Array.from(e.currentTarget.files) }, this.handleSubmit);
     }
 
     handleDrop(fileList) {
-        this.setState({ files: Array.from(fileList) }, this.handleSubmit)
+        this.setState({ files: Array.from(fileList) }, this.handleSubmit);
     }
 
     render() {
         if (this.state.redirect) {
-            return <Redirect to={this.state.redirect}/>
+            return (<Redirect to={this.state.redirect}/>);
         }
         return (
             <div className="upload-modal">

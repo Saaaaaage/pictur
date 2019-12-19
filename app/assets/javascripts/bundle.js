@@ -3574,16 +3574,26 @@ function (_React$Component) {
       var formData = new FormData();
       formData.append('post[id]', this.props.match.params.postId); // formData.append('post[title]', "this is going to be the title of the post");
 
-      this.state.files.forEach(function (file) {
-        formData.append('post[uploads][]', file);
-      });
-      var that = this;
-      this.props.formAction(formData).then(function (action) {
-        that.setState({
-          redirect: "/posts/".concat(action.post.id, "/edit")
+      if (this.state.files.every(function (file) {
+        var size = file.size / 1024 / 1024;
+        return size <= 5;
+      })) {
+        this.state.files.forEach(function (file) {
+          formData.append('post[uploads][]', file);
         });
-        that.props.closeModal();
-      });
+        var that = this;
+        this.props.formAction(formData).then(function (action) {
+          that.setState({
+            redirect: "/posts/".concat(action.post.id, "/edit")
+          });
+          that.props.closeModal();
+        });
+      } else {
+        alert('One or more of your files exceeds 5MB');
+        this.setState({
+          files: []
+        });
+      }
     }
   }, {
     key: "handleManualUpload",

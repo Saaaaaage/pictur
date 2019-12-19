@@ -100,6 +100,10 @@ class PostEdit extends React.Component {
         );
     }
 
+    publishable() {
+        return (this.state.title && this.state.title.length > 0);
+    }
+
     publish(type) {
         const payload = {
             title: this.state.title,
@@ -167,7 +171,12 @@ class PostEdit extends React.Component {
         body.classList.remove(...body.classList);
         body.classList.add("bg-post-edit-page");
 
-        const bgIndicator = this.state.title ? "pe-banner-titled" : "pe-banner-untitled";
+        let bgIndicator = "pe-banner-untitled";
+        let peSidebarBtnActive = 'pe-comm-post-btn-inactive';
+        if (this.publishable()) {
+            bgIndicator = "pe-banner-titled";
+            peSidebarBtnActive = 'pe-community-post-btn';
+        }
         
         return (
             <div>
@@ -202,7 +211,8 @@ class PostEdit extends React.Component {
                                     POST
                                 </div>
                                 <button
-                                    className="pe-sidebar-btn pe-community-post-btn"
+                                    className={`pe-sidebar-btn ${peSidebarBtnActive}`}
+                                    disabled={!this.publishable()}
                                     onClick={() => this.publish('public')}
                                 >
                                     To Community
@@ -264,7 +274,11 @@ class PostEdit extends React.Component {
                                     IMG TOOLS
                                 </div>
                                 <ul className='pe-sidebar-tools'>
-                                    <li><i className="fas fa-plus"></i>Add more images</li>
+                                    <li
+                                        onClick={() => this.props.openModal('edit-upload')}
+                                    >
+                                        <i className="fas fa-plus"></i>Add more images
+                                    </li>
                                     <li><i className="fas fa-code"></i>Embed post</li>
                                     <li><i className="fas fa-download"></i>Download post</li>
                                     <li><i className="fas fa-trash"></i>Delete post</li>

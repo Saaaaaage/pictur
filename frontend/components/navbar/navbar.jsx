@@ -1,6 +1,5 @@
 import React from 'react';
-
-import { Link } from 'react-router-dom'
+import { Link, withRouter } from 'react-router-dom';
 
 const NavBar = ({currentUser, logout}) => {
     const menuClick = e => {
@@ -10,9 +9,12 @@ const NavBar = ({currentUser, logout}) => {
 
     const menuBlur = e => {
         const menu = document.getElementsByClassName("avatar-menu")[0];
-        if (event.relatedTarget.tagName.toLowerCase() != 'a') {
+        
+        //  e.relatedTarget.tagName.toLowerCase() != 'a'
+        if (!e.relatedTarget) {
             menu.setAttribute("style", "display:none");
         }
+        e.stopPropagation();
     };
 
     const navbarRight = !currentUser ? (
@@ -21,29 +23,29 @@ const NavBar = ({currentUser, logout}) => {
             <Link to='/register' className='button'>Sign up</Link>
         </div>
     ) : (
-            <div className='navbar-right'>
-                <div
-                    className="avatar-nav"
-                    onClick={menuClick}
-                    onBlur={menuBlur}
-                    tabIndex="0"
-                >
-                    <p>
-                        {currentUser.username[0].toUpperCase()}
-                    </p>
-                    <div className='avatar-menu'>
-                        <ul className="avatar-menu-top">
-                            <li><Link to={`/users/${currentUser.id}`}>Posts</Link></li>
-                            <li>Favorites</li>
-                            <li>Comments</li>
-                            <li>Images</li>
-                            <li onClick={logout}>Logout</li>
-                        </ul>
-                    </div>
+        <div className='navbar-right'>
+            <div
+                className="avatar-nav"
+                onClick={menuClick}
+                onBlur={menuBlur}
+                tabIndex="0"
+            >
+                <p>
+                    {currentUser.username[0].toUpperCase()}
+                </p>
+                <div className='avatar-menu'>
+                    <ul className="avatar-menu-top">
+                        <li><Link to={`/users/${currentUser.id}`}>Posts</Link></li>
+                        <li>Favorites</li>
+                        <li>Comments</li>
+                        <li>Images</li>
+                        <li onClick={logout}>Logout</li>
+                    </ul>
                 </div>
             </div>
-        )
-
+        </div>
+    )
+    
     return (
         <div className="navbar">
             <div className="navbar-left">
@@ -68,4 +70,4 @@ const NavBar = ({currentUser, logout}) => {
     )
 }
 
-export default NavBar;
+export default withRouter(NavBar);

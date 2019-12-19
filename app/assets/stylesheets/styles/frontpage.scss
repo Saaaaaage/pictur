@@ -1,3 +1,11 @@
+.loading-spinner {
+    background-color: transparent;
+    background-image: url(asset_path('loading.svg'));
+    background-size: contain;
+    height: 80px;
+    width: 80px;
+}
+
 .grid-column-container {
     display: flex;
     justify-content: center;
@@ -20,6 +28,7 @@
     background-color: #474a51;
     text-overflow: ellipsis;
     color: #fff;
+    position: relative;
 }
 
 .post-preview-info {
@@ -38,12 +47,37 @@
     letter-spacing: .3px;
     text-align: left;
     color: #fff;
-    display: -webkit-box;
+    // display: -webkit-box;
     max-height: 31.92px;
     overflow: hidden;
     text-overflow: ellipsis;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
+}
+
+.post-preview-description p {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.6);
+    margin-top: 10px;
+}
+
+.post-preview-edit {
+    position: absolute;
+    top: 5px;
+    right: 7px;
+    font-size: 20px;
+    text-shadow: 2px 2px 3px black;
+    cursor: pointer;
+}
+
+.post-preview-edit a {
+    padding: 1em;
+    margin: -2em;
+}
+
+.post-preview-edit a:hover {
+    // color: #1bb76e;
+    text-shadow: 2px 2px 3px #1bb76e94;
 }
 
 .greeting {
@@ -57,4 +91,5 @@
     position: relative;
     margin-bottom: 30px;
     padding-top: 65px;
+    // text-shadow: 2px 2px 7px rgb(31, 31, 31)
 }

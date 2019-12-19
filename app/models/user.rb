@@ -24,6 +24,10 @@ class User < ApplicationRecord
     has_many :posts, inverse_of: :user
     has_many :comments, inverse_of: :user
 
+    ##################################
+    ##### Session functions ##########
+    ##################################
+
     def self.find_by_credentials(username, password)
         user = User.find_by(username: username)
         return nil unless user
@@ -51,5 +55,13 @@ class User < ApplicationRecord
 
     def ensure_session_token
         self.session_token ||= User.generate_session_token
+    end
+
+    ######################################
+    ##### End Session functions ##########
+    ######################################
+
+    def post_count
+        self.posts.where(public:true).size
     end
 end

@@ -87,7 +87,7 @@ class Gallery extends React.Component {
             gridColumns.fill('');
             gridColumns = gridColumns.map(() => new Array());
             this.props.posts.forEach((post, i) => {
-                    gridColumns[i % this.state.columns].push(<PostPreview post={post} key={i} />)
+                    gridColumns[i % this.state.columns].push(<PostPreview post={post} key={i} currentUserId={this.props.currentUserId}/>)
                 }
             );
         }
@@ -108,11 +108,10 @@ class Gallery extends React.Component {
                     </div>
                 ) : (
                         <div className="grid-column-container" style={{ margin: '380px 0 0 0'}}>
-                        <h2>...</h2>
+                        <div className="loading-spinner"></div>
                     </div>
                 )
                 }
-                
             </div>
         )
     }

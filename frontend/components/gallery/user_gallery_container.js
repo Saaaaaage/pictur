@@ -10,11 +10,12 @@ import UserGalleryBanner from './gallery_banner/user_gallery_banner';
 
 const msp = (state, ownProps) => {
     const userId = ownProps.match.params.userId;
-    const user = state.entities.users[userId] || {};
+    const user = state.entities.users[userId] || { username: ""};
     return {
         posts: Object.values(state.entities.posts || {}),
-        bannerObject: <UserGalleryBanner user={user}/>
-    }
+        currentUserId: state.session.id,
+        bannerObject: <UserGalleryBanner user={user}/>,
+    };
 };
 
 const mdp = (dispatch, ownProps) => {

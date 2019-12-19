@@ -7,7 +7,7 @@ import { findTags, findOrCreateTag } from '../../../util/tag_api_util';
 const msp = (state, ownProps) => {
     const allPosts = state.entities.posts;
     const postId = ownProps.match.params.postId;
-    const post = allPosts[postId] || { user: {}, uploads: {} };
+    const post = allPosts[postId] || { user: {}, uploads: {}, title: ""};
     return {
         post: post,
         images: Object.values(post.uploads || {}),

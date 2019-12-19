@@ -1832,14 +1832,18 @@ function (_React$Component) {
 
         _this4.setState({
           tagSearchString: "",
-          addTagDialogue: false
+          tagSearchResults: []
         });
       });
     }
   }, {
     key: "returnSelected",
     value: function returnSelected(tag) {
-      this.props.handleAddTag(tag);
+      if (tag.id) {
+        this.props.handleAddTag(tag);
+      } else {
+        this.attemptNewTag(tag.name);
+      }
     }
   }, {
     key: "showAddTagDialogue",
@@ -1864,15 +1868,28 @@ function (_React$Component) {
     value: function render() {
       var _this5 = this;
 
-      var dialogueTags = this.state.tagSearchResults.length > 0 ? this.state.tagSearchResults : this.state.popularTags;
-      var tagList = dialogueTags.map(function (tag) {
+      var dialogueTags = this.state.popularTags;
+
+      if (this.state.tagSearchResults.length > 0) {
+        dialogueTags = this.state.tagSearchResults;
+      } else if (this.state.tagSearchResults.length === 0 && this.state.tagSearchString.length > 1) {
+        var name = this.state.tagSearchString.toLowerCase().split(' ').map(function (s) {
+          return s.charAt(0).toUpperCase() + s.substring(1);
+        }).join(' ');
+        dialogueTags = [{
+          name: name,
+          post_count: null
+        }];
+      }
+
+      var tagList = dialogueTags.map(function (tag, i) {
         return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
-          key: tag.id,
+          key: i,
           className: "addTagLi",
           onMouseDown: function onMouseDown() {
             return _this5.returnSelected(tag);
           }
-        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, tag.name), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, tag.post_count, " posts"));
+        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, tag.name), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, tag.post_count && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, tag.post_count, " posts")));
       });
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "pe-add-tags",
@@ -1888,17 +1905,19 @@ function (_React$Component) {
         onChange: this.handleTagSearchInput,
         tabIndex: "-1",
         onKeyDown: function onKeyDown(e) {
+          // commit on return or tab
           if (e.keyCode === 13 || e.keyCode === 9) {
             e.preventDefault();
 
             _this5.attemptNewTag(_this5.state.tagSearchString);
+          } else if (e.keyCode === 27) {
+            // exit on escape key
+            _this5.hideAddTagDialogue(e);
+
+            e.target.blur();
           }
         }
-      }), this.state.addTagDialogue && // <AddTagsDialogue
-      //     tags={dialogueTags}
-      //     addTag={this.handleAddTag}
-      // />
-      react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      }), this.state.addTagDialogue && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "addTagPositioning"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "addTagContainer"

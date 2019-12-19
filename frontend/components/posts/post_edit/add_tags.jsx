@@ -53,14 +53,18 @@ class AddTags extends React.Component {
                 this.props.handleAddTag(tag);
                 this.setState({
                     tagSearchString: "",
-                    addTagDialogue: false
+                    tagSearchResults: []
                 });
             }
         );
     }
 
     returnSelected(tag) {
-        this.props.handleAddTag(tag);
+        if (tag.id) {
+            this.props.handleAddTag(tag);
+        } else {
+            this.attemptNewTag(tag.name);
+        }
     }
 
     showAddTagDialogue(e) {
@@ -78,17 +82,32 @@ class AddTags extends React.Component {
     }
 
     render () {
-        const dialogueTags = this.state.tagSearchResults.length > 0 ? this.state.tagSearchResults : this.state.popularTags;
+        let dialogueTags = this.state.popularTags;
+        if (this.state.tagSearchResults.length > 0) {
+            dialogueTags = this.state.tagSearchResults;
+        } else if (this.state.tagSearchResults.length === 0 && this.state.tagSearchString.length > 1) {
+            const name = this.state.tagSearchString.toLowerCase().split(' ').map((s) => {
+                return s.charAt(0).toUpperCase() + s.substring(1);
+            }).join(' ');
+            dialogueTags = [{
+                name: name,
+                post_count: null
+            }];
+        }
 
-        const tagList = dialogueTags.map(tag => {
+        const tagList = dialogueTags.map((tag, i) => {
             return (
                 <li
-                    key={tag.id}
+                    key={i}
                     className="addTagLi"
                     onMouseDown={() => this.returnSelected(tag)}
                 >
                     <div>{tag.name}</div>
-                    <div>{tag.post_count} posts</div>
+                    <div>
+                        {tag.post_count &&
+                            <span>{tag.post_count} posts</span>
+                        }
+                    </div>
                     
                 </li>
             )
@@ -110,17 +129,18 @@ class AddTags extends React.Component {
                     onChange={this.handleTagSearchInput}
                     tabIndex="-1"
                     onKeyDown={e => {
+                        // commit on return or tab
                         if (e.keyCode === 13 || e.keyCode === 9) {
                             e.preventDefault();
                             this.attemptNewTag(this.state.tagSearchString);
+                        } else if (e.keyCode === 27) {
+                            // exit on escape key
+                            this.hideAddTagDialogue(e);
+                            e.target.blur();
                         }
                     }}
                 />
                 {this.state.addTagDialogue &&
-                    // <AddTagsDialogue
-                    //     tags={dialogueTags}
-                    //     addTag={this.handleAddTag}
-                    // />
                     <div className="addTagPositioning">
                         <div className="addTagContainer">
                             <ul>

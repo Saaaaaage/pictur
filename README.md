@@ -21,15 +21,18 @@ The add tag button is a basket of user-friendly functionality to make adding tag
 
 Each feature individually is a small piece of functionality, but together they deliver a very nice user experience.
 
-[![UX++](https://gfycat.com/infamouseminentalaskankleekai "UX++")](<iframe src='https://gfycat.com/ifr/InfamousEminentAlaskankleekai' frameborder='0' scrolling='no' allowfullscreen width='640' height='687'></iframe> "UX++")
-
 #### User Auth
+
+User authentication is a fully in-house auth solution.  From user creation, to sessions, to password security, all functions were built from the ground up to address the needs of the project.
 
 #### Splash Page Behavior
 
-#### Comments
+###### Resizing
 
-Delve deep into ~2 features that show off your technical abilities. Discuss both the challenges faced and your brilliant solutions.
-Code snippets to highlight your best code (markdown code snippets, NOT screenshots)
+Pictur's splash page displays a series of columns each continaing a stack of images.  However, a fixed number of columns could look terrible if viewed on screens larger or smaller than the one used to develop the site.  To address this, the splash page adds an event listener to the window to fetch and track the size of the window.  This datum is used to determine the number of columns to display before, finally, the React component distributes the splash page's post previews evenly into the allocated columns.
+
+###### Parallax Scrolling
+
+As you scroll down on the splash page, a scroll event listener on the page calculates a new position to assign to the splash page banner in order to give the impression of parallax scrolling.  The banner moves upward faster than other assets on the page until it reaches a threshold to trigger different behavior, at which point it becomes sticky and the z-index is updated to change the position from behind the post previews, to in front of the post previews.  A drop shadow is added to visually reinforce this change.
 
 ## Installation

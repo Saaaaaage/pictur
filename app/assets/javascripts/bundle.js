@@ -1660,7 +1660,19 @@ var NavBar = function NavBar(_ref) {
     className: "avatar-menu-top"
   }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
     to: "/users/".concat(currentUser.id)
-  }, "Posts")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", null, "Favorites"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", null, "Comments"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", null, "Images"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
+  }, "Posts")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
+    style: {
+      cursor: 'not-allowed'
+    }
+  }, "Favorites"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
+    style: {
+      cursor: 'not-allowed'
+    }
+  }, "Comments"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
+    style: {
+      cursor: 'not-allowed'
+    }
+  }, "Images"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
     onClick: logout
   }, "Logout")))));
   return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -1681,7 +1693,10 @@ var NavBar = function NavBar(_ref) {
   }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
     className: "search-bar",
     placeholder: "Images, #tags, @users oh my!",
-    type: "text"
+    type: "text",
+    style: {
+      cursor: 'not-allowed'
+    }
   })), navbarRight);
 };
 
@@ -2309,9 +2324,17 @@ function (_React$Component) {
         }
       }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("i", {
         className: "fas fa-plus"
-      }), "Add more images"), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("li", null, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("i", {
+      }), "Add more images"), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("li", {
+        style: {
+          cursor: 'not-allowed'
+        }
+      }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("i", {
         className: "fas fa-code"
-      }), "Embed post"), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("li", null, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("i", {
+      }), "Embed post"), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("li", {
+        style: {
+          cursor: 'not-allowed'
+        }
+      }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("i", {
         className: "fas fa-download"
       }), "Download post"), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("li", {
         onClick: function onClick() {
@@ -54397,7 +54420,7 @@ function warning(message) {
 /*!***************************************************************!*\
   !*** ./node_modules/react-router-dom/esm/react-router-dom.js ***!
   \***************************************************************/
-/*! exports provided: BrowserRouter, HashRouter, Link, NavLink, MemoryRouter, Prompt, Redirect, Route, Router, StaticRouter, Switch, __RouterContext, generatePath, matchPath, useHistory, useLocation, useParams, useRouteMatch, withRouter */
+/*! exports provided: MemoryRouter, Prompt, Redirect, Route, Router, StaticRouter, Switch, __RouterContext, generatePath, matchPath, useHistory, useLocation, useParams, useRouteMatch, withRouter, BrowserRouter, HashRouter, Link, NavLink */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";

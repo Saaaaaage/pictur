@@ -193,8 +193,8 @@ class PostEdit extends React.Component {
                                     >
                                         <i className="fas fa-plus"></i>Add more images
                                     </li>
-                                    <li><i className="fas fa-code"></i>Embed post</li>
-                                    <li><i className="fas fa-download"></i>Download post</li>
+                                    <li style={{cursor: 'not-allowed'}}><i className="fas fa-code"></i>Embed post</li>
+                                    <li style={{cursor: 'not-allowed'}}><i className="fas fa-download"></i>Download post</li>
                                     <li
                                         onClick={() => this.props.openModal('delete-post-confirmation')}
                                     >

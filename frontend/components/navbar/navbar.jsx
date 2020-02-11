@@ -36,9 +36,9 @@ const NavBar = ({currentUser, logout}) => {
                 <div className='avatar-menu'>
                     <ul className="avatar-menu-top">
                         <li><Link to={`/users/${currentUser.id}`}>Posts</Link></li>
-                        <li>Favorites</li>
-                        <li>Comments</li>
-                        <li>Images</li>
+                        <li style={{cursor: 'not-allowed'}}>Favorites</li>
+                        <li style={{cursor: 'not-allowed'}}>Comments</li>
+                        <li style={{cursor: 'not-allowed'}}>Images</li>
                         <li onClick={logout}>Logout</li>
                     </ul>
                 </div>
@@ -63,6 +63,7 @@ const NavBar = ({currentUser, logout}) => {
                 <input className="search-bar"
                     placeholder="Images, #tags, @users oh my!"
                     type="text"
+                    style={{cursor: 'not-allowed'}}
                 />
             </div>
             {navbarRight}

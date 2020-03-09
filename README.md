@@ -34,5 +34,3 @@ Pictur's splash page displays a series of columns each continaing a stack of ima
 ###### Parallax Scrolling
 
 As you scroll down on the splash page, a scroll event listener on the page calculates a new position to assign to the splash page banner in order to give the impression of parallax scrolling.  The banner moves upward faster than other assets on the page until it reaches a threshold to trigger different behavior, at which point it becomes sticky and the z-index is updated to change the position from behind the post previews, to in front of the post previews.  A drop shadow is added to visually reinforce this change.
-
-## Installation
